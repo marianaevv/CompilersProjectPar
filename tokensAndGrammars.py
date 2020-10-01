@@ -40,22 +40,26 @@ tokens = [
             'CTEFLOAT',
             'CTEINT'
     ]
+
 #Reserved words definition
 reserved = {
     'int': 'INT',
     'float': 'FLOAT',
+    'char': 'CHAR',
     'var': 'VAR',
     'module': 'MODULE',
     'return': 'RETURN',
     'while': 'WHILE',
     'for': 'FOR',
     'do': 'DO',
+    'to': 'TO',
     'if': 'IF',
+    'then': 'THEN',
     'else': 'ELSE',
     'read': 'READ',
     'write': 'WRITE',
-    'print': 'PRINT', #Lleva?
-    'program': 'PROGRAM'
+    'Program': 'PROGRAM',
+    'main': 'MAIN'
 }
 
 tokens += list(reserved.values())
@@ -91,15 +95,14 @@ t_COLON = r'\:'
 t_SEMICOLON = r'\;'
 t_ignore = ' \t\n'
 
-def t_CTESTRING(token): #To be fixed--------------------------------
-    #r'\"(.*)\"'
-    r'"([^"\n]|(\\"))*"$'
+def t_CTECHAR(token): #To be fixed----------------------------------
+    r'"([^"])"'
     token.value = str(token.value)
     return token
 
-def t_CTECHAR(token): #To be fixed----------------------------------
-    r'\"([a-zA-Z])\"'
-    token.value = chr(token.value)
+def t_CTESTRING(token): #To be fixed--------------------------------
+    r'"([^"]*)"'
+    token.value = str(token.value)
     return token
 
 def t_CTEFLOAT(t):
@@ -118,7 +121,9 @@ def t_CTEINT(t):
    return t
 
 lexer = lex.lex()
-#lexer.input("- + * / % ++ -- == != > < >= <= & | = += -= resultado : ; , { } ( ) 32 32.55 A abc")
+
+
+lexer.input('- + * / % ++ -- == != > < >= <= & | = += -= resultado : ; , { } ( ) 32 32.55 "A" "abasd_ \#!#c"')
 while True:
     tok = lexer.token()
     if not tok:
