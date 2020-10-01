@@ -141,9 +141,8 @@ while True:
         break
     print(tok)
 
+
 # Grammars Definitions
-
-
 def p_program(p):
     '''
     program : PROGRAM ID SEMICOLON vars funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
@@ -230,6 +229,190 @@ def p_funciones(p):
 
 def p_parametros(p):
     '''
-    parametros : LEFTPARENTHESIS tipo 
+    parametros : LEFTPARENTHESIS tipo ids RIGHTPARENTHESIS
+    '''
+    pass
+
+
+def p_bloque(p):
+    '''
+    bloque : LEFTBRACKET mas_estatutos RIGHTBRACKET
+           | LEFTBRACKET RIGHTBRACKET
+    '''
+    pass
+
+
+def p_mas_estatutos(p):
+    '''
+    mas_estatutos : estatuto mas_estatutos
+                  | estatuto
+    '''
+    pass
+
+
+def p_estatuto(p):
+    '''
+    estatuto : asignacion
+             | llamada_func
+             | lectura
+             | escritura
+             | decision
+             | repeticion
+    '''
+    pass
+
+
+def p_asignacion(p):
+    '''
+    asignacion : ID dimensiones EQUALS expresion SEMICOLON
+               | ID EQUALS expresion SEMICOLON
+    '''
+    pass
+
+
+def p_dimensiones(p):
+    '''
+    dimensiones: dimension dimension
+               | dimension
+    '''
+    pass
+
+
+def p_dimension(p):
+    '''
+    dimension : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    '''
+    pass
+
+
+def p_llamada_func(p):
+    '''
+    llamada_func : ID parametros SEMICOLON
+    '''
+    pass
+
+
+def p_lectura(p):  # To be fixed (ids hace uso de declaradimensiones)
+    '''
+    lectura : READ LEFTPARENTHESIS ids RIGHTPARENTHESIS
+    '''
+    pass
+
+
+def p_escritura(p):
+    '''
+    escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
+    '''
+    pass
+
+
+def p_poswrite(p):
+    '''
+    poswrite : CTESTRING COMMA poswrite
+             | expresion COMMA poswrite
+             | CTESTRING
+             | expresion
+    '''
+    pass
+
+
+def p_decision(p):
+    '''
+    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
+             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
+    '''
+    pass
+
+
+def p_repeticion(p):
+    '''
+    repeticion : condicional bloque
+               | no_condicional bloque
+    '''
+    pass
+
+
+def p_condicional(p):
+    '''
+    condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    '''
+    pass
+
+
+def p_no_condicional(p):
+    '''
+    no_condicional : FOR ID EQUALS exp TO exp DO
+    '''
+    pass
+
+
+def p_expresion(p):
+    '''
+    expresion : exp comparadores exp
+              | exp
+    '''
+    pass
+
+
+def p_comparadores(p):
+    '''
+    comparadores : COMPARISON
+                 | GREATERHANOREQUAL
+                 | LESSTHANOREQUAL
+                 | GREATERTHAN
+                 | LESSTHAN
+                 | DIFFERENT
+    '''
+    pass
+
+
+def p_exp(p):
+    '''
+    exp : termino opera_exp exp
+        | termino
+    '''
+    pass
+
+
+def p_opera_exp(p):
+    '''
+    opera_exp : PLUS
+                 | MINUS
+    '''
+    pass
+
+
+def p_termino(p):
+    '''
+    termino : factor opera_term termino
+            | factor
+    '''
+    pass
+
+
+def p_opera_term(p):
+    '''
+    opera_term : MULTIPLY
+               | DIVIDE
+    '''
+    pass
+
+
+def p_factor(p):
+    '''
+    factor : LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+           | opera_exp valor_opt
+           | valor_opt
+    '''
+    pass
+
+
+def p_valor_opt(p):
+    '''
+    valor_opt : ID dimensiones
+              | ID
+              | llamada_func
+              | CTEINT
+              | CTEFLOAT
     '''
     pass
