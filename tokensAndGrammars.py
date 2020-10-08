@@ -148,7 +148,7 @@ lexer = lex.lex()
 
 def p_program(p):
     '''
-    program : vars
+    program : mas_estatutos
     '''
     pass
 
@@ -244,7 +244,7 @@ def p_paramlist(p):
 
 def p_bloque(p):
     '''
-    bloque : LEFTBRACKET estatuto RIGHTBRACKET
+    bloque : LEFTBRACKET mas_estatutos RIGHTBRACKET
            | LEFTBRACKET RIGHTBRACKET
     '''
     pass
@@ -261,19 +261,18 @@ def p_mas_estatutos(p):
 def p_estatuto(p):
     '''
     estatuto : asignacion
+             | lectura
+             | escritura
+             | decision
+             | repeticion
     '''
-#              | lectura
 #              | llamada_func
-#              | escritura
-#              | decision
-#              | repeticion
     pass
 
 
 def p_asignacion(p):
     '''
-    asignacion : ID dimensiones EQUALS expresion SEMICOLON
-               | ID EQUALS expresion SEMICOLON
+    asignacion : id_dimensiones EQUALS expresion SEMICOLON
     '''
     pass
 
@@ -284,59 +283,66 @@ def p_asignacion(p):
 #     '''
 #     pass
 
-
-# def p_lectura(p):  # To be fixed (ids hace uso de declaradimensiones)
-#     '''
-#     lectura : READ LEFTPARENTHESIS ids RIGHTPARENTHESIS
-#     '''
-#     pass
-
-
-# def p_escritura(p):
-#     '''
-#     escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
-#     '''
-#     pass
+def p_lista_ids(p):
+    '''
+    lista_ids : id_dimensiones COMMA lista_ids
+             | id_dimensiones
+    '''
+    pass
 
 
-# def p_poswrite(p):
-#     '''
-#     poswrite : CTESTRING COMMA poswrite
-#              | expresion COMMA poswrite
-#              | CTESTRING
-#              | expresion
-#     '''
-#     pass
+def p_lectura(p):
+    '''
+    lectura : READ LEFTPARENTHESIS lista_ids RIGHTPARENTHESIS SEMICOLON
+    '''
+    pass
 
 
-# def p_decision(p):
-#     '''
-#     decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
-#              | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
-#     '''
-#     pass
+def p_escritura(p):
+    '''
+    escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
+    '''
+    pass
 
 
-# def p_repeticion(p):
-#     '''
-#     repeticion : condicional bloque
-#                | no_condicional bloque
-#     '''
-#     pass
+def p_poswrite(p):
+    '''
+    poswrite : CTESTRING COMMA poswrite
+             | expresion COMMA poswrite
+             | CTESTRING
+             | expresion
+    '''
+    pass
 
 
-# def p_condicional(p):
-#     '''
-#     condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
-#     '''
-#     pass
+def p_decision(p):
+    '''
+    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
+             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
+    '''
+    pass
 
 
-# def p_no_condicional(p):
-#     '''
-#     no_condicional : FOR ID EQUALS exp TO exp DO
-#     '''
-#     pass
+def p_repeticion(p):
+    '''
+    repeticion : condicional bloque
+               | no_condicional bloque
+    '''
+    pass
+
+
+def p_condicional(p):
+    '''
+    condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    '''
+    pass
+
+
+def p_no_condicional(p):
+    '''
+    no_condicional : FOR ID EQUALS exp TO exp DO
+    '''
+    pass
 
 
 def p_expresion(p):
@@ -400,10 +406,11 @@ def p_factor(p):
     pass
 
 
-def p_dimensiones(p):
+def p_id_dimensiones(p):
     '''
-    dimensiones : dimen_expre dimen_expre
-                | dimen_expre
+    id_dimensiones : ID dimen_expre dimen_expre
+                   | ID dimen_expre
+                   | ID
     '''
     pass
 
@@ -417,8 +424,7 @@ def p_dimen_expre(p):
 
 def p_valor_opt(p):
     '''
-    valor_opt : ID dimensiones
-              | ID
+    valor_opt : id_dimensiones
               | CTEINT
               | CTEFLOAT
     '''
