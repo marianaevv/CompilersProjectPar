@@ -1,0 +1,5 @@
+var 
+    int: i, j, p;
+    int: Arreglo[10];
+    float: valor;
+    int: Matriz[3][8];

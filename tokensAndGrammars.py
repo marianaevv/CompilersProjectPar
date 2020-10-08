@@ -2,6 +2,9 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+# Flag to know if there was an error or not
+bError = False
+
 # Tokens definition
 tokens = [
     # Arithmetic Operators
@@ -60,7 +63,7 @@ reserved = {
     'else': 'ELSE',
     'read': 'READ',
     'write': 'WRITE',
-    'Program': 'PROGRAM',
+    'program': 'PROGRAM',
     'main': 'MAIN'
 }
 
@@ -130,25 +133,22 @@ def t_CTEINT(t):
     return t
 
 
+def t_error(token):
+    print('No apropiado')
+    token.lexer.skip(1)
+
+
 lexer = lex.lex()
 
-
-lexer.input(
-    '- + * / % ++ -- == != > < >= <= & | = += -= resultado : ; , { } ( ) 32 32.55 "A" "abasd_ \#!#c"')
-while True:
-    tok = lexer.token()
-    if not tok:
-        break
-    print(tok)
-
-
 # Grammars Definitions
+# program : PROGRAM ID SEMICOLON vars funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
+#         | PROGRAM ID SEMICOLON vars main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
+#         | PROGRAM ID SEMICOLON funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
+
+
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON vars main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
+    program : vars
     '''
     pass
 
@@ -203,16 +203,16 @@ def p_tipo(p):
 
 def p_funcvoid(p):
     '''
-    funcvoid : MODULE ID PARAMETROS SEMICOLON vars bloque
-             | MODULE ID PARAMETROS SEMICOLON bloque
+    funcvoid : MODULE ID parametros SEMICOLON vars bloque
+             | MODULE ID parametros SEMICOLON bloque
     '''
     pass
 
 
 def p_funcreturn(p):  # To be fixed
     '''
-    funcreturn : tipo MODULE ID PARAMETROS SEMICOLON vars bloque
-               | tipo MODULE ID PARAMETROS SEMICOLON bloque
+    funcreturn : tipo MODULE ID parametros SEMICOLON vars bloque
+               | tipo MODULE ID parametros SEMICOLON bloque
     '''
     pass
 
@@ -229,14 +229,22 @@ def p_funciones(p):
 
 def p_parametros(p):
     '''
-    parametros : LEFTPARENTHESIS tipo ids RIGHTPARENTHESIS
+    parametros : LEFTPARENTHESIS paramlist RIGHTPARENTHESIS
+    '''
+    pass
+
+
+def p_paramlist(p):
+    '''
+    paramlist : tipo declaraid COMMA paramlist
+              | tipo declaraid
     '''
     pass
 
 
 def p_bloque(p):
     '''
-    bloque : LEFTBRACKET mas_estatutos RIGHTBRACKET
+    bloque : LEFTBRACKET estatuto RIGHTBRACKET
            | LEFTBRACKET RIGHTBRACKET
     '''
     pass
@@ -253,12 +261,12 @@ def p_mas_estatutos(p):
 def p_estatuto(p):
     '''
     estatuto : asignacion
-             | llamada_func
-             | lectura
-             | escritura
-             | decision
-             | repeticion
     '''
+#              | lectura
+#              | llamada_func
+#              | escritura
+#              | decision
+#              | repeticion
     pass
 
 
@@ -270,80 +278,65 @@ def p_asignacion(p):
     pass
 
 
-def p_dimensiones(p):
-    '''
-    dimensiones: dimension dimension
-               | dimension
-    '''
-    pass
+# def p_llamada_func(p):
+#     '''
+#     llamada_func : ID parametros SEMICOLON
+#     '''
+#     pass
 
 
-def p_dimension(p):
-    '''
-    dimension : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    '''
-    pass
+# def p_lectura(p):  # To be fixed (ids hace uso de declaradimensiones)
+#     '''
+#     lectura : READ LEFTPARENTHESIS ids RIGHTPARENTHESIS
+#     '''
+#     pass
 
 
-def p_llamada_func(p):
-    '''
-    llamada_func : ID parametros SEMICOLON
-    '''
-    pass
+# def p_escritura(p):
+#     '''
+#     escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
+#     '''
+#     pass
 
 
-def p_lectura(p):  # To be fixed (ids hace uso de declaradimensiones)
-    '''
-    lectura : READ LEFTPARENTHESIS ids RIGHTPARENTHESIS
-    '''
-    pass
+# def p_poswrite(p):
+#     '''
+#     poswrite : CTESTRING COMMA poswrite
+#              | expresion COMMA poswrite
+#              | CTESTRING
+#              | expresion
+#     '''
+#     pass
 
 
-def p_escritura(p):
-    '''
-    escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
-    '''
-    pass
+# def p_decision(p):
+#     '''
+#     decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
+#              | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
+#     '''
+#     pass
 
 
-def p_poswrite(p):
-    '''
-    poswrite : CTESTRING COMMA poswrite
-             | expresion COMMA poswrite
-             | CTESTRING
-             | expresion
-    '''
-    pass
+# def p_repeticion(p):
+#     '''
+#     repeticion : condicional bloque
+#                | no_condicional bloque
+#     '''
+#     pass
 
 
-def p_decision(p):
-    '''
-    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
-             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
-    '''
-    pass
+# def p_condicional(p):
+#     '''
+#     condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+#     '''
+#     pass
 
 
-def p_repeticion(p):
-    '''
-    repeticion : condicional bloque
-               | no_condicional bloque
-    '''
-    pass
-
-
-def p_condicional(p):
-    '''
-    condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
-    '''
-    pass
-
-
-def p_no_condicional(p):
-    '''
-    no_condicional : FOR ID EQUALS exp TO exp DO
-    '''
-    pass
+# def p_no_condicional(p):
+#     '''
+#     no_condicional : FOR ID EQUALS exp TO exp DO
+#     '''
+#     pass
 
 
 def p_expresion(p):
@@ -377,7 +370,7 @@ def p_exp(p):
 def p_opera_exp(p):
     '''
     opera_exp : PLUS
-                 | MINUS
+              | MINUS
     '''
     pass
 
@@ -407,12 +400,52 @@ def p_factor(p):
     pass
 
 
+def p_dimensiones(p):
+    '''
+    dimensiones : dimen_expre dimen_expre
+                | dimen_expre
+    '''
+    pass
+
+
+def p_dimen_expre(p):
+    '''
+    dimen_expre : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    '''
+    pass
+
+
 def p_valor_opt(p):
     '''
     valor_opt : ID dimensiones
               | ID
-              | llamada_func
               | CTEINT
               | CTEFLOAT
     '''
+    # | llamada_func
     pass
+
+
+def p_error(p):
+    # Error rule for syntax errors
+    global bError
+    bError = True
+    print("\n-> No apropiado\n")
+
+
+# Build the parser
+parser = yacc.yacc()
+
+try:
+    # Read the source file
+    fileName = './Input.txt'
+    f = open(fileName, "r")
+    srcFile = f.read()
+
+    # Parser the input
+    result = parser.parse(srcFile)
+
+    if not bError:
+        print("\n-> Apropiado\n")
+except:
+    print("\n-> No existe el archivo\n")
