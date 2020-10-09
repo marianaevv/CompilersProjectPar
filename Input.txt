@@ -1,26 +1,55 @@
-i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-i = 1 > 2;
+program Ejemplo;
 
-read(p, s[1]);
+var
+    int i, j, p;
+    int Arreglo[10];
+    float valor;
+    int Matriz[3][8];
 
-write("asdasd");
-write("asdsad", adsad, 2+2);
-write(1+2,"asdsad", adsad, 2+2);
-
-if(1 > 2) then {
-    i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-    i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-    i[9][2] = x + 2 * s[s+ 2] + (a + 1) / 1.2 < 1;
-    i = 1 > 2;
-} else {
-    write("sdasd");
+int module fact(int j)
+var int iJ;
+{i = j + (p - j * 2 + j);
+if(j == 1) then
+ { }
+ else
+ {}
 }
 
-while (1>1) do {
+void module inicia(int y)
+var int x;
+{
+    x=0;
+    while(x<11)do
+    {
+        Arreglo[x] = y * x;
+        x = x + 1;
+    }
 }
 
-for i = 0 to w do {
-    
+main ()
+{
+    read(p);
+    j = p * 2;
+    i = 10 % 2;
+    i += 10 % 2;
+    i -= 10 % 2;
+    a++;
+    a--;
+    inicia(p * A- 5);
+    for i = 0 to 9 do {
+        Arreglo[i] += Arreglo[i] * fact(Arreglo[i] - p);
+    }
+
+    for j = 0 to 2 do{
+        for k = 0 to 7 do
+            {
+                Matriz[j][i] = Arreglo[j + k - fact(p) + p * k] * p + j;
+            }
+    }
+
+    while(i >= 0) do
+    {
+        write("Resultado", Arreglo[i], fact(i + 2) * valor);
+        i = i - 1;
+    }
 }
