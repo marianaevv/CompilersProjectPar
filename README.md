@@ -37,5 +37,5 @@ Para correr el programa se tiene que contar en el directorio del mismo un archiv
 # Tecnologías
 [(Back to top)](#tabla-de-contenidos)
 
-PLY-3.11
-Python 3.8.1
+- PLY-3.11
+- Python 3.8.1
