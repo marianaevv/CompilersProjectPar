@@ -45,16 +45,16 @@ Rule 35    statute -> loop
 Rule 36    statute -> function_call SEMICOLON
 Rule 37    statutes_list -> statute statutes_list
 Rule 38    statutes_list -> statute
-Rule 39    asignation -> id_dimensiones EQUALS expresion SEMICOLON
-Rule 40    asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON
-Rule 41    asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON
-Rule 42    asignation -> id_dimensiones INCREMENT SEMICOLON
-Rule 43    asignation -> id_dimensiones DECREMENT SEMICOLON
+Rule 39    asignation -> id_dimensions EQUALS expresion SEMICOLON
+Rule 40    asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON
+Rule 41    asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
+Rule 42    asignation -> id_dimensions INCREMENT SEMICOLON
+Rule 43    asignation -> id_dimensions DECREMENT SEMICOLON
 Rule 44    expresion_list -> expresion COMMA expresion_list
 Rule 45    expresion_list -> expresion
 Rule 46    function_call -> ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-Rule 47    ids_list -> id_dimensiones COMMA ids_list
-Rule 48    ids_list -> id_dimensiones
+Rule 47    ids_list -> id_dimensions COMMA ids_list
+Rule 48    ids_list -> id_dimensions
 Rule 49    reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
 Rule 50    writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
 Rule 51    writing_list -> CTESTRING COMMA writing_list
@@ -89,15 +89,15 @@ Rule 79    term_operator -> MOD
 Rule 80    factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS
 Rule 81    factor -> exp_operator opt_value
 Rule 82    factor -> opt_value
-Rule 83    id_dimensiones -> ID exp_dimension exp_dimension
-Rule 84    id_dimensiones -> ID exp_dimension
-Rule 85    id_dimensiones -> ID
+Rule 83    id_dimensions -> ID exp_dimension exp_dimension
+Rule 84    id_dimensions -> ID exp_dimension
+Rule 85    id_dimensions -> ID
 Rule 86    exp_dimension -> LEFTSQRBRACKET expresion RIGHTSQRBRACKET
 Rule 87    opt_value -> CTEINT
 Rule 88    opt_value -> CTEFLOAT
 Rule 89    opt_value -> CTECHAR
 Rule 90    opt_value -> function_call
-Rule 91    opt_value -> id_dimensiones
+Rule 91    opt_value -> id_dimensions
 
 Terminals, with rules where they appear
 
@@ -173,7 +173,7 @@ funcreturn           : 22 24
 function_call        : 36 90
 funcvoid             : 21 23
 id_declar            : 11 12 27 28
-id_dimensiones       : 39 40 41 42 43 47 48 91
+id_dimensions        : 39 40 41 42 43 47 48 91
 ids_list             : 47 49
 loop                 : 35
 non_conditional      : 58
@@ -577,11 +577,11 @@ state 35
     (34) statute -> . decision
     (35) statute -> . loop
     (36) statute -> . function_call SEMICOLON
-    (39) asignation -> . id_dimensiones EQUALS expresion SEMICOLON
-    (40) asignation -> . id_dimensiones PLUSEQUALS expresion SEMICOLON
-    (41) asignation -> . id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON
-    (42) asignation -> . id_dimensiones INCREMENT SEMICOLON
-    (43) asignation -> . id_dimensiones DECREMENT SEMICOLON
+    (39) asignation -> . id_dimensions EQUALS expresion SEMICOLON
+    (40) asignation -> . id_dimensions PLUSEQUALS expresion SEMICOLON
+    (41) asignation -> . id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
+    (42) asignation -> . id_dimensions INCREMENT SEMICOLON
+    (43) asignation -> . id_dimensions DECREMENT SEMICOLON
     (49) reading -> . READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
     (50) writing -> . WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
     (55) decision -> . IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
@@ -589,9 +589,9 @@ state 35
     (57) loop -> . conditional block
     (58) loop -> . non_conditional block
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
     (59) conditional -> . WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
     (60) non_conditional -> . FOR ID EQUALS exp TO exp DO
 
@@ -611,7 +611,7 @@ state 35
     decision                       shift and go to state 51
     loop                           shift and go to state 52
     function_call                  shift and go to state 53
-    id_dimensiones                 shift and go to state 54
+    id_dimensions                  shift and go to state 54
     conditional                    shift and go to state 58
     non_conditional                shift and go to state 59
 
@@ -785,11 +785,11 @@ state 47
     (34) statute -> . decision
     (35) statute -> . loop
     (36) statute -> . function_call SEMICOLON
-    (39) asignation -> . id_dimensiones EQUALS expresion SEMICOLON
-    (40) asignation -> . id_dimensiones PLUSEQUALS expresion SEMICOLON
-    (41) asignation -> . id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON
-    (42) asignation -> . id_dimensiones INCREMENT SEMICOLON
-    (43) asignation -> . id_dimensiones DECREMENT SEMICOLON
+    (39) asignation -> . id_dimensions EQUALS expresion SEMICOLON
+    (40) asignation -> . id_dimensions PLUSEQUALS expresion SEMICOLON
+    (41) asignation -> . id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
+    (42) asignation -> . id_dimensions INCREMENT SEMICOLON
+    (43) asignation -> . id_dimensions DECREMENT SEMICOLON
     (49) reading -> . READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
     (50) writing -> . WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
     (55) decision -> . IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
@@ -797,9 +797,9 @@ state 47
     (57) loop -> . conditional block
     (58) loop -> . non_conditional block
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
     (59) conditional -> . WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
     (60) non_conditional -> . FOR ID EQUALS exp TO exp DO
 
@@ -819,7 +819,7 @@ state 47
     decision                       shift and go to state 51
     loop                           shift and go to state 52
     function_call                  shift and go to state 53
-    id_dimensiones                 shift and go to state 54
+    id_dimensions                  shift and go to state 54
     conditional                    shift and go to state 58
     non_conditional                shift and go to state 59
 
@@ -897,11 +897,11 @@ state 53
 
 state 54
 
-    (39) asignation -> id_dimensiones . EQUALS expresion SEMICOLON
-    (40) asignation -> id_dimensiones . PLUSEQUALS expresion SEMICOLON
-    (41) asignation -> id_dimensiones . SUBSTRACTEQUALS expresion SEMICOLON
-    (42) asignation -> id_dimensiones . INCREMENT SEMICOLON
-    (43) asignation -> id_dimensiones . DECREMENT SEMICOLON
+    (39) asignation -> id_dimensions . EQUALS expresion SEMICOLON
+    (40) asignation -> id_dimensions . PLUSEQUALS expresion SEMICOLON
+    (41) asignation -> id_dimensions . SUBSTRACTEQUALS expresion SEMICOLON
+    (42) asignation -> id_dimensions . INCREMENT SEMICOLON
+    (43) asignation -> id_dimensions . DECREMENT SEMICOLON
 
     EQUALS          shift and go to state 80
     PLUSEQUALS      shift and go to state 81
@@ -955,36 +955,36 @@ state 59
 state 60
 
     (46) function_call -> ID . LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> ID . exp_dimension exp_dimension
-    (84) id_dimensiones -> ID . exp_dimension
-    (85) id_dimensiones -> ID .
+    (83) id_dimensions -> ID . exp_dimension exp_dimension
+    (84) id_dimensions -> ID . exp_dimension
+    (85) id_dimensions -> ID .
     (86) exp_dimension -> . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
 
     LEFTPARENTHESIS shift and go to state 90
-    EQUALS          reduce using rule 85 (id_dimensiones -> ID .)
-    PLUSEQUALS      reduce using rule 85 (id_dimensiones -> ID .)
-    SUBSTRACTEQUALS reduce using rule 85 (id_dimensiones -> ID .)
-    INCREMENT       reduce using rule 85 (id_dimensiones -> ID .)
-    DECREMENT       reduce using rule 85 (id_dimensiones -> ID .)
-    MULTIPLY        reduce using rule 85 (id_dimensiones -> ID .)
-    DIVIDE          reduce using rule 85 (id_dimensiones -> ID .)
-    MOD             reduce using rule 85 (id_dimensiones -> ID .)
-    PLUS            reduce using rule 85 (id_dimensiones -> ID .)
-    MINUS           reduce using rule 85 (id_dimensiones -> ID .)
-    COMPARISON      reduce using rule 85 (id_dimensiones -> ID .)
-    GREATERHANOREQUAL reduce using rule 85 (id_dimensiones -> ID .)
-    LESSTHANOREQUAL reduce using rule 85 (id_dimensiones -> ID .)
-    GREATERTHAN     reduce using rule 85 (id_dimensiones -> ID .)
-    LESSTHAN        reduce using rule 85 (id_dimensiones -> ID .)
-    DIFFERENT       reduce using rule 85 (id_dimensiones -> ID .)
-    OR              reduce using rule 85 (id_dimensiones -> ID .)
-    AND             reduce using rule 85 (id_dimensiones -> ID .)
-    SEMICOLON       reduce using rule 85 (id_dimensiones -> ID .)
-    COMMA           reduce using rule 85 (id_dimensiones -> ID .)
-    RIGHTPARENTHESIS reduce using rule 85 (id_dimensiones -> ID .)
-    RIGHTSQRBRACKET reduce using rule 85 (id_dimensiones -> ID .)
-    TO              reduce using rule 85 (id_dimensiones -> ID .)
-    DO              reduce using rule 85 (id_dimensiones -> ID .)
+    EQUALS          reduce using rule 85 (id_dimensions -> ID .)
+    PLUSEQUALS      reduce using rule 85 (id_dimensions -> ID .)
+    SUBSTRACTEQUALS reduce using rule 85 (id_dimensions -> ID .)
+    INCREMENT       reduce using rule 85 (id_dimensions -> ID .)
+    DECREMENT       reduce using rule 85 (id_dimensions -> ID .)
+    MULTIPLY        reduce using rule 85 (id_dimensions -> ID .)
+    DIVIDE          reduce using rule 85 (id_dimensions -> ID .)
+    MOD             reduce using rule 85 (id_dimensions -> ID .)
+    PLUS            reduce using rule 85 (id_dimensions -> ID .)
+    MINUS           reduce using rule 85 (id_dimensions -> ID .)
+    COMPARISON      reduce using rule 85 (id_dimensions -> ID .)
+    GREATERHANOREQUAL reduce using rule 85 (id_dimensions -> ID .)
+    LESSTHANOREQUAL reduce using rule 85 (id_dimensions -> ID .)
+    GREATERTHAN     reduce using rule 85 (id_dimensions -> ID .)
+    LESSTHAN        reduce using rule 85 (id_dimensions -> ID .)
+    DIFFERENT       reduce using rule 85 (id_dimensions -> ID .)
+    OR              reduce using rule 85 (id_dimensions -> ID .)
+    AND             reduce using rule 85 (id_dimensions -> ID .)
+    SEMICOLON       reduce using rule 85 (id_dimensions -> ID .)
+    COMMA           reduce using rule 85 (id_dimensions -> ID .)
+    RIGHTPARENTHESIS reduce using rule 85 (id_dimensions -> ID .)
+    RIGHTSQRBRACKET reduce using rule 85 (id_dimensions -> ID .)
+    TO              reduce using rule 85 (id_dimensions -> ID .)
+    DO              reduce using rule 85 (id_dimensions -> ID .)
     LEFTSQRBRACKET  shift and go to state 92
 
     exp_dimension                  shift and go to state 91
@@ -1182,7 +1182,7 @@ state 79
 
 state 80
 
-    (39) asignation -> id_dimensiones EQUALS . expresion SEMICOLON
+    (39) asignation -> id_dimensions EQUALS . expresion SEMICOLON
     (61) expresion -> . exp comparators exp
     (62) expresion -> . exp
     (71) exp -> . term exp_operator exp
@@ -1198,11 +1198,11 @@ state 80
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1212,7 +1212,7 @@ state 80
     CTECHAR         shift and go to state 112
     ID              shift and go to state 60
 
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
     expresion                      shift and go to state 101
     exp                            shift and go to state 102
     term                           shift and go to state 103
@@ -1223,7 +1223,7 @@ state 80
 
 state 81
 
-    (40) asignation -> id_dimensiones PLUSEQUALS . expresion SEMICOLON
+    (40) asignation -> id_dimensions PLUSEQUALS . expresion SEMICOLON
     (61) expresion -> . exp comparators exp
     (62) expresion -> . exp
     (71) exp -> . term exp_operator exp
@@ -1239,11 +1239,11 @@ state 81
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1253,7 +1253,7 @@ state 81
     CTECHAR         shift and go to state 112
     ID              shift and go to state 60
 
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
     expresion                      shift and go to state 114
     exp                            shift and go to state 102
     term                           shift and go to state 103
@@ -1264,7 +1264,7 @@ state 81
 
 state 82
 
-    (41) asignation -> id_dimensiones SUBSTRACTEQUALS . expresion SEMICOLON
+    (41) asignation -> id_dimensions SUBSTRACTEQUALS . expresion SEMICOLON
     (61) expresion -> . exp comparators exp
     (62) expresion -> . exp
     (71) exp -> . term exp_operator exp
@@ -1280,11 +1280,11 @@ state 82
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1294,7 +1294,7 @@ state 82
     CTECHAR         shift and go to state 112
     ID              shift and go to state 60
 
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
     expresion                      shift and go to state 115
     exp                            shift and go to state 102
     term                           shift and go to state 103
@@ -1305,14 +1305,14 @@ state 82
 
 state 83
 
-    (42) asignation -> id_dimensiones INCREMENT . SEMICOLON
+    (42) asignation -> id_dimensions INCREMENT . SEMICOLON
 
     SEMICOLON       shift and go to state 116
 
 
 state 84
 
-    (43) asignation -> id_dimensiones DECREMENT . SEMICOLON
+    (43) asignation -> id_dimensions DECREMENT . SEMICOLON
 
     SEMICOLON       shift and go to state 117
 
@@ -1320,16 +1320,16 @@ state 84
 state 85
 
     (49) reading -> READ LEFTPARENTHESIS . ids_list RIGHTPARENTHESIS SEMICOLON
-    (47) ids_list -> . id_dimensiones COMMA ids_list
-    (48) ids_list -> . id_dimensiones
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (47) ids_list -> . id_dimensions COMMA ids_list
+    (48) ids_list -> . id_dimensions
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     ID              shift and go to state 120
 
     ids_list                       shift and go to state 118
-    id_dimensiones                 shift and go to state 119
+    id_dimensions                  shift and go to state 119
 
 state 86
 
@@ -1353,11 +1353,11 @@ state 86
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     CTESTRING       shift and go to state 122
     LEFTPARENTHESIS shift and go to state 106
@@ -1376,7 +1376,7 @@ state 86
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 87
 
@@ -1397,11 +1397,11 @@ state 87
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1418,7 +1418,7 @@ state 87
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 88
 
@@ -1466,11 +1466,11 @@ state 90
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1488,38 +1488,38 @@ state 90
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 91
 
-    (83) id_dimensiones -> ID exp_dimension . exp_dimension
-    (84) id_dimensiones -> ID exp_dimension .
+    (83) id_dimensions -> ID exp_dimension . exp_dimension
+    (84) id_dimensions -> ID exp_dimension .
     (86) exp_dimension -> . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
 
-    EQUALS          reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    PLUSEQUALS      reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    SUBSTRACTEQUALS reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    INCREMENT       reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    DECREMENT       reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    MULTIPLY        reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    DIVIDE          reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    MOD             reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    PLUS            reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    MINUS           reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    COMPARISON      reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    GREATERHANOREQUAL reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    LESSTHANOREQUAL reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    GREATERTHAN     reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    LESSTHAN        reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    DIFFERENT       reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    OR              reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    AND             reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    SEMICOLON       reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    COMMA           reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    RIGHTPARENTHESIS reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    RIGHTSQRBRACKET reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    TO              reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
-    DO              reduce using rule 84 (id_dimensiones -> ID exp_dimension .)
+    EQUALS          reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    PLUSEQUALS      reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    SUBSTRACTEQUALS reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    INCREMENT       reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    DECREMENT       reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    MULTIPLY        reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    DIVIDE          reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    MOD             reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    PLUS            reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    MINUS           reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    COMPARISON      reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    GREATERHANOREQUAL reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    LESSTHANOREQUAL reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    GREATERTHAN     reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    LESSTHAN        reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    DIFFERENT       reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    OR              reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    AND             reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    SEMICOLON       reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    COMMA           reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    RIGHTPARENTHESIS reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    RIGHTSQRBRACKET reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    TO              reduce using rule 84 (id_dimensions -> ID exp_dimension .)
+    DO              reduce using rule 84 (id_dimensions -> ID exp_dimension .)
     LEFTSQRBRACKET  shift and go to state 92
 
     exp_dimension                  shift and go to state 127
@@ -1542,11 +1542,11 @@ state 92
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1563,7 +1563,7 @@ state 92
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 93
 
@@ -1583,11 +1583,11 @@ state 93
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1604,7 +1604,7 @@ state 93
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 94
 
@@ -1666,32 +1666,32 @@ state 99
 
 state 100
 
-    (91) opt_value -> id_dimensiones .
+    (91) opt_value -> id_dimensions .
 
-    MULTIPLY        reduce using rule 91 (opt_value -> id_dimensiones .)
-    DIVIDE          reduce using rule 91 (opt_value -> id_dimensiones .)
-    MOD             reduce using rule 91 (opt_value -> id_dimensiones .)
-    PLUS            reduce using rule 91 (opt_value -> id_dimensiones .)
-    MINUS           reduce using rule 91 (opt_value -> id_dimensiones .)
-    COMPARISON      reduce using rule 91 (opt_value -> id_dimensiones .)
-    GREATERHANOREQUAL reduce using rule 91 (opt_value -> id_dimensiones .)
-    LESSTHANOREQUAL reduce using rule 91 (opt_value -> id_dimensiones .)
-    GREATERTHAN     reduce using rule 91 (opt_value -> id_dimensiones .)
-    LESSTHAN        reduce using rule 91 (opt_value -> id_dimensiones .)
-    DIFFERENT       reduce using rule 91 (opt_value -> id_dimensiones .)
-    OR              reduce using rule 91 (opt_value -> id_dimensiones .)
-    AND             reduce using rule 91 (opt_value -> id_dimensiones .)
-    SEMICOLON       reduce using rule 91 (opt_value -> id_dimensiones .)
-    COMMA           reduce using rule 91 (opt_value -> id_dimensiones .)
-    RIGHTPARENTHESIS reduce using rule 91 (opt_value -> id_dimensiones .)
-    RIGHTSQRBRACKET reduce using rule 91 (opt_value -> id_dimensiones .)
-    TO              reduce using rule 91 (opt_value -> id_dimensiones .)
-    DO              reduce using rule 91 (opt_value -> id_dimensiones .)
+    MULTIPLY        reduce using rule 91 (opt_value -> id_dimensions .)
+    DIVIDE          reduce using rule 91 (opt_value -> id_dimensions .)
+    MOD             reduce using rule 91 (opt_value -> id_dimensions .)
+    PLUS            reduce using rule 91 (opt_value -> id_dimensions .)
+    MINUS           reduce using rule 91 (opt_value -> id_dimensions .)
+    COMPARISON      reduce using rule 91 (opt_value -> id_dimensions .)
+    GREATERHANOREQUAL reduce using rule 91 (opt_value -> id_dimensions .)
+    LESSTHANOREQUAL reduce using rule 91 (opt_value -> id_dimensions .)
+    GREATERTHAN     reduce using rule 91 (opt_value -> id_dimensions .)
+    LESSTHAN        reduce using rule 91 (opt_value -> id_dimensions .)
+    DIFFERENT       reduce using rule 91 (opt_value -> id_dimensions .)
+    OR              reduce using rule 91 (opt_value -> id_dimensions .)
+    AND             reduce using rule 91 (opt_value -> id_dimensions .)
+    SEMICOLON       reduce using rule 91 (opt_value -> id_dimensions .)
+    COMMA           reduce using rule 91 (opt_value -> id_dimensions .)
+    RIGHTPARENTHESIS reduce using rule 91 (opt_value -> id_dimensions .)
+    RIGHTSQRBRACKET reduce using rule 91 (opt_value -> id_dimensions .)
+    TO              reduce using rule 91 (opt_value -> id_dimensions .)
+    DO              reduce using rule 91 (opt_value -> id_dimensions .)
 
 
 state 101
 
-    (39) asignation -> id_dimensiones EQUALS expresion . SEMICOLON
+    (39) asignation -> id_dimensions EQUALS expresion . SEMICOLON
 
     SEMICOLON       shift and go to state 132
 
@@ -1757,11 +1757,11 @@ state 104
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     CTEINT          shift and go to state 110
     CTEFLOAT        shift and go to state 111
@@ -1770,7 +1770,7 @@ state 104
 
     opt_value                      shift and go to state 143
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 105
 
@@ -1820,11 +1820,11 @@ state 106
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -1841,7 +1841,7 @@ state 106
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 107
 
@@ -1996,42 +1996,42 @@ state 113
 
 state 114
 
-    (40) asignation -> id_dimensiones PLUSEQUALS expresion . SEMICOLON
+    (40) asignation -> id_dimensions PLUSEQUALS expresion . SEMICOLON
 
     SEMICOLON       shift and go to state 149
 
 
 state 115
 
-    (41) asignation -> id_dimensiones SUBSTRACTEQUALS expresion . SEMICOLON
+    (41) asignation -> id_dimensions SUBSTRACTEQUALS expresion . SEMICOLON
 
     SEMICOLON       shift and go to state 150
 
 
 state 116
 
-    (42) asignation -> id_dimensiones INCREMENT SEMICOLON .
+    (42) asignation -> id_dimensions INCREMENT SEMICOLON .
 
-    READ            reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    WRITE           reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    IF              reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    ID              reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    WHILE           reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    FOR             reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 42 (asignation -> id_dimensiones INCREMENT SEMICOLON .)
+    READ            reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    WRITE           reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    IF              reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    ID              reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    WHILE           reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    FOR             reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 42 (asignation -> id_dimensions INCREMENT SEMICOLON .)
 
 
 state 117
 
-    (43) asignation -> id_dimensiones DECREMENT SEMICOLON .
+    (43) asignation -> id_dimensions DECREMENT SEMICOLON .
 
-    READ            reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    WRITE           reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    IF              reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    ID              reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    WHILE           reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    FOR             reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 43 (asignation -> id_dimensiones DECREMENT SEMICOLON .)
+    READ            reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    WRITE           reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    IF              reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    ID              reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    WHILE           reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    FOR             reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 43 (asignation -> id_dimensions DECREMENT SEMICOLON .)
 
 
 state 118
@@ -2043,22 +2043,22 @@ state 118
 
 state 119
 
-    (47) ids_list -> id_dimensiones . COMMA ids_list
-    (48) ids_list -> id_dimensiones .
+    (47) ids_list -> id_dimensions . COMMA ids_list
+    (48) ids_list -> id_dimensions .
 
     COMMA           shift and go to state 152
-    RIGHTPARENTHESIS reduce using rule 48 (ids_list -> id_dimensiones .)
+    RIGHTPARENTHESIS reduce using rule 48 (ids_list -> id_dimensions .)
 
 
 state 120
 
-    (83) id_dimensiones -> ID . exp_dimension exp_dimension
-    (84) id_dimensiones -> ID . exp_dimension
-    (85) id_dimensiones -> ID .
+    (83) id_dimensions -> ID . exp_dimension exp_dimension
+    (84) id_dimensions -> ID . exp_dimension
+    (85) id_dimensions -> ID .
     (86) exp_dimension -> . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
 
-    COMMA           reduce using rule 85 (id_dimensiones -> ID .)
-    RIGHTPARENTHESIS reduce using rule 85 (id_dimensiones -> ID .)
+    COMMA           reduce using rule 85 (id_dimensions -> ID .)
+    RIGHTPARENTHESIS reduce using rule 85 (id_dimensions -> ID .)
     LEFTSQRBRACKET  shift and go to state 92
 
     exp_dimension                  shift and go to state 91
@@ -2114,32 +2114,32 @@ state 126
 
 state 127
 
-    (83) id_dimensiones -> ID exp_dimension exp_dimension .
+    (83) id_dimensions -> ID exp_dimension exp_dimension .
 
-    EQUALS          reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    PLUSEQUALS      reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    SUBSTRACTEQUALS reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    INCREMENT       reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    DECREMENT       reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    MULTIPLY        reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    DIVIDE          reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    MOD             reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    PLUS            reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    MINUS           reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    COMPARISON      reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    GREATERHANOREQUAL reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    LESSTHANOREQUAL reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    GREATERTHAN     reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    LESSTHAN        reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    DIFFERENT       reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    OR              reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    AND             reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    SEMICOLON       reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    COMMA           reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    RIGHTPARENTHESIS reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    RIGHTSQRBRACKET reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    TO              reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
-    DO              reduce using rule 83 (id_dimensiones -> ID exp_dimension exp_dimension .)
+    EQUALS          reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    PLUSEQUALS      reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    SUBSTRACTEQUALS reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    INCREMENT       reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    DECREMENT       reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    MULTIPLY        reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    DIVIDE          reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    MOD             reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    PLUS            reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    MINUS           reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    COMPARISON      reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    GREATERHANOREQUAL reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    LESSTHANOREQUAL reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    GREATERTHAN     reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    LESSTHAN        reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    DIFFERENT       reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    OR              reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    AND             reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    SEMICOLON       reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    COMMA           reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    RIGHTPARENTHESIS reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    RIGHTSQRBRACKET reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    TO              reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
+    DO              reduce using rule 83 (id_dimensions -> ID exp_dimension exp_dimension .)
 
 
 state 128
@@ -2172,11 +2172,11 @@ state 130
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2192,7 +2192,7 @@ state 130
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 131
 
@@ -2212,15 +2212,15 @@ state 131
 
 state 132
 
-    (39) asignation -> id_dimensiones EQUALS expresion SEMICOLON .
+    (39) asignation -> id_dimensions EQUALS expresion SEMICOLON .
 
-    READ            reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    IF              reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    ID              reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 39 (asignation -> id_dimensiones EQUALS expresion SEMICOLON .)
+    READ            reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    WRITE           reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    IF              reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    ID              reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    WHILE           reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    FOR             reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 39 (asignation -> id_dimensions EQUALS expresion SEMICOLON .)
 
 
 state 133
@@ -2239,11 +2239,11 @@ state 133
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2259,7 +2259,7 @@ state 133
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 134
 
@@ -2381,11 +2381,11 @@ state 142
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2401,7 +2401,7 @@ state 142
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 143
 
@@ -2442,11 +2442,11 @@ state 144
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2461,7 +2461,7 @@ state 144
     exp_operator                   shift and go to state 104
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 145
 
@@ -2511,28 +2511,28 @@ state 148
 
 state 149
 
-    (40) asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .
+    (40) asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .
 
-    READ            reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    IF              reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    ID              reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 40 (asignation -> id_dimensiones PLUSEQUALS expresion SEMICOLON .)
+    READ            reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    WRITE           reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    IF              reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    ID              reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    WHILE           reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    FOR             reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 40 (asignation -> id_dimensions PLUSEQUALS expresion SEMICOLON .)
 
 
 state 150
 
-    (41) asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .
+    (41) asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .
 
-    READ            reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    IF              reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    ID              reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 41 (asignation -> id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON .)
+    READ            reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    WRITE           reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    IF              reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    ID              reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    WHILE           reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    FOR             reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 41 (asignation -> id_dimensions SUBSTRACTEQUALS expresion SEMICOLON .)
 
 
 state 151
@@ -2544,16 +2544,16 @@ state 151
 
 state 152
 
-    (47) ids_list -> id_dimensiones COMMA . ids_list
-    (47) ids_list -> . id_dimensiones COMMA ids_list
-    (48) ids_list -> . id_dimensiones
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (47) ids_list -> id_dimensions COMMA . ids_list
+    (47) ids_list -> . id_dimensions COMMA ids_list
+    (48) ids_list -> . id_dimensions
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     ID              shift and go to state 120
 
-    id_dimensiones                 shift and go to state 119
+    id_dimensions                  shift and go to state 119
     ids_list                       shift and go to state 168
 
 state 153
@@ -2585,11 +2585,11 @@ state 154
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     CTESTRING       shift and go to state 122
     LEFTPARENTHESIS shift and go to state 106
@@ -2608,7 +2608,7 @@ state 154
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 155
 
@@ -2632,11 +2632,11 @@ state 155
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     CTESTRING       shift and go to state 122
     LEFTPARENTHESIS shift and go to state 106
@@ -2655,7 +2655,7 @@ state 155
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 156
 
@@ -2710,11 +2710,11 @@ state 158
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2732,7 +2732,7 @@ state 158
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 159
 
@@ -2878,9 +2878,9 @@ state 167
 
 state 168
 
-    (47) ids_list -> id_dimensiones COMMA ids_list .
+    (47) ids_list -> id_dimensions COMMA ids_list .
 
-    RIGHTPARENTHESIS reduce using rule 47 (ids_list -> id_dimensiones COMMA ids_list .)
+    RIGHTPARENTHESIS reduce using rule 47 (ids_list -> id_dimensions COMMA ids_list .)
 
 
 state 169
@@ -2951,11 +2951,11 @@ state 175
     (88) opt_value -> . CTEFLOAT
     (89) opt_value -> . CTECHAR
     (90) opt_value -> . function_call
-    (91) opt_value -> . id_dimensiones
+    (91) opt_value -> . id_dimensions
     (46) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (83) id_dimensiones -> . ID exp_dimension exp_dimension
-    (84) id_dimensiones -> . ID exp_dimension
-    (85) id_dimensiones -> . ID
+    (83) id_dimensions -> . ID exp_dimension exp_dimension
+    (84) id_dimensions -> . ID exp_dimension
+    (85) id_dimensions -> . ID
 
     LEFTPARENTHESIS shift and go to state 106
     PLUS            shift and go to state 108
@@ -2971,7 +2971,7 @@ state 175
     factor                         shift and go to state 105
     opt_value                      shift and go to state 107
     function_call                  shift and go to state 113
-    id_dimensiones                 shift and go to state 100
+    id_dimensions                  shift and go to state 100
 
 state 176
 

@@ -268,11 +268,11 @@ def p_statutes_list(p):
 
 def p_asignation(p):
     '''
-    asignation : id_dimensiones EQUALS expresion SEMICOLON
-               | id_dimensiones PLUSEQUALS expresion SEMICOLON
-               | id_dimensiones SUBSTRACTEQUALS expresion SEMICOLON
-               | id_dimensiones INCREMENT SEMICOLON
-               | id_dimensiones DECREMENT SEMICOLON
+    asignation : id_dimensions EQUALS expresion SEMICOLON
+               | id_dimensions PLUSEQUALS expresion SEMICOLON
+               | id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
+               | id_dimensions INCREMENT SEMICOLON
+               | id_dimensions DECREMENT SEMICOLON
     '''
     pass
 
@@ -294,8 +294,8 @@ def p_function_call(p):
 
 def p_ids_list(p):
     '''
-    ids_list : id_dimensiones COMMA ids_list
-             | id_dimensiones
+    ids_list : id_dimensions COMMA ids_list
+             | id_dimensions
     '''
     pass
 
@@ -418,9 +418,9 @@ def p_factor(p):
     pass
 
 
-def p_id_dimensiones(p):
+def p_id_dimensions(p):
     '''
-    id_dimensiones : ID exp_dimension exp_dimension
+    id_dimensions : ID exp_dimension exp_dimension
                    | ID exp_dimension
                    | ID
     '''
@@ -440,7 +440,7 @@ def p_opt_value(p):
               | CTEFLOAT
               | CTECHAR
               | function_call
-              | id_dimensiones
+              | id_dimensions
     '''
     pass
 
