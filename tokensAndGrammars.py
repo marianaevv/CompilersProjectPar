@@ -1,7 +1,11 @@
+#A00513571 Mariana Villegas
+#A00820323 Noé Campos
+
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+err = False
 # Tokens definition
 tokens = [
     # Arithmetic Operators
@@ -130,19 +134,10 @@ def t_CTEINT(t):
     return t
 
 
+
 lexer = lex.lex()
 
 
-lexer.input(
-    '- + * / % ++ -- == != > < >= <= & | = += -= resultado : ; , { } ( ) 32 32.55 "A" "abasd_ \#!#c"')
-while True:
-    tok = lexer.token()
-    if not tok:
-        break
-    print(tok)
-
-
-# Grammars Definitions
 def p_program(p):
     '''
     program : PROGRAM ID SEMICOLON vars funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
@@ -416,3 +411,21 @@ def p_valor_opt(p):
               | CTEFLOAT
     '''
     pass
+
+def p_error(p):
+    global err
+    err = True
+    print("\nNo apropiado\n")
+
+parser = yacc.yacc()
+
+try: 
+    fileName = input("\nIngresa el nombre del archivo: ")
+    filehandle = open(fileName, "r")
+    srcFile = filehandle.read()
+    result = parser.parse(srcFile)
+
+    if not err:
+        print("\nApropiado\n")
+except:
+    print("\nEl archivo no fue encontrado\n")
