@@ -131,6 +131,10 @@ def t_CTEINT(t):
     t.value = int(t.value)
     return t
 
+def t_CTEBOOL(t):
+    r'(true|false)'
+    t.value (t.value == "true")
+    return t
 
 def t_error(token):
     print('No apropiado')
