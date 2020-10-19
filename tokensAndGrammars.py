@@ -5,7 +5,9 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
-err = False
+# Flag to know if there was an error or not
+bError = False
+
 # Tokens definition
 tokens = [
     # Arithmetic Operators
@@ -32,7 +34,6 @@ tokens = [
     'SUBSTRACTEQUALS',
     # Others
     'ID',
-    'COLON',
     'COMMA',
     'LEFTBRACKET',
     'RIGHTBRACKET',
@@ -52,6 +53,7 @@ reserved = {
     'int': 'INT',
     'float': 'FLOAT',
     'char': 'CHAR',
+    'void': 'VOID',
     'var': 'VAR',
     'module': 'MODULE',
     'return': 'RETURN',
@@ -64,7 +66,7 @@ reserved = {
     'else': 'ELSE',
     'read': 'READ',
     'write': 'WRITE',
-    'Program': 'PROGRAM',
+    'program': 'PROGRAM',
     'main': 'MAIN'
 }
 
@@ -99,7 +101,6 @@ t_RIGHTSQRBRACKET = r'\]'
 t_LEFTPARENTHESIS = r'\('
 t_RIGHTPARENTHESIS = r'\)'
 t_COMMA = r'\,'
-t_COLON = r'\:'
 t_SEMICOLON = r'\;'
 t_ignore = ' \t\n'
 
@@ -133,47 +134,62 @@ def t_CTEINT(t):
     t.value = int(t.value)
     return t
 
+def t_CTEBOOL(t):
+    r'(true|false)'
+    t.value (t.value == "true")
+    return t
+
+def t_error(token):
+    print('No apropiado')
+    token.lexer.skip(1)
 
 
 lexer = lex.lex()
 
-
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON vars main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON funciones main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
-            | PROGRAM ID SEMICOLON main LEFTPARENTHESIS RIGHTPARENTHESIS bloque
+    program : PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON funciones MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
     pass
 
 
 def p_vars(p):
     '''
-    vars : VAR vartipo
+    vars : VAR vars_list
     '''
     pass
 
 
-def p_vartipo(p):
+def p_vars_list(p):
     '''
-    vartipo : tipo COLON ids SEMICOLON vartipo
-            | tipo COLON ids SEMICOLON 
-    '''
-    pass
-
-
-def p_ids(p):
-    '''
-    ids : declaraid COMMA ids
-        | declaraid
+    vars_list : data_type decl_ids_list SEMICOLON vars_list
+              | data_type decl_ids_list SEMICOLON funciones
+              | data_type decl_ids_list SEMICOLON
     '''
     pass
 
 
-def p_declaraid(p):
+def p_data_type(p):
     '''
-    declaraid : ID dimen_declara dimen_declara
+    data_type : INT
+              | FLOAT
+              | CHAR
+    '''
+    pass
+
+def p_decl_ids_list(p):
+    '''
+    decl_ids_list : id_declar COMMA decl_ids_list
+                  | id_declar
+    '''
+    pass
+
+
+def p_id_declar(p):
+    '''
+    id_declar : ID dimen_declara dimen_declara
               | ID dimen_declara
               | ID
     '''
@@ -187,27 +203,18 @@ def p_dimen_declara(p):
     pass
 
 
-def p_tipo(p):
-    '''
-    tipo : INT
-         | FLOAT
-         | CHAR
-    '''
-    pass
-
-
 def p_funcvoid(p):
     '''
-    funcvoid : MODULE ID PARAMETROS SEMICOLON vars bloque
-             | MODULE ID PARAMETROS SEMICOLON bloque
+    funcvoid : VOID MODULE ID parameters vars block
+             | VOID MODULE ID parameters block
     '''
     pass
 
 
-def p_funcreturn(p):  # To be fixed
+def p_funcreturn(p):
     '''
-    funcreturn : tipo MODULE ID PARAMETROS SEMICOLON vars bloque
-               | tipo MODULE ID PARAMETROS SEMICOLON bloque
+    funcreturn : data_type MODULE ID parameters vars block
+               | data_type MODULE ID parameters block
     '''
     pass
 
@@ -215,180 +222,196 @@ def p_funcreturn(p):  # To be fixed
 def p_funciones(p):
     '''
     funciones : funcvoid funciones
-              | funcreturn funciones
-              | funcvoid
-              | funcreturn
+            | funcreturn funciones
+            | funcvoid
+            | funcreturn
     '''
     pass
 
 
-def p_parametros(p):
+def p_parameters(p):
     '''
-    parametros : LEFTPARENTHESIS tipo ids RIGHTPARENTHESIS
-    '''
-    pass
-
-
-def p_bloque(p):
-    '''
-    bloque : LEFTBRACKET mas_estatutos RIGHTBRACKET
-           | LEFTBRACKET RIGHTBRACKET
+    parameters : LEFTPARENTHESIS parameters_list RIGHTPARENTHESIS
+               | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
     pass
 
 
-def p_mas_estatutos(p):
+def p_parameters_list(p):
     '''
-    mas_estatutos : estatuto mas_estatutos
-                  | estatuto
-    '''
-    pass
-
-
-def p_estatuto(p):
-    '''
-    estatuto : asignacion
-             | llamada_func
-             | lectura
-             | escritura
-             | decision
-             | repeticion
+    parameters_list : data_type id_declar COMMA parameters_list
+                    | data_type id_declar
     '''
     pass
 
 
-def p_asignacion(p):
+def p_block(p):
     '''
-    asignacion : ID dimensiones EQUALS expresion SEMICOLON
-               | ID EQUALS expresion SEMICOLON
-    '''
-    pass
-
-
-def p_dimensiones(p):
-    '''
-    dimensiones: dimension dimension
-               | dimension
+    block : LEFTBRACKET statutes_list RIGHTBRACKET
+          | LEFTBRACKET RIGHTBRACKET
     '''
     pass
 
 
-def p_dimension(p):
+def p_statute(p):
     '''
-    dimension : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    '''
-    pass
-
-
-def p_llamada_func(p):
-    '''
-    llamada_func : ID parametros SEMICOLON
+    statute : asignation
+            | reading
+            | writing
+            | decision
+            | loop
+            | function_call SEMICOLON
     '''
     pass
 
 
-def p_lectura(p):  # To be fixed (ids hace uso de declaradimensiones)
+def p_statutes_list(p):
     '''
-    lectura : READ LEFTPARENTHESIS ids RIGHTPARENTHESIS
-    '''
-    pass
-
-
-def p_escritura(p):
-    '''
-    escritura : WRITE LEFTPARENTHESIS poswrite RIGHTPARENTHESIS SEMICOLON
+    statutes_list : statute statutes_list
+                  | statute
     '''
     pass
 
 
-def p_poswrite(p):
+def p_asignation(p):
     '''
-    poswrite : CTESTRING COMMA poswrite
-             | expresion COMMA poswrite
-             | CTESTRING
-             | expresion
+    asignation : id_dimensions EQUALS expresion SEMICOLON
+               | id_dimensions PLUSEQUALS expresion SEMICOLON
+               | id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
+               | id_dimensions INCREMENT SEMICOLON
+               | id_dimensions DECREMENT SEMICOLON
+    '''
+    pass
+
+
+def p_expresion_list(p):
+    '''
+    expresion_list : expresion COMMA expresion_list
+                   | expresion
+    '''
+    pass
+
+
+def p_function_call(p):
+    '''
+    function_call : ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    '''
+    pass
+
+
+def p_ids_list(p):
+    '''
+    ids_list : id_dimensions COMMA ids_list
+             | id_dimensions
+    '''
+    pass
+
+
+def p_reading(p):
+    '''
+    reading : READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
+    '''
+    pass
+
+
+def p_writing(p):
+    '''
+    writing : WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
+    '''
+    pass
+
+
+def p_writing_list(p):
+    '''
+    writing_list : CTESTRING COMMA writing_list
+                 | expresion COMMA writing_list
+                 | CTESTRING
+                 | expresion
     '''
     pass
 
 
 def p_decision(p):
     '''
-    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque ELSE bloque
-             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN bloque
+    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
+             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block
     '''
     pass
 
 
-def p_repeticion(p):
+def p_loop(p):
     '''
-    repeticion : condicional bloque
-               | no_condicional bloque
-    '''
-    pass
-
-
-def p_condicional(p):
-    '''
-    condicional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    loop : conditional block
+         | non_conditional block
     '''
     pass
 
 
-def p_no_condicional(p):
+def p_conditional(p):
     '''
-    no_condicional : FOR ID EQUALS exp TO exp DO
+    conditional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    '''
+    pass
+
+
+def p_non_conditional(p):
+    '''
+    non_conditional : FOR ID EQUALS exp TO exp DO
     '''
     pass
 
 
 def p_expresion(p):
     '''
-    expresion : exp comparadores exp
+    expresion : exp comparators exp
               | exp
     '''
     pass
 
 
-def p_comparadores(p):
+def p_comparators(p):
     '''
-    comparadores : COMPARISON
-                 | GREATERHANOREQUAL
-                 | LESSTHANOREQUAL
-                 | GREATERTHAN
-                 | LESSTHAN
-                 | DIFFERENT
+    comparators : COMPARISON
+                | GREATERHANOREQUAL
+                | LESSTHANOREQUAL
+                | GREATERTHAN
+                | LESSTHAN
+                | DIFFERENT
+                | OR
+                | AND
     '''
     pass
 
 
 def p_exp(p):
     '''
-    exp : termino opera_exp exp
-        | termino
+    exp : term exp_operator exp
+        | term
     '''
     pass
 
 
-def p_opera_exp(p):
+def p_exp_operator(p):
     '''
-    opera_exp : PLUS
+    exp_operator : PLUS
                  | MINUS
     '''
     pass
 
 
-def p_termino(p):
+def p_term(p):
     '''
-    termino : factor opera_term termino
-            | factor
+    term : factor term_operator term
+         | factor
     '''
     pass
 
 
-def p_opera_term(p):
+def p_term_operator(p):
     '''
-    opera_term : MULTIPLY
-               | DIVIDE
+    term_operator : MULTIPLY
+                  | DIVIDE
+                  | MOD
     '''
     pass
 
@@ -396,36 +419,59 @@ def p_opera_term(p):
 def p_factor(p):
     '''
     factor : LEFTPARENTHESIS expresion RIGHTPARENTHESIS
-           | opera_exp valor_opt
-           | valor_opt
+           | exp_operator opt_value
+           | opt_value
     '''
     pass
 
 
-def p_valor_opt(p):
+def p_id_dimensions(p):
     '''
-    valor_opt : ID dimensiones
-              | ID
-              | llamada_func
-              | CTEINT
+    id_dimensions : ID exp_dimension exp_dimension
+                   | ID exp_dimension
+                   | ID
+    '''
+    pass
+
+
+def p_exp_dimension(p):
+    '''
+    exp_dimension : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    '''
+    pass
+
+
+def p_opt_value(p):
+    '''
+    opt_value : CTEINT
               | CTEFLOAT
+              | CTECHAR
+              | function_call
+              | id_dimensions
     '''
     pass
+
 
 def p_error(p):
-    global err
-    err = True
-    print("\nNo apropiado\n")
+    # Error rule for syntax errors
+    global bError
+    bError = True
+    print("\n-> No apropiado\n")
 
+
+# Build the parser
 parser = yacc.yacc()
 
-try: 
-    fileName = input("\nIngresa el nombre del archivo: ")
-    filehandle = open(fileName, "r")
-    srcFile = filehandle.read()
+try:
+    # Read the source file
+    fileName = './Input.txt'
+    f = open(fileName, "r")
+    srcFile = f.read()
+
+    # Parser the input
     result = parser.parse(srcFile)
 
-    if not err:
-        print("\nApropiado\n")
+    if not bError:
+        print("\n-> Apropiado\n")
 except:
-    print("\nEl archivo no fue encontrado\n")
+    print("\n-> No existe el archivo\n")
