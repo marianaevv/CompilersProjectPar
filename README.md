@@ -7,6 +7,7 @@ COMPILERS PROJECT PAR ++
 - [Table of contents](#tabla-de-contenidos)
 - [Avance 1](#avance1)
 - [Avance 2](#avance2)
+- [Avance 3](#avance3)
 - [Tecnologías](#tecnologías)
 
 # Avance 1
@@ -52,6 +53,18 @@ La tabla completa de estos escenarios de nuestra semántica, también conocida c
 Lo que tratamos de expresar con esta estructura es las combinaciones que se podrán realizar con el lenguage Par++ asi como las combinaciones que detonarian un error, es decir si sumamos una variable de tipo int con otra variable de tipo int el resultado será de tipo int, asi mismo con los demas operandos y los tipos de variables.
 
 El resultado err (error) nos indica que la combinación de esas variables no es posible.  
+
+# Avance 3
+[(Back to top)](#tabla-de-contenidos)
+
+En este avance se hizo un refactor del cubo semántico para un mejor rendimiento al momento de acceder a este, la tabla de funciones y variables fue implementada usando diccionarios en los cuales se definio que nuestras funciones guardarían los siguientes valores:
+
+- Nombre
+- Tipo de retorno
+- Parametros
+- Variables (scope)
+
+Ademas se implementaron algunos de los puntos neuralgicos a ocupar en nuestra gramáticas los cuales harán uso de los cuadruplos a generar, el cubo semantico, tabla de funciones y variables. 
 
 # Tecnologías
 [(Back to top)](#tabla-de-contenidos)
