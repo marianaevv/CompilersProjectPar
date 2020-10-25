@@ -1,5 +1,5 @@
-#A00513571 Mariana Villegas
-#A00820323 Noé Campos
+# A00513571 Mariana Villegas
+# A00820323 Noé Campos
 
 import ply.lex as lex
 import ply.yacc as yacc
@@ -102,8 +102,7 @@ t_LEFTPARENTHESIS = r'\('
 t_RIGHTPARENTHESIS = r'\)'
 t_COMMA = r'\,'
 t_SEMICOLON = r'\;'
-t_ignore = ' \t\n'
-
+t_ignore = ' \t'
 
 def t_CTECHAR(token):
     r'"([^"])"'
@@ -134,10 +133,15 @@ def t_CTEINT(t):
     t.value = int(t.value)
     return t
 
+
 def t_CTEBOOL(t):
     r'(true|false)'
-    t.value (t.value == "true")
+    t.value(t.value == "true")
     return t
+
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += t.value.count("\n")
 
 def t_error(token):
     print('No apropiado')
@@ -145,6 +149,7 @@ def t_error(token):
 
 
 lexer = lex.lex()
+
 
 def p_program(p):
     '''
@@ -178,6 +183,7 @@ def p_data_type(p):
               | CHAR
     '''
     pass
+
 
 def p_decl_ids_list(p):
     '''
@@ -422,6 +428,11 @@ def p_factor(p):
            | exp_operator opt_value
            | opt_value
     '''
+    for i in p:
+        print(i)
+    print(len(p))
+    print("-")
+    print()
     pass
 
 
@@ -449,7 +460,7 @@ def p_opt_value(p):
               | function_call
               | id_dimensions
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_error(p):
@@ -461,6 +472,16 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
+
+# Needed stacks (list on python)
+stackOperand = list()
+stackType = list()
+stackOperator = list()
+stackJumps = list()
+
+# Needed directories
+variableDir = {}
+
 
 try:
     # Read the source file

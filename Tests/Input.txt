@@ -1,0 +1,9 @@
+program Ejemplo;
+
+var
+    int i;
+
+main ()
+{
+    j = 3 + 2;
+}
