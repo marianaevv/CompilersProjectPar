@@ -104,6 +104,7 @@ t_COMMA = r'\,'
 t_SEMICOLON = r'\;'
 t_ignore = ' \t'
 
+
 def t_CTECHAR(token):
     r'"([^"])"'
     token.value = str(token.value)
@@ -139,9 +140,11 @@ def t_CTEBOOL(t):
     t.value(t.value == "true")
     return t
 
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
+
 
 def t_error(token):
     print('No apropiado')
@@ -151,31 +154,17 @@ def t_error(token):
 lexer = lex.lex()
 
 
+# ====================== Main ======================
 def p_program(p):
     '''
     program : PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON funciones MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON functions_list MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
             | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
     pass
 
 
-def p_vars(p):
-    '''
-    vars : VAR vars_list
-    '''
-    pass
-
-
-def p_vars_list(p):
-    '''
-    vars_list : data_type decl_ids_list SEMICOLON vars_list
-              | data_type decl_ids_list SEMICOLON funciones
-              | data_type decl_ids_list SEMICOLON
-    '''
-    pass
-
-
+# ====================== Variables ======================
 def p_data_type(p):
     '''
     data_type : INT
@@ -185,88 +174,124 @@ def p_data_type(p):
     pass
 
 
-def p_decl_ids_list(p):
+def p_vars(p):
     '''
-    decl_ids_list : id_declar COMMA decl_ids_list
-                  | id_declar
-    '''
-    pass
-
-
-def p_id_declar(p):
-    '''
-    id_declar : ID dimen_declara dimen_declara
-              | ID dimen_declara
-              | ID
+    vars : VAR vars_lists
     '''
     pass
 
 
-def p_dimen_declara(p):
+def p_vars_lists(p):
     '''
-    dimen_declara : LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
-    '''
-    pass
-
-
-def p_funcvoid(p):
-    '''
-    funcvoid : VOID MODULE ID parameters vars block
-             | VOID MODULE ID parameters block
+    vars_lists : data_type ids_list SEMICOLON vars_lists
+               | data_type ids_list SEMICOLON functions_list
+               | data_type ids_list SEMICOLON
     '''
     pass
 
 
-def p_funcreturn(p):
+def p_ids_list(p):
     '''
-    funcreturn : data_type MODULE ID parameters vars block
-               | data_type MODULE ID parameters block
-    '''
-    pass
-
-
-def p_funciones(p):
-    '''
-    funciones : funcvoid funciones
-            | funcreturn funciones
-            | funcvoid
-            | funcreturn
+    ids_list : identifier COMMA ids_list
+             | identifier
     '''
     pass
 
 
-def p_parameters(p):
+def p_identifier(p):
     '''
-    parameters : LEFTPARENTHESIS parameters_list RIGHTPARENTHESIS
-               | LEFTPARENTHESIS RIGHTPARENTHESIS
+    identifier : ID id_dimensions id_dimensions
+               | ID id_dimensions
+               | ID
+    '''
+    pass
+
+
+def p_id_dimensions(p):
+    '''
+    id_dimensions : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    '''
+    pass
+
+# ====================== Functions ======================
+
+
+def p_return_type(p):
+    '''
+    return_type : data_type
+                | VOID
+    '''
+    pass
+
+
+def p_function(p):
+    '''
+    function : return_type MODULE ID parameters_list vars block
+             | return_type MODULE ID parameters_list block
+    '''
+
+
+def p_functions_list(p):
+    '''
+    functions_list : function functions_list
+                   | function
     '''
     pass
 
 
 def p_parameters_list(p):
     '''
-    parameters_list : data_type id_declar COMMA parameters_list
-                    | data_type id_declar
+    parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS
+                    | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
     pass
 
 
+def p_parameter(p):
+    '''
+    parameter : data_type identifier COMMA parameter
+              | data_type identifier
+    '''
+    pass
+
+
+# ====================== Operators ======================
+def p_comparators(p):
+    '''
+    comparators : COMPARISON
+                | GREATERHANOREQUAL
+                | LESSTHANOREQUAL
+                | GREATERTHAN
+                | LESSTHAN
+                | DIFFERENT
+                | OR
+                | AND
+    '''
+    pass
+
+
+def p_exp_operator(p):
+    '''
+    exp_operator : PLUS
+                 | MINUS
+    '''
+    pass
+
+
+def p_term_operator(p):
+    '''
+    term_operator : MULTIPLY
+                  | DIVIDE
+                  | MOD
+    '''
+    pass
+
+
+# ====================== Statutes ======================
 def p_block(p):
     '''
     block : LEFTBRACKET statutes_list RIGHTBRACKET
           | LEFTBRACKET RIGHTBRACKET
-    '''
-    pass
-
-
-def p_statute(p):
-    '''
-    statute : asignation
-            | reading
-            | writing
-            | decision
-            | loop
-            | function_call SEMICOLON
     '''
     pass
 
@@ -279,36 +304,26 @@ def p_statutes_list(p):
     pass
 
 
+def p_statute(p):
+    '''
+    statute : asignation
+            | reading
+            | writing
+            | decision
+            | loop
+            | function_return
+            | function_call SEMICOLON
+    '''
+    pass
+
+
 def p_asignation(p):
     '''
-    asignation : id_dimensions EQUALS expresion SEMICOLON
-               | id_dimensions PLUSEQUALS expresion SEMICOLON
-               | id_dimensions SUBSTRACTEQUALS expresion SEMICOLON
-               | id_dimensions INCREMENT SEMICOLON
-               | id_dimensions DECREMENT SEMICOLON
-    '''
-    pass
-
-
-def p_expresion_list(p):
-    '''
-    expresion_list : expresion COMMA expresion_list
-                   | expresion
-    '''
-    pass
-
-
-def p_function_call(p):
-    '''
-    function_call : ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    '''
-    pass
-
-
-def p_ids_list(p):
-    '''
-    ids_list : id_dimensions COMMA ids_list
-             | id_dimensions
+    asignation : identifier EQUALS expresion SEMICOLON
+               | identifier PLUSEQUALS expresion SEMICOLON
+               | identifier SUBSTRACTEQUALS expresion SEMICOLON
+               | identifier INCREMENT SEMICOLON
+               | identifier DECREMENT SEMICOLON
     '''
     pass
 
@@ -367,24 +382,31 @@ def p_non_conditional(p):
     pass
 
 
-def p_expresion(p):
+def p_function_return(p):
     '''
-    expresion : exp comparators exp
-              | exp
+    function_return : RETURN LEFTPARENTHESIS exp RIGHTPARENTHESIS SEMICOLON
+    '''
+
+
+def p_function_call(p):
+    '''
+    function_call : ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
     '''
     pass
 
 
-def p_comparators(p):
+def p_expresion_list(p):
     '''
-    comparators : COMPARISON
-                | GREATERHANOREQUAL
-                | LESSTHANOREQUAL
-                | GREATERTHAN
-                | LESSTHAN
-                | DIFFERENT
-                | OR
-                | AND
+    expresion_list : expresion COMMA expresion_list
+                   | expresion
+    '''
+    pass
+
+
+def p_expresion(p):
+    '''
+    expresion : exp comparators exp
+              | exp
     '''
     pass
 
@@ -397,27 +419,10 @@ def p_exp(p):
     pass
 
 
-def p_exp_operator(p):
-    '''
-    exp_operator : PLUS
-                 | MINUS
-    '''
-    pass
-
-
 def p_term(p):
     '''
     term : factor term_operator term
          | factor
-    '''
-    pass
-
-
-def p_term_operator(p):
-    '''
-    term_operator : MULTIPLY
-                  | DIVIDE
-                  | MOD
     '''
     pass
 
@@ -428,27 +433,6 @@ def p_factor(p):
            | exp_operator opt_value
            | opt_value
     '''
-    for i in p:
-        print(i)
-    print(len(p))
-    print("-")
-    print()
-    pass
-
-
-def p_id_dimensions(p):
-    '''
-    id_dimensions : ID exp_dimension exp_dimension
-                   | ID exp_dimension
-                   | ID
-    '''
-    pass
-
-
-def p_exp_dimension(p):
-    '''
-    exp_dimension : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    '''
     pass
 
 
@@ -458,9 +442,9 @@ def p_opt_value(p):
               | CTEFLOAT
               | CTECHAR
               | function_call
-              | id_dimensions
+              | identifier
     '''
-    p[0] = p[1]
+    pass
 
 
 def p_error(p):
@@ -479,13 +463,9 @@ stackType = list()
 stackOperator = list()
 stackJumps = list()
 
-# Needed directories
-variableDir = {}
-
-
 try:
     # Read the source file
-    fileName = './Input.txt'
+    fileName = './Tests/Input2.txt'
     f = open(fileName, "r")
     srcFile = f.read()
 

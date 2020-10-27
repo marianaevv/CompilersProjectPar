@@ -149,7 +149,7 @@ class SemanticCube:
     def verifyOperations(self, operator, leftOperand, rightOper):
         """
         Function that checks the type of the operations and return
-        the result of the operation
+        the result type of the operation or it is a invalid operation
         """
         ArithmeticOps = ['+', '-', '*', '%']
         Division = ['/']

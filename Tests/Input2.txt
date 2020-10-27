@@ -10,9 +10,9 @@ int module fact(int j)
 var int iJ;
 {i = j + (p - j * 2 + j);
 if(j == 1) then
- { }
+ { return(j);}
  else
- {}
+ {return (j + fact(j));}
 }
 
 void module inicia(int y)
