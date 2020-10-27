@@ -4,9 +4,16 @@ class FunctionTable:
         """
         Initializes the dictionary that works as a variable table
         """
-        self.__functionTable = {}
+        self.__functionTable = {
+            'global': {
+                'returnType': 'void',
+                'numParameters': 0,
+                'typeParameters': [],
+                'varTable': {}
+            }
+        }
 
-    def addNewFunction(self, funcName, returnType, numParameters, typeParameters):
+    def addNewFunction(self, funcName, returnType):
         """
         Add new function data into the Function Table after making 
         the needed validations.
@@ -14,8 +21,6 @@ class FunctionTable:
         Args:
             funcName (string): Function name
             returnType (string): Function return type
-            numParameters (integer): Number of parameters the function has
-            typeParameters (list): List with the parameters data type
         """
 
         # Check if the function name is repeated
@@ -25,13 +30,41 @@ class FunctionTable:
         # Check if the function name is already used a as variable name
         for func in self.__functionTable:
             if funcName in func['varTable']:
-                raise Exception('"{}" already exists as a variable'.format(funcName))
-
+                raise Exception(
+                    '"{}" already exists as a variable'.format(funcName))
 
         # If all the validations were passed, then add the function to the table
         self.__functionTable[funcName] = {
-                                        'returnType': returnType,
-                                        'numParameters': numParameters,
-                                        'typeParameters': typeParameters,
-                                        'varTable': {}
-                                     }
+            'returnType': returnType,
+            'numParameters': 0,
+            'typeParameters': [],
+            'varTable': {}
+        }
+
+    def addVariables(self, funcName, varList):
+        """
+        Adds the variables to its corresponding function
+
+        Args:
+            funcName (string): The function name
+            varList (list): A list of tuples with the format (VarType, VarName)
+        """
+
+        for var in varList:
+            # Check if the variable name is already used as function name
+            if var[1] in self.__functionTable:
+                raise Exception(
+                    'The name "{}" is already used as a function'.format(var[1]))
+
+            # Check if the variable already exists on the global or local scope
+            if var[1] in self.__functionTable['global']['varTable']:
+                raise Exception(
+                    'Variable "{}" already exists as a global variable'.format(var[1]))
+            elif var[1] in self.__functionTable[funcName]['varTable']:
+                raise Exception(
+                    'Variable "{}" has already been declared'.format(var[1]))
+
+            # Add the variable to the function variables table
+            self.__functionTable[funcName]['varTable'][var[1]] = {
+                'varType': var[0]
+            }

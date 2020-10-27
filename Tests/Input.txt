@@ -1,7 +1,8 @@
-program Ejemplo;
+program global;
 
 var
-    int i, j[7], d[8][2];
+    int i, j, d;
+    char a, b, v;
 
 main ()
 {

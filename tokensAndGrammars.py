@@ -184,7 +184,8 @@ def p_vars(p):
     '''
     vars : VAR vars_lists
     '''
-    pass
+    # Add the variables to the current function
+    funcTable.addVariables(p[-2], p[2])
 
 
 def p_vars_lists(p):
@@ -193,7 +194,13 @@ def p_vars_lists(p):
                | data_type decla_ids_list SEMICOLON functions_list
                | data_type decla_ids_list SEMICOLON
     '''
-    pass
+    # Map the id list to a tupple format (VarType, ID)
+    p[0] = list(map(lambda x: (p[1], x), p[2]))
+
+    # Put all the IDs list together
+    if(len(p) > 4):
+        if(type(p[4]) == list):
+            p[0] += p[4]
 
 
 def p_decla_ids_list(p):
@@ -201,7 +208,11 @@ def p_decla_ids_list(p):
     decla_ids_list : decla_identifier COMMA decla_ids_list
                    | decla_identifier
     '''
-    pass
+    # Return an array with all the IDs of the current id list
+    if(len(p) == 2):
+        p[0] = [p[1]]
+    elif(len(p) > 2):
+        p[0] = [p[1]] + p[3]
 
 
 def p_decla_identifier(p):
@@ -210,7 +221,7 @@ def p_decla_identifier(p):
                      | ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
                      | ID
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_ids_list(p):
@@ -256,9 +267,9 @@ def p_function(p):
         raise Exception(
             'Function "{}" is void and does not need a return'.format(p[3]))
 
-    for i in p:
-        print(i, end=' ')
-    print()
+    # for i in p:
+    #     print(i, end=' ')
+    # print()
 
     flgHaveReturn = False
 
@@ -480,8 +491,6 @@ def p_opt_value(p):
     '''
     pass
 
-# ====================== Validations ======================
-
 
 def p_error(p):
     # Error rule for syntax errors
@@ -501,7 +510,7 @@ stackJumps = list()
 
 try:
     # Read the source file
-    fileName = './Tests/Input2.txt'
+    fileName = './Tests/Input.txt'
     f = open(fileName, "r")
     srcFile = f.read()
 
