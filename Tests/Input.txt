@@ -1,13 +1,13 @@
 program Ejemplo;
 
 var
-    int i, j[2], d[2][3.3];
+    int i, j[7], d[8][2];
 
 main ()
 {
-    j = 3 + 2;
+    j = 3 + 0;
 
     if(j >= 1) then {
-        a = 2;
+        a = 5;
     }
 }

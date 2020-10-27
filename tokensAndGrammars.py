@@ -5,8 +5,9 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
-# Flag to know if there was an error or not
-bError = False
+# Flags to make certain validations
+flgError = False
+flgHaveReturn = False
 
 # Tokens definition
 tokens = [
@@ -161,7 +162,6 @@ def p_program(p):
             | PROGRAM ID SEMICOLON functions_list MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
             | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
-    pass
 
 
 # ====================== Variables ======================
@@ -171,7 +171,7 @@ def p_data_type(p):
               | FLOAT
               | CHAR
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_vars(p):
@@ -183,9 +183,26 @@ def p_vars(p):
 
 def p_vars_lists(p):
     '''
-    vars_lists : data_type ids_list SEMICOLON vars_lists
-               | data_type ids_list SEMICOLON functions_list
-               | data_type ids_list SEMICOLON
+    vars_lists : data_type decla_ids_list SEMICOLON vars_lists
+               | data_type decla_ids_list SEMICOLON functions_list
+               | data_type decla_ids_list SEMICOLON
+    '''
+    pass
+
+
+def p_decla_ids_list(p):
+    '''
+    decla_ids_list : decla_identifier COMMA decla_ids_list
+                   | decla_identifier
+    '''
+    pass
+
+
+def p_decla_identifier(p):
+    '''
+    decla_identifier : ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
+                     | ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
+                     | ID
     '''
     pass
 
@@ -200,28 +217,20 @@ def p_ids_list(p):
 
 def p_identifier(p):
     '''
-    identifier : ID id_dimensions id_dimensions
-               | ID id_dimensions
+    identifier : ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+               | ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
                | ID
     '''
     pass
 
 
-def p_id_dimensions(p):
-    '''
-    id_dimensions : LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    '''
-    pass
-
 # ====================== Functions ======================
-
-
 def p_return_type(p):
     '''
     return_type : data_type
                 | VOID
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_function(p):
@@ -229,6 +238,22 @@ def p_function(p):
     function : return_type MODULE ID parameters_list vars block
              | return_type MODULE ID parameters_list block
     '''
+    global flgHaveReturn
+
+    # Makes the validation if the function is not void and does not have a return
+    if(p[1] != 'void' and not flgHaveReturn):
+        raise Exception('Function "{}" need a return of type {}'.format(p[3], p[1]))
+        
+    # or if the function is void and have a return
+    elif(p[1] == 'void' and flgHaveReturn):
+        raise Exception('Function "{}" is void and does not need a return'.format(p[3]))
+    
+
+    for i in p:
+        print(i, end = ' ')
+    print()
+
+    flgHaveReturn = False
 
 
 def p_functions_list(p):
@@ -246,11 +271,10 @@ def p_parameters_list(p):
     '''
     pass
 
-
 def p_parameter(p):
     '''
-    parameter : data_type identifier COMMA parameter
-              | data_type identifier
+    parameter : data_type decla_identifier COMMA parameter
+              | data_type decla_identifier
     '''
     pass
 
@@ -386,7 +410,8 @@ def p_function_return(p):
     '''
     function_return : RETURN LEFTPARENTHESIS exp RIGHTPARENTHESIS SEMICOLON
     '''
-
+    global flgHaveReturn
+    flgHaveReturn = True
 
 def p_function_call(p):
     '''
@@ -446,11 +471,13 @@ def p_opt_value(p):
     '''
     pass
 
+# ====================== Validations ======================
+
 
 def p_error(p):
     # Error rule for syntax errors
-    global bError
-    bError = True
+    global flgError
+    flgError = True
     print("\n-> No apropiado\n")
 
 
@@ -472,7 +499,8 @@ try:
     # Parser the input
     result = parser.parse(srcFile)
 
-    if not bError:
+    if not flgError:
         print("\n-> Apropiado\n")
-except:
+
+except FileNotFoundError:
     print("\n-> No existe el archivo\n")
