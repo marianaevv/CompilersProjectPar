@@ -5,6 +5,12 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+from FunctionTable import FunctionTable
+
+# Initialize the helper objects
+funcTable = FunctionTable()
+
+
 # Flags to make certain validations
 flgError = False
 flgHaveReturn = False
@@ -242,15 +248,16 @@ def p_function(p):
 
     # Makes the validation if the function is not void and does not have a return
     if(p[1] != 'void' and not flgHaveReturn):
-        raise Exception('Function "{}" need a return of type {}'.format(p[3], p[1]))
-        
+        raise Exception(
+            'Function "{}" need a return of type {}'.format(p[3], p[1]))
+
     # or if the function is void and have a return
     elif(p[1] == 'void' and flgHaveReturn):
-        raise Exception('Function "{}" is void and does not need a return'.format(p[3]))
-    
+        raise Exception(
+            'Function "{}" is void and does not need a return'.format(p[3]))
 
     for i in p:
-        print(i, end = ' ')
+        print(i, end=' ')
     print()
 
     flgHaveReturn = False
@@ -270,6 +277,7 @@ def p_parameters_list(p):
                     | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
     pass
+
 
 def p_parameter(p):
     '''
@@ -412,6 +420,7 @@ def p_function_return(p):
     '''
     global flgHaveReturn
     flgHaveReturn = True
+
 
 def p_function_call(p):
     '''
