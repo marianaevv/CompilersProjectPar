@@ -8,6 +8,7 @@ COMPILERS PROJECT PAR ++
 - [Avance 1](#avance1)
 - [Avance 2](#avance2)
 - [Avance 3](#avance3)
+- [Avance 4](#avance4)
 - [Tecnologías](#tecnologías)
 
 # Avance 1
@@ -65,6 +66,21 @@ En este avance se hizo un refactor del cubo semántico para un mejor rendimiento
 - Variables (scope)
 
 Ademas se implementaron algunos de los puntos neuralgicos a ocupar en nuestra gramáticas los cuales harán uso de los cuadruplos a generar, el cubo semantico, tabla de funciones y variables. 
+
+# Avance 4
+[(Back to top)](#tabla-de-contenidos)
+
+ Se reestructuró la forma en que las variables y funcioones son guardadas, se estarán manejando diccionarios para facil acceso al buscar.
+ Debido a que se estarán implementando arreglos y matrices se agregaron validaciones para identificar si las variables definidas son simples, arreglos o matrices, teniendo en cuenta que al revisar la gramática el programa validará la cantidad de elementos que contiene para hacer esta validación.
+ 
+ Se definieron los espacios de memoria para los entornos
+ 
+- Global
+- Local
+- Constantes
+
+Asi como también el poder guardar estás variables a traves de un diccionario.
+
 
 # Tecnologías
 [(Back to top)](#tabla-de-contenidos)
