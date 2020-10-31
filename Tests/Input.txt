@@ -1,8 +1,9 @@
 program global;
 
 var
-    int i, j, d;
+    int i, j[10], d[2][5];
     char a, b, v;
+
 
 main ()
 {

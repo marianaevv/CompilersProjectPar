@@ -60,6 +60,10 @@ class FunctionTable:
         """
 
         for var in varList:
+            flgArray = False
+            dimensions = None
+            size = 1
+
             # Check if the variable name is already used as function name
             if var[1] in self.__functionTable:
                 raise Exception(
@@ -73,10 +77,31 @@ class FunctionTable:
                 raise Exception(
                     'Variable "{}" has already been declared'.format(var[1]))
 
+            # Check if the variable is array or matrix
+            if (len(var) == 3):
+                print(var)
+                flgArray = True
+                dimensions = var[2]
+
+                # Calculate the size if it is a matrix
+                if(type(var[2]) == tuple):
+                    size = var[2][0] * var[2][1]
+                
+                # Or just store the array size
+                else:
+                    size = var[2]
+                
+
             # Add the variable to the function variables table
             self.__functionTable[funcName]['varTable'][var[1]] = {
-                'varType': var[0]
+                'varType': var[0],
+                'size': size,
+                'flgArray': flgArray,
+                'dimensions': dimensions
             }
+
+            #print(self.__functionTable[funcName]['varTable'])
+
 
     def searchVariable(self, funcName, varName):
         """
@@ -90,7 +115,7 @@ class FunctionTable:
             Exception: If the variable do not exists
 
         Returns:
-            [type]: The dictionary with the variable data
+            Dictionary: The dictionary with the variable data
         """
 
         # Check on the global scope

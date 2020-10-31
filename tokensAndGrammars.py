@@ -195,7 +195,7 @@ def p_vars_lists(p):
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
-    p[0] = list(map(lambda x: (p[1], x), p[2]))
+    p[0] = list(map(lambda x: (p[1], x[0], x[1]) if (type(x) == tuple) else (p[1], x), p[2]))
 
     # Put all the IDs list together
     if(len(p) > 4):
@@ -221,7 +221,13 @@ def p_decla_identifier(p):
                      | ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
                      | ID
     '''
-    p[0] = p[1]
+
+    if (len(p) == 8):
+        p[0] = p[1], (p[3], p[6])
+    elif (len(p) == 5):
+        p[0] = p[1], p[3]
+    else:
+        p[0] = p[1]
 
 
 def p_ids_list(p):
