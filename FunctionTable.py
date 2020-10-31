@@ -21,6 +21,10 @@ class FunctionTable:
         Args:
             funcName (string): Function name
             returnType (string): Function return type
+
+        Raises:
+            Exception: If the function name is already being used
+            Exception: If the function name is already being used in a variable
         """
 
         # Check if the function name is repeated
@@ -48,6 +52,11 @@ class FunctionTable:
         Args:
             funcName (string): The function name
             varList (list): A list of tuples with the format (VarType, VarName)
+
+        Raises:
+            Exception: If the function is already used
+            Exception: If the function name is already used in a globl variable
+            Exception: If the function name is already used in a local variable
         """
 
         for var in varList:
@@ -68,3 +77,31 @@ class FunctionTable:
             self.__functionTable[funcName]['varTable'][var[1]] = {
                 'varType': var[0]
             }
+
+    def searchVariable(self, funcName, varName):
+        """
+        Method to search a variable on the global and local scope.
+
+        Args:
+            funcName (string): Function name
+            varName (string): Wanted variable name
+
+        Raises:
+            Exception: If the variable do not exists
+
+        Returns:
+            [type]: The dictionary with the variable data
+        """
+
+        # Check on the global scope
+        if varName in self.__functionTable['global']['varTable']:
+            return self.__functionTable['global']['varTable'][varName]
+
+        # Check on local function scope
+        elif varName in self.__functionTable[funcName]['varTable'][varName]:
+            return self.__functionTable[funcName]['varTable'][varName]
+
+        # If not, the variable do no exists
+        else:
+            raise Exception(
+                'The variable "{}" has not been declared'.format(varName))

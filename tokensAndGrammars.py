@@ -267,9 +267,9 @@ def p_function(p):
         raise Exception(
             'Function "{}" is void and does not need a return'.format(p[3]))
 
-    # for i in p:
-    #     print(i, end=' ')
-    # print()
+    for i in p:
+        print(i, end=' ')
+    print()
 
     flgHaveReturn = False
 
