@@ -7,8 +7,8 @@ class FunctionTable:
         self.__functionTable = {
             'global': {
                 'returnType': 'void',
-                'numParameters': 0,
-                'typeParameters': [],
+                'paramsNumber': 0,
+                'paramsType': [],
                 'varTable': {}
             }
         }
@@ -32,7 +32,7 @@ class FunctionTable:
             raise Exception('Function "{}" already exists'.format(funcName))
 
         # Check if the function name is already used a as variable name
-        for func in self.__functionTable:
+        for func in self.__functionTable.values():
             if funcName in func['varTable']:
                 raise Exception(
                     '"{}" already exists as a variable'.format(funcName))
@@ -40,26 +40,35 @@ class FunctionTable:
         # If all the validations were passed, then add the function to the table
         self.__functionTable[funcName] = {
             'returnType': returnType,
-            'numParameters': 0,
-            'typeParameters': [],
+            'paramsNumber': 0,
+            'paramsType': [],
             'varTable': {}
         }
 
-    def addVariables(self, funcName, varList):
+    def addVariables(self, funcName, varList, flgParams=False):
         """
         Adds the variables to its corresponding function
 
         Args:
             funcName (string): The function name
             varList (list): A list of tuples with the format (VarType, VarName)
+            flgParams (bool, optional): Flag to know if the list are 
+            parameters of the current function. Defaults to False.
 
         Raises:
             Exception: If the function is already used
             Exception: If the function name is already used in a globl variable
             Exception: If the function name is already used in a local variable
         """
+        # If the variables are parameters, store the amount
+        if(flgParams):
+            self.__functionTable[funcName]['paramsNumber'] = len(varList)
 
         for var in varList:
+            flgArray = False
+            dimensions = None
+            size = 1
+
             # Check if the variable name is already used as function name
             if var[1] in self.__functionTable:
                 raise Exception(
@@ -73,10 +82,30 @@ class FunctionTable:
                 raise Exception(
                     'Variable "{}" has already been declared'.format(var[1]))
 
+            # Check if the variable is array or matrix
+            if (len(var) == 3):
+                flgArray = True
+                dimensions = var[2]
+
+                # Calculate the size if it is a matrix
+                if(type(var[2]) == tuple):
+                    size = var[2][0] * var[2][1]
+
+                # Or just store the array size
+                else:
+                    size = var[2]
+
             # Add the variable to the function variables table
             self.__functionTable[funcName]['varTable'][var[1]] = {
-                'varType': var[0]
+                'varType': var[0],
+                'size': size,
+                'flgArray': flgArray,
+                'dimensions': dimensions
             }
+
+            # If the variables are parameters, store the data type also on another list
+            if(flgParams):
+                self.__functionTable[funcName]['paramsType'].append(var[0])
 
     def searchVariable(self, funcName, varName):
         """
@@ -90,7 +119,7 @@ class FunctionTable:
             Exception: If the variable do not exists
 
         Returns:
-            [type]: The dictionary with the variable data
+            Dictionary: The dictionary with the variable data
         """
 
         # Check on the global scope

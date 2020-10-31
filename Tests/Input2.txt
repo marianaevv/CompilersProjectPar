@@ -6,7 +6,7 @@ var
     float valor;
     int Matriz[3][8];
 
-int module fact(int j)
+int module fact(int j, int y, char a)
 var int iJ;
 {i = j + (p - j * 2 + j);
 if(j == 1) then

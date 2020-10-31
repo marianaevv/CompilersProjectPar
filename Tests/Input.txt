@@ -1,8 +1,30 @@
 program global;
 
+
 var
-    int i, j, d;
-    char a, b, v;
+    int i, j, p;
+    int Arreglo[10];
+
+void module inicia(int y[10])
+var int x, w2[2][2], s2[10];
+{
+    x=0;
+    while(x<11)do
+    {
+        Arreglo[x] = y * x;
+        x = x + 1;
+    }
+}
+
+int module fact(int j, int y, char a)
+var int iJ;
+{i = j + (p - j * 2 + j);
+if(j == 1) then
+ { return(j);}
+ else
+ {return (j + fact(j));}
+}
+
 
 main ()
 {
