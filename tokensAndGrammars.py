@@ -185,7 +185,7 @@ def p_vars(p):
     vars : VAR vars_lists
     '''
     # Add the variables to the current function
-    funcTable.addVariables(p[-2], p[2])
+    funcTable.addVariables(p[-3], p[2])
 
 
 def p_vars_lists(p):
@@ -195,7 +195,8 @@ def p_vars_lists(p):
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
-    p[0] = list(map(lambda x: (p[1], x[0], x[1]) if (type(x) == tuple) else (p[1], x), p[2]))
+    p[0] = list(map(lambda x: (p[1], x[0], x[1]) if (
+        type(x) == tuple) else (p[1], x), p[2]))
 
     # Put all the IDs list together
     if(len(p) > 4):
@@ -258,8 +259,8 @@ def p_return_type(p):
 
 def p_function(p):
     '''
-    function : return_type MODULE ID parameters_list vars block
-             | return_type MODULE ID parameters_list block
+    function : return_type MODULE ID neupoint_add_function parameters_list vars block
+             | return_type MODULE ID neupoint_add_function parameters_list block
     '''
     global flgHaveReturn
 
@@ -273,9 +274,9 @@ def p_function(p):
         raise Exception(
             'Function "{}" is void and does not need a return'.format(p[3]))
 
-    for i in p:
-        print(i, end=' ')
-    print()
+    # for i in p:
+    #     print(i, end=' ')
+    # print()
 
     flgHaveReturn = False
 
@@ -302,6 +303,16 @@ def p_parameter(p):
               | data_type decla_identifier
     '''
     pass
+
+# --------------- Functions Neural Points ---------------
+
+
+def p_neupoint_add_function(p):
+    """
+    neupoint_add_function : 
+    """
+    # Create the function table
+    funcTable.addNewFunction(p[-1], p[-3])
 
 
 # ====================== Operators ======================

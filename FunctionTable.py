@@ -32,7 +32,7 @@ class FunctionTable:
             raise Exception('Function "{}" already exists'.format(funcName))
 
         # Check if the function name is already used a as variable name
-        for func in self.__functionTable:
+        for func in self.__functionTable.values():
             if funcName in func['varTable']:
                 raise Exception(
                     '"{}" already exists as a variable'.format(funcName))
@@ -79,18 +79,16 @@ class FunctionTable:
 
             # Check if the variable is array or matrix
             if (len(var) == 3):
-                print(var)
                 flgArray = True
                 dimensions = var[2]
 
                 # Calculate the size if it is a matrix
                 if(type(var[2]) == tuple):
                     size = var[2][0] * var[2][1]
-                
+
                 # Or just store the array size
                 else:
                     size = var[2]
-                
 
             # Add the variable to the function variables table
             self.__functionTable[funcName]['varTable'][var[1]] = {
@@ -99,9 +97,6 @@ class FunctionTable:
                 'flgArray': flgArray,
                 'dimensions': dimensions
             }
-
-            #print(self.__functionTable[funcName]['varTable'])
-
 
     def searchVariable(self, funcName, varName):
         """
