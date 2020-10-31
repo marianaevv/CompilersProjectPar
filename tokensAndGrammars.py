@@ -185,7 +185,10 @@ def p_vars(p):
     vars : VAR vars_lists
     '''
     # Add the variables to the current function
-    funcTable.addVariables(p[-3], p[2])
+    if(p[-3] == 'program'):
+        funcTable.addVariables('global', p[2])
+    else:
+        funcTable.addVariables(p[-3], p[2])
 
 
 def p_vars_lists(p):
@@ -294,7 +297,8 @@ def p_parameters_list(p):
     parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS
                     | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
-    pass
+    if(len(p) == 4):
+        funcTable.addVariables(p[-2], p[2], True)
 
 
 def p_parameter(p):
@@ -302,7 +306,25 @@ def p_parameter(p):
     parameter : data_type decla_identifier COMMA parameter
               | data_type decla_identifier
     '''
-    pass
+    # Check if any parameter is a array or matrix
+    if(type(p[2]) == tuple):
+        tempId = p[2][0]
+        tempDimen = p[2][1]
+
+        # Put together the tuple list with (ParamType, Name)
+        if(len(p) == 5):
+            p[0] = [(p[1], tempId, tempDimen)] + p[4]
+        else:
+            p[0] = [(p[1], tempId, tempDimen)]
+
+    # If not, just pass the type and id
+    else:
+        # Put together the tuple list with (ParamType, Name)
+        if(len(p) == 5):
+            p[0] = [(p[1], p[2])] + p[4]
+        else:
+            p[0] = [(p[1], p[2])]
+
 
 # --------------- Functions Neural Points ---------------
 

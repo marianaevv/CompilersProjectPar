@@ -7,8 +7,8 @@ class FunctionTable:
         self.__functionTable = {
             'global': {
                 'returnType': 'void',
-                'numParameters': 0,
-                'typeParameters': [],
+                'paramsNumber': 0,
+                'paramsType': [],
                 'varTable': {}
             }
         }
@@ -40,24 +40,29 @@ class FunctionTable:
         # If all the validations were passed, then add the function to the table
         self.__functionTable[funcName] = {
             'returnType': returnType,
-            'numParameters': 0,
-            'typeParameters': [],
+            'paramsNumber': 0,
+            'paramsType': [],
             'varTable': {}
         }
 
-    def addVariables(self, funcName, varList):
+    def addVariables(self, funcName, varList, flgParams=False):
         """
         Adds the variables to its corresponding function
 
         Args:
             funcName (string): The function name
             varList (list): A list of tuples with the format (VarType, VarName)
+            flgParams (bool, optional): Flag to know if the list are 
+            parameters of the current function. Defaults to False.
 
         Raises:
             Exception: If the function is already used
             Exception: If the function name is already used in a globl variable
             Exception: If the function name is already used in a local variable
         """
+        # If the variables are parameters, store the amount
+        if(flgParams):
+            self.__functionTable[funcName]['paramsNumber'] = len(varList)
 
         for var in varList:
             flgArray = False
@@ -97,6 +102,10 @@ class FunctionTable:
                 'flgArray': flgArray,
                 'dimensions': dimensions
             }
+
+            # If the variables are parameters, store the data type also on another list
+            if(flgParams):
+                self.__functionTable[funcName]['paramsType'].append(var[0])
 
     def searchVariable(self, funcName, varName):
         """
