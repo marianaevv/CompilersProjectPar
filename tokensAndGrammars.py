@@ -6,6 +6,7 @@ import ply.yacc as yacc
 import sys
 
 from FunctionTable import FunctionTable
+from Quadruples import Quadruple
 
 # Initialize the helper objects
 funcTable = FunctionTable()
