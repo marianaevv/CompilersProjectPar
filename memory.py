@@ -18,9 +18,19 @@ class memory:
             'bool' = {},
             'char' = {}
         }
-        self.globalMem = 1000 #Comienza en 1000 y termina en 20999
-        self.localMem = 21000 #Comienza en 21000 y termina en 40999
-        self.constantMem = 41000 # Comienza en 41000 y termina en 60000
+
+        """
+        Global Memory - Starts at 1000 and ends at 20999
+        Local Memory - Starts at 21000 and ends at 40999
+        Constant Memory - Starts at 41000 and ends at 60000
+
+        Each memory context will be divided into types context (int, bool, float, char, temp)
+        avoiding the use of casting values.
+        
+        """
+        self.globalMem = 1000
+        self.localMem = 21000
+        self.constantMem = 41000
         self.intMem = 1
         self.floatMem = 4000
         self.charMem = 8000
