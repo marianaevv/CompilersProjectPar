@@ -7,11 +7,13 @@ import sys
 
 from IntermediateCode import IntermediateCode
 from FunctionTable import FunctionTable
+from SemanticCube import SemanticCube
 from Quadruples import Quadruple
 
 # Initialize the helper objects
 funcTable = FunctionTable()
 interCode = IntermediateCode()
+semanticCube = SemanticCube()
 
 # Flags to make certain validations
 flgError = False
@@ -511,16 +513,16 @@ def p_expresion(p):
 
 def p_exp(p):
     '''
-    exp : term exp_operator neupoint_add_operator exp
-        | term
+    exp : term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+        | term neupoint_arithmetic_exp_quad
     '''
     pass
 
 
 def p_term(p):
     '''
-    term : factor term_operator neupoint_add_operator term
-         | factor
+    term : factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+         | factor neupoint_arithmetic_term_quad
     '''
     pass
 
@@ -541,7 +543,7 @@ def p_neupoint_add_operator(p):
     '''
     neupoint_add_operator : 
     '''
-    interCode.stkOperand.append(p[-1])
+    interCode.stkOperator.append(p[-1])
 
 
 def p_neupoint_add_operand(p):
@@ -553,7 +555,7 @@ def p_neupoint_add_operand(p):
         interCode.currentFunction, p[-1])['dataType']
 
     # Add name and datatype to the stacks
-    interCode.stkOperator.append(p[-1])
+    interCode.stkOperand.append(p[-1])
     interCode.stkType.append(operandType)
 
 
@@ -561,7 +563,7 @@ def p_neupoint_add_cte_operand(p):
     '''
     neupoint_add_cte_operand : 
     '''
-    interCode.stkOperator.append(p[-1])
+    interCode.stkOperand.append(p[-1])
     if(type(p[-1]).__name__ == 'str'):
         if(len(p[-1]) == 1):
             interCode.stkType.append('char')
@@ -569,6 +571,89 @@ def p_neupoint_add_cte_operand(p):
             interCode.stkType.append('str')
     else:
         interCode.stkType.append(type(p[-1]).__name__)
+
+
+def p_neupoint_arithmetic_exp_quad(p):
+    '''
+    neupoint_arithmetic_exp_quad : 
+    '''
+
+    # If the last operator is a PLUS or MINUS..
+    if(interCode.stkOperator):
+        if(interCode.stkOperator[-1] in ['+', '-']):
+            # Pop the last operands
+            rgtOperand = interCode.stkOperand.pop()
+            rgtOpndType = interCode.stkType.pop()
+            lftOperand = interCode.stkOperand.pop()
+            lftOpndType = interCode.stkType.pop()
+
+            # Pop the operator
+            operator = interCode.stkOperator.pop()
+
+            # Validate the operation
+            resultType = semanticCube.verifyOperations(
+                operator, lftOpndType, rgtOpndType)
+
+            # Raise exception if it is a invalid operation
+            if(resultType == "error"):
+                raise Exception("Invalid operation {} between {} and {}".format(
+                    operator, lftOpndType, rgtOpndType))
+
+            # If the operation is valid, generate the memory direction to the result
+            resultDirection = 'T' + str(interCode.countTemporals)
+            interCode.countTemporals += 1
+
+            # Push the result and it's type
+            interCode.stkOperand.append(resultDirection)
+            interCode.stkType.append(resultType)
+
+            # Push the quadruple
+            interCode.stkQuadruples.append(
+                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
+
+            print(interCode.stkQuadruples)
+
+
+def p_neupoint_arithmetic_term_quad(p):
+    '''
+    neupoint_arithmetic_term_quad : 
+    '''
+
+
+    # If the last operator is a MULTIPLY, DIVIDE or MODULE..
+    if(interCode.stkOperator):
+        if(interCode.stkOperator[-1] in ['*', '/', '%']):
+            # Pop the last operands
+            rgtOperand = interCode.stkOperand.pop()
+            rgtOpndType = interCode.stkType.pop()
+            lftOperand = interCode.stkOperand.pop()
+            lftOpndType = interCode.stkType.pop()
+
+            # Pop the operator
+            operator = interCode.stkOperator.pop()
+
+            # Validate the operation
+            resultType = semanticCube.verifyOperations(
+                operator, lftOpndType, rgtOpndType)
+
+            # Raise exception if it is a invalid operation
+            if(resultType == "error"):
+                raise Exception("Invalid operation {} between {} and {}".format(
+                    operator, lftOpndType, rgtOpndType))
+
+            # If the operation is valid, generate the memory direction to the result
+            resultDirection = 'T' + str(interCode.countTemporals)
+            interCode.countTemporals += 1
+
+            # Push the result and it's type
+            interCode.stkOperand.append(resultDirection)
+            interCode.stkType.append(resultType)
+
+            # Push the quadruple
+            interCode.stkQuadruples.append(
+                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
+
+            print(interCode.stkQuadruples)
 
 
 # ====================== Rule for syntax errors ======================
