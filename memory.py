@@ -1,7 +1,7 @@
 class memory:
     def __init__(self):
         """
-
+        Dictionaries to save values according to the context and the value type
         """
         self.globalMemory = {
             'int' = {},
@@ -35,9 +35,11 @@ class memory:
         }
 
         """
-        Global Memory - Starts at 1000 and ends at 20999
-        Local Memory - Starts at 21000 and ends at 40999
-        Constant Memory - Starts at 41000 and ends at 60000
+        Global Memory - Starts at 1000 and ends at 15999
+        Temporal Global Memory - 17000 and ends at 32999
+        Local Memory - Starts at 33000 and ends at 48999
+        Temporal Global Memory - 49000 and ends at 64999
+        Constant Memory - Starts at 65000 and ends at 80999
 
         Each memory context will be divided into types context (int, bool, float, char, temp)
         avoiding the use of casting values.
