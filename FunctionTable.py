@@ -45,6 +45,15 @@ class FunctionTable:
             'varTable': {}
         }
 
+        if (returnType != 'void'):
+            # Add the variable to store the return value
+            self.__functionTable['global']['varTable'][funcName] = {
+                'dataType': returnType,
+                'size': 1,
+                'flgArray': False,
+                'dimensions': 1
+            }
+
     def addVariables(self, funcName, varList, flgParams=False):
         """
         Adds the variables to its corresponding function
@@ -75,9 +84,10 @@ class FunctionTable:
                     'The name "{}" is already used as a function'.format(var[1]))
 
             # Check if the variable already exists on the global or local scope
-            if var[1] in self.__functionTable['global']['varTable']:
+            elif var[1] in self.__functionTable['global']['varTable']:
                 raise Exception(
                     'Variable "{}" already exists as a global variable'.format(var[1]))
+                    
             elif var[1] in self.__functionTable[funcName]['varTable']:
                 raise Exception(
                     'Variable "{}" has already been declared'.format(var[1]))

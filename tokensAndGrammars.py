@@ -359,8 +359,6 @@ def p_comparators(p):
                 | GREATERTHAN
                 | LESSTHAN
                 | DIFFERENT
-                | OR
-                | AND
     '''
     p[0] = p[1]
 
@@ -409,7 +407,11 @@ def p_statute(p):
             | function_return
             | function_call SEMICOLON
     '''
-    pass
+    print(interCode.stkOperator)
+    print(interCode.stkOperand)
+    print(interCode.stkType)
+    print(interCode.stkQuadruples)
+    print()
 
 
 def p_assignment(p):
@@ -502,8 +504,17 @@ def p_expresion_list(p):
 
 def p_expresion(p):
     '''
-    expresion : exp comparators neupoint_add_operator exp
-              | exp
+    expresion : exp_relational AND neupoint_add_operator expresion neupoint_logical_relational_opt
+              | exp_relational OR neupoint_add_operator expresion neupoint_logical_relational_opt
+              | exp_relational
+    '''
+    pass
+
+
+def p_exp_relational(p):
+    '''
+    exp_relational : exp comparators neupoint_add_operator exp neupoint_logical_relational_opt
+                   | exp
     '''
     pass
 
@@ -576,7 +587,7 @@ def p_neupoint_arithmetic_exp_quad(p):
     '''
 
     # If the last operator is a PLUS or MINUS..
-    interCode.generateArithmeticQuadruple(['+', '-'])
+    interCode.generateOperatorQuadruple(['+', '-'])
 
 
 def p_neupoint_arithmetic_term_quad(p):
@@ -585,7 +596,7 @@ def p_neupoint_arithmetic_term_quad(p):
     '''
 
     # If the last operator is a MULTIPLY, DIVIDE or MODULE..
-    interCode.generateArithmeticQuadruple(['*', '/', '%'])
+    interCode.generateOperatorQuadruple(['*', '/', '%'])
 
 
 def p_neupoint_add_wall(p):
@@ -608,9 +619,6 @@ def p_neupoint_assignment_quad(p):
     '''
     neupoint_assignment_quad : 
     '''
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
     interCode.generateAssignmentQuad()
 
 
@@ -618,12 +626,17 @@ def p_neupoint_assignment_single_quad(p):
     '''
     neupoint_assignment_single_quad : 
     '''
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
     interCode.generateAssignmentSingleQuad()
 
+def p_neupoint_logical_relational_opt(p):
+    '''
+    neupoint_logical_relational_opt : 
+    '''
+    interCode.generateOperatorQuadruple(flgArithmetic=False)
+
 # ====================== Rule for syntax errors ======================
+
+
 def p_error(p):
     global flgError
     flgError = True

@@ -17,51 +17,64 @@ class IntermediateCode:
 
         self.currentFunction = 'global'
 
-    def generateArithmeticQuadruple(self, groupOperators):
+    def generateOperatorQuadruple(self, groupOperators=None, flgArithmetic=True):
         """
-        Function to generate the arithmetich operation quadruples
+        Function to generate the operation quadruples
 
         Args:
-            groupOperators (list): List with the arithmetich operators to look for
+            groupOperators (list, optional): List with the arithmetic operators to look for
+            flgArithmetic (bool, optional): If the quadruple is going to be a arithmetic operation or not
 
         Raises:
             Exception: If the operation is invalid
         """
 
-        # If the last operator is a PLUS or MINUS..
-        if(self.stkOperator):
-            if(self.stkOperator[-1] in groupOperators):
-                # Pop the last operands
-                rgtOperand = self.stkOperand.pop()
-                rgtOpndType = self.stkType.pop()
-                lftOperand = self.stkOperand.pop()
-                lftOpndType = self.stkType.pop()
+        # Flag to know if is time to push a quadruple
+        insertQuad = False
 
-                # Pop the operator
-                operator = self.stkOperator.pop()
+        # If it is a arithmetic operator, make the validations...
+        if(flgArithmetic):
+            # Check that there are operands and if the 
+            # if the las operator is on the searched operators group
+            if(self.stkOperator):
+                if(self.stkOperator[-1] in groupOperators):
+                    insertQuad = True
 
-                # Validate the operation
-                resultType = semanticCube.verifyOperations(
-                    operator, lftOpndType, rgtOpndType)
+        # Or just push the quad if it is a logical 
+        # or relational operator
+        else:
+            insertQuad = True
 
-                # Raise exception if it is a invalid operation
-                if(resultType == "error"):
-                    raise Exception("Invalid operation {} between {} and {}".format(
-                        operator, lftOpndType, rgtOpndType))
+        if(insertQuad):
+            # Pop the last operands
+            rgtOperand = self.stkOperand.pop()
+            rgtOpndType = self.stkType.pop()
+            lftOperand = self.stkOperand.pop()
+            lftOpndType = self.stkType.pop()
 
-                # If the operation is valid, generate the memory direction to the result
-                resultDirection = 'T' + str(self.countTemporals)
-                self.countTemporals += 1
+            # Pop the operator
+            operator = self.stkOperator.pop()
 
-                # Push the result and it's type
-                self.stkOperand.append(resultDirection)
-                self.stkType.append(resultType)
+            # Validate the operation
+            resultType = semanticCube.verifyOperations(
+                operator, lftOpndType, rgtOpndType)
 
-                # Push the quadruple
-                self.stkQuadruples.append(
-                    Quadruple(operator, lftOperand, rgtOperand, resultDirection))
+            # Raise exception if it is a invalid operation
+            if(resultType == "error"):
+                raise Exception("Invalid operation {} between {} and {}".format(
+                    operator, lftOpndType, rgtOpndType))
 
-                print(self.stkQuadruples)
+            # If the operation is valid, generate the memory direction to the result
+            resultDirection = 'T' + str(self.countTemporals)
+            self.countTemporals += 1
+
+            # Push the result and it's type
+            self.stkOperand.append(resultDirection)
+            self.stkType.append(resultType)
+
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
 
     def generateAssignmentQuad(self):
         """
@@ -100,9 +113,13 @@ class IntermediateCode:
             self.stkQuadruples.append(
                 Quadruple('-', lftOperand, rgtOperand, lftOperand))
 
-        print(self.stkQuadruples)
-
     def generateAssignmentSingleQuad(self):
+        """
+        Generate the quadruple when using the operators ++ and --
+
+        Raises:
+            Exception: If the variables are not Integers or Floats
+        """
 
         # Pop the last operands
         lftOperand = self.stkOperand.pop()
@@ -128,5 +145,3 @@ class IntermediateCode:
             # Push the quadruple
             self.stkQuadruples.append(
                 Quadruple('-', lftOperand, 1, lftOperand))
-
-        print(self.stkQuadruples)
