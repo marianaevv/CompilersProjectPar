@@ -5,12 +5,13 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+from IntermediateCode import IntermediateCode
 from FunctionTable import FunctionTable
 from Quadruples import Quadruple
 
 # Initialize the helper objects
 funcTable = FunctionTable()
-
+interCode = IntermediateCode()
 
 # Flags to make certain validations
 flgError = False
@@ -115,7 +116,7 @@ t_ignore = ' \t'
 
 def t_CTECHAR(token):
     r'"([^"])"'
-    token.value = str(token.value)
+    token.value = str(token.value)[1]
     return token
 
 
@@ -165,8 +166,9 @@ lexer = lex.lex()
 # ====================== Main ======================
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON functions_list MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+    program : PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
             | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
 
@@ -183,19 +185,14 @@ def p_data_type(p):
 
 def p_vars(p):
     '''
-    vars : VAR vars_lists
+    vars : VAR vars_lists neupoint_add_vars
     '''
-    # Add the variables to the current function
-    if(p[-3] == 'program'):
-        funcTable.addVariables('global', p[2])
-    else:
-        funcTable.addVariables(p[-3], p[2])
+    pass
 
 
 def p_vars_lists(p):
     '''
     vars_lists : data_type decla_ids_list SEMICOLON vars_lists
-               | data_type decla_ids_list SEMICOLON functions_list
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
@@ -249,7 +246,15 @@ def p_identifier(p):
                | ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
                | ID
     '''
-    pass
+    p[0] = p[1]
+
+
+def p_neupoint_add_vars(p):
+    '''
+    neupoint_add_vars : 
+    '''
+    print("Adding to ", interCode.currentFunction)
+    funcTable.addVariables(interCode.currentFunction, p[-1])
 
 
 # ====================== Functions ======================
@@ -261,17 +266,25 @@ def p_return_type(p):
     p[0] = p[1]
 
 
+def p_functions_list(p):
+    '''
+    functions_list : function functions_list
+                   | function
+    '''
+    pass
+
+
 def p_function(p):
     '''
-    function : return_type MODULE ID neupoint_add_function parameters_list vars block
-             | return_type MODULE ID neupoint_add_function parameters_list block
+    function : MODULE return_type ID neupoint_add_function parameters_list vars block
+             | MODULE return_type ID neupoint_add_function parameters_list block
     '''
     global flgHaveReturn
 
     # Makes the validation if the function is not void and does not have a return
-    if(p[1] != 'void' and not flgHaveReturn):
+    if(p[2] != 'void' and not flgHaveReturn):
         raise Exception(
-            'Function "{}" need a return of type {}'.format(p[3], p[1]))
+            'Function "{}" need a return of type {}'.format(p[3], p[2]))
 
     # or if the function is void and have a return
     elif(p[1] == 'void' and flgHaveReturn):
@@ -285,21 +298,13 @@ def p_function(p):
     flgHaveReturn = False
 
 
-def p_functions_list(p):
-    '''
-    functions_list : function functions_list
-                   | function
-    '''
-    pass
-
-
 def p_parameters_list(p):
     '''
     parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS
                     | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
     if(len(p) == 4):
-        funcTable.addVariables(p[-2], p[2], True)
+        funcTable.addVariables(interCode.currentFunction, p[2], True)
 
 
 def p_parameter(p):
@@ -331,11 +336,19 @@ def p_parameter(p):
 
 
 def p_neupoint_add_function(p):
-    """
+    '''
     neupoint_add_function : 
-    """
+    '''
+    interCode.currentFunction = p[-1]
     # Create the function table
-    funcTable.addNewFunction(p[-1], p[-3])
+    funcTable.addNewFunction(interCode.currentFunction, p[-2])
+
+
+def p_neupoint_back_global(p):
+    '''
+    neupoint_back_global : 
+    '''
+    interCode.currentFunction = 'global'
 
 
 # ====================== Operators ======================
@@ -350,7 +363,7 @@ def p_comparators(p):
                 | OR
                 | AND
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_exp_operator(p):
@@ -358,7 +371,7 @@ def p_exp_operator(p):
     exp_operator : PLUS
                  | MINUS
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_term_operator(p):
@@ -367,7 +380,7 @@ def p_term_operator(p):
                   | DIVIDE
                   | MOD
     '''
-    pass
+    p[0] = p[1]
 
 
 # ====================== Statutes ======================
@@ -490,7 +503,7 @@ def p_expresion_list(p):
 
 def p_expresion(p):
     '''
-    expresion : exp comparators exp
+    expresion : exp comparators neupoint_add_operator exp
               | exp
     '''
     pass
@@ -498,7 +511,7 @@ def p_expresion(p):
 
 def p_exp(p):
     '''
-    exp : term exp_operator exp
+    exp : term exp_operator neupoint_add_operator exp
         | term
     '''
     pass
@@ -506,7 +519,7 @@ def p_exp(p):
 
 def p_term(p):
     '''
-    term : factor term_operator term
+    term : factor term_operator neupoint_add_operator term
          | factor
     '''
     pass
@@ -515,25 +528,53 @@ def p_term(p):
 def p_factor(p):
     '''
     factor : LEFTPARENTHESIS expresion RIGHTPARENTHESIS
-           | exp_operator opt_value
-           | opt_value
+           | CTEINT neupoint_add_cte_operand
+           | CTEFLOAT neupoint_add_cte_operand
+           | CTECHAR neupoint_add_cte_operand
+           | function_call
+           | identifier neupoint_add_operand
     '''
-    pass
 
 
-def p_opt_value(p):
+# --------------- Expressions Neural Points ---------------
+def p_neupoint_add_operator(p):
     '''
-    opt_value : CTEINT
-              | CTEFLOAT
-              | CTECHAR
-              | function_call
-              | identifier
+    neupoint_add_operator : 
     '''
-    pass
+    interCode.stkOperand.append(p[-1])
+    # print(interCode.stkOperand)
 
 
+def p_neupoint_add_operand(p):
+    '''
+    neupoint_add_operand : 
+    '''
+    interCode.stkOperator.append(p[-1])
+
+    # print(interCode.stkOperator)
+    # print()
+
+
+def p_neupoint_add_cte_operand(p):
+    '''
+    neupoint_add_cte_operand : 
+    '''
+    interCode.stkOperator.append(p[-1])
+    if(type(p[-1]).__name__ == 'str'):
+        if(len(p[-1]) == 1):
+            interCode.stkType.append('char')
+        else:
+            interCode.stkType.append('str')
+    else:
+        interCode.stkType.append(type(p[-1]).__name__)
+
+    # print(interCode.stkOperator)
+    # print(interCode.stkType)
+    # print()
+
+
+# ====================== Rule for syntax errors ======================
 def p_error(p):
-    # Error rule for syntax errors
     global flgError
     flgError = True
     print("\n-> No apropiado\n")
@@ -541,12 +582,6 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
-
-# Needed stacks (list on python)
-stackOperand = list()
-stackType = list()
-stackOperator = list()
-stackJumps = list()
 
 try:
     # Read the source file

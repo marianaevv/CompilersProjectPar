@@ -66,7 +66,7 @@ class FunctionTable:
 
         for var in varList:
             flgArray = False
-            dimensions = None
+            dimensions = 1
             size = 1
 
             # Check if the variable name is already used as function name
