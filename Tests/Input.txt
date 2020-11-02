@@ -7,5 +7,5 @@ var
 
 main ()
 {
-    iI = i + iI * p + i / JJ;
+    iI = (i + iI) * (12 - i / JJ;
 }

@@ -88,7 +88,7 @@ Rule 82    exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_op
 Rule 83    exp -> term neupoint_arithmetic_exp_quad
 Rule 84    term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
 Rule 85    term -> factor neupoint_arithmetic_term_quad
-Rule 86    factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+Rule 86    factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
 Rule 87    factor -> CTEINT neupoint_add_cte_operand
 Rule 88    factor -> CTEFLOAT neupoint_add_cte_operand
 Rule 89    factor -> CTECHAR neupoint_add_cte_operand
@@ -99,6 +99,8 @@ Rule 93    neupoint_add_operand -> <empty>
 Rule 94    neupoint_add_cte_operand -> <empty>
 Rule 95    neupoint_arithmetic_exp_quad -> <empty>
 Rule 96    neupoint_arithmetic_term_quad -> <empty>
+Rule 97    neupoint_add_wall -> <empty>
+Rule 98    neupoint_remove_wall -> <empty>
 
 Terminals, with rules where they appear
 
@@ -181,9 +183,11 @@ neupoint_add_operand : 91
 neupoint_add_operator : 80 82 84
 neupoint_add_parameters : 28
 neupoint_add_vars    : 8
+neupoint_add_wall    : 86
 neupoint_arithmetic_exp_quad : 82 83
 neupoint_arithmetic_term_quad : 84 85
 neupoint_back_global : 1 3
+neupoint_remove_wall : 86
 non_conditional      : 73
 parameter            : 28 30
 parameters_list      : 26 27
@@ -1090,7 +1094,7 @@ state 75
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1123,7 +1127,7 @@ state 76
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1156,7 +1160,7 @@ state 77
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1221,7 +1225,7 @@ state 81
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1257,7 +1261,7 @@ state 82
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1316,7 +1320,7 @@ state 85
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1350,7 +1354,7 @@ state 86
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1385,7 +1389,7 @@ state 87
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1418,7 +1422,7 @@ state 88
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1629,36 +1633,16 @@ state 101
 
 state 102
 
-    (86) factor -> LEFTPARENTHESIS . expresion RIGHTPARENTHESIS
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
+    (86) factor -> LEFTPARENTHESIS . neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (97) neupoint_add_wall -> .
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
+    LEFTPARENTHESIS reduce using rule 97 (neupoint_add_wall -> .)
+    CTEINT          reduce using rule 97 (neupoint_add_wall -> .)
+    CTEFLOAT        reduce using rule 97 (neupoint_add_wall -> .)
+    CTECHAR         reduce using rule 97 (neupoint_add_wall -> .)
+    ID              reduce using rule 97 (neupoint_add_wall -> .)
 
-    expresion                      shift and go to state 141
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    neupoint_add_wall              shift and go to state 141
 
 state 103
 
@@ -1913,7 +1897,7 @@ state 123
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2168,10 +2152,36 @@ state 140
 
 state 141
 
-    (86) factor -> LEFTPARENTHESIS expresion . RIGHTPARENTHESIS
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall . expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
 
-    RIGHTPARENTHESIS shift and go to state 170
+    LEFTPARENTHESIS shift and go to state 102
+    CTEINT          shift and go to state 103
+    CTEFLOAT        shift and go to state 104
+    CTECHAR         shift and go to state 105
+    ID              shift and go to state 62
 
+    expresion                      shift and go to state 170
+    exp                            shift and go to state 99
+    term                           shift and go to state 100
+    factor                         shift and go to state 101
+    function_call                  shift and go to state 106
+    identifier                     shift and go to state 97
 
 state 142
 
@@ -2317,7 +2327,7 @@ state 150
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2356,7 +2366,7 @@ state 151
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2433,7 +2443,7 @@ state 155
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2542,7 +2552,7 @@ state 162
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2648,27 +2658,9 @@ state 169
 
 state 170
 
-    (86) factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion . RIGHTPARENTHESIS neupoint_remove_wall
 
-    MULTIPLY        reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    DIVIDE          reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    MOD             reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    PLUS            reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    MINUS           reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    COMPARISON      reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    GREATERHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    LESSTHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    GREATERTHAN     reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    LESSTHAN        reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    DIFFERENT       reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    OR              reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    AND             reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    SEMICOLON       reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    COMMA           reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    RIGHTPARENTHESIS reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    RIGHTSQRBRACKET reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    TO              reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
-    DO              reduce using rule 86 (factor -> LEFTPARENTHESIS expresion RIGHTPARENTHESIS .)
+    RIGHTPARENTHESIS shift and go to state 187
 
 
 state 171
@@ -2729,7 +2721,7 @@ state 176
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 187
+    block                          shift and go to state 188
 
 state 177
 
@@ -2761,7 +2753,7 @@ state 179
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2778,7 +2770,7 @@ state 179
     CTECHAR         shift and go to state 105
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 188
+    expresion                      shift and go to state 189
     exp                            shift and go to state 99
     term                           shift and go to state 100
     factor                         shift and go to state 101
@@ -2799,7 +2791,7 @@ state 181
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2816,7 +2808,7 @@ state 181
     CTECHAR         shift and go to state 105
     ID              shift and go to state 62
 
-    exp                            shift and go to state 189
+    exp                            shift and go to state 190
     term                           shift and go to state 100
     factor                         shift and go to state 101
     function_call                  shift and go to state 106
@@ -2855,7 +2847,7 @@ state 185
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2873,7 +2865,7 @@ state 185
     ID              shift and go to state 62
 
     term                           shift and go to state 100
-    exp                            shift and go to state 190
+    exp                            shift and go to state 191
     factor                         shift and go to state 101
     function_call                  shift and go to state 106
     identifier                     shift and go to state 97
@@ -2883,7 +2875,7 @@ state 186
     (84) term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator . term
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2901,16 +2893,43 @@ state 186
     ID              shift and go to state 62
 
     factor                         shift and go to state 101
-    term                           shift and go to state 191
+    term                           shift and go to state 192
     function_call                  shift and go to state 106
     identifier                     shift and go to state 97
 
 state 187
 
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS . neupoint_remove_wall
+    (98) neupoint_remove_wall -> .
+
+    MULTIPLY        reduce using rule 98 (neupoint_remove_wall -> .)
+    DIVIDE          reduce using rule 98 (neupoint_remove_wall -> .)
+    MOD             reduce using rule 98 (neupoint_remove_wall -> .)
+    PLUS            reduce using rule 98 (neupoint_remove_wall -> .)
+    MINUS           reduce using rule 98 (neupoint_remove_wall -> .)
+    COMPARISON      reduce using rule 98 (neupoint_remove_wall -> .)
+    GREATERHANOREQUAL reduce using rule 98 (neupoint_remove_wall -> .)
+    LESSTHANOREQUAL reduce using rule 98 (neupoint_remove_wall -> .)
+    GREATERTHAN     reduce using rule 98 (neupoint_remove_wall -> .)
+    LESSTHAN        reduce using rule 98 (neupoint_remove_wall -> .)
+    DIFFERENT       reduce using rule 98 (neupoint_remove_wall -> .)
+    OR              reduce using rule 98 (neupoint_remove_wall -> .)
+    AND             reduce using rule 98 (neupoint_remove_wall -> .)
+    SEMICOLON       reduce using rule 98 (neupoint_remove_wall -> .)
+    COMMA           reduce using rule 98 (neupoint_remove_wall -> .)
+    RIGHTPARENTHESIS reduce using rule 98 (neupoint_remove_wall -> .)
+    RIGHTSQRBRACKET reduce using rule 98 (neupoint_remove_wall -> .)
+    TO              reduce using rule 98 (neupoint_remove_wall -> .)
+    DO              reduce using rule 98 (neupoint_remove_wall -> .)
+
+    neupoint_remove_wall           shift and go to state 193
+
+state 188
+
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block . ELSE block
     (71) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .
 
-    ELSE            shift and go to state 192
+    ELSE            shift and go to state 194
     READ            reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
     WRITE           reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
     IF              reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
@@ -2921,21 +2940,21 @@ state 187
     RIGHTBRACKET    reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
 
 
-state 188
+state 189
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion . RIGHTSQRBRACKET
 
-    RIGHTSQRBRACKET shift and go to state 193
-
-
-state 189
-
-    (75) non_conditional -> FOR ID EQUALS exp TO exp . DO
-
-    DO              shift and go to state 194
+    RIGHTSQRBRACKET shift and go to state 195
 
 
 state 190
+
+    (75) non_conditional -> FOR ID EQUALS exp TO exp . DO
+
+    DO              shift and go to state 196
+
+
+state 191
 
     (82) exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .
 
@@ -2955,7 +2974,7 @@ state 190
     DO              reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
 
 
-state 191
+state 192
 
     (84) term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .
 
@@ -2977,7 +2996,32 @@ state 191
     DO              reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
 
 
-state 192
+state 193
+
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .
+
+    MULTIPLY        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    DIVIDE          reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    MOD             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    PLUS            reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    MINUS           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    COMPARISON      reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    GREATERHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    LESSTHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    GREATERTHAN     reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    LESSTHAN        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    DIFFERENT       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    OR              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    AND             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    SEMICOLON       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    COMMA           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    RIGHTPARENTHESIS reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    RIGHTSQRBRACKET reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    TO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+    DO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
+
+
+state 194
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE . block
     (48) block -> . LEFTBRACKET statutes_list RIGHTBRACKET
@@ -2985,9 +3029,9 @@ state 192
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 195
+    block                          shift and go to state 197
 
-state 193
+state 195
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .
 
@@ -3017,14 +3061,14 @@ state 193
     DO              reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
 
 
-state 194
+state 196
 
     (75) non_conditional -> FOR ID EQUALS exp TO exp DO .
 
     LEFTBRACKET     reduce using rule 75 (non_conditional -> FOR ID EQUALS exp TO exp DO .)
 
 
-state 195
+state 197
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block .
 

@@ -7,13 +7,10 @@ import sys
 
 from IntermediateCode import IntermediateCode
 from FunctionTable import FunctionTable
-from SemanticCube import SemanticCube
-from Quadruples import Quadruple
 
 # Initialize the helper objects
 funcTable = FunctionTable()
 interCode = IntermediateCode()
-semanticCube = SemanticCube()
 
 # Flags to make certain validations
 flgError = False
@@ -529,7 +526,7 @@ def p_term(p):
 
 def p_factor(p):
     '''
-    factor : LEFTPARENTHESIS expresion RIGHTPARENTHESIS
+    factor : LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
            | CTEINT neupoint_add_cte_operand
            | CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
@@ -579,39 +576,7 @@ def p_neupoint_arithmetic_exp_quad(p):
     '''
 
     # If the last operator is a PLUS or MINUS..
-    if(interCode.stkOperator):
-        if(interCode.stkOperator[-1] in ['+', '-']):
-            # Pop the last operands
-            rgtOperand = interCode.stkOperand.pop()
-            rgtOpndType = interCode.stkType.pop()
-            lftOperand = interCode.stkOperand.pop()
-            lftOpndType = interCode.stkType.pop()
-
-            # Pop the operator
-            operator = interCode.stkOperator.pop()
-
-            # Validate the operation
-            resultType = semanticCube.verifyOperations(
-                operator, lftOpndType, rgtOpndType)
-
-            # Raise exception if it is a invalid operation
-            if(resultType == "error"):
-                raise Exception("Invalid operation {} between {} and {}".format(
-                    operator, lftOpndType, rgtOpndType))
-
-            # If the operation is valid, generate the memory direction to the result
-            resultDirection = 'T' + str(interCode.countTemporals)
-            interCode.countTemporals += 1
-
-            # Push the result and it's type
-            interCode.stkOperand.append(resultDirection)
-            interCode.stkType.append(resultType)
-
-            # Push the quadruple
-            interCode.stkQuadruples.append(
-                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
-
-            print(interCode.stkQuadruples)
+    interCode.generateArithmeticQuadruple(['+', '-'])
 
 
 def p_neupoint_arithmetic_term_quad(p):
@@ -619,41 +584,23 @@ def p_neupoint_arithmetic_term_quad(p):
     neupoint_arithmetic_term_quad : 
     '''
 
-
     # If the last operator is a MULTIPLY, DIVIDE or MODULE..
-    if(interCode.stkOperator):
-        if(interCode.stkOperator[-1] in ['*', '/', '%']):
-            # Pop the last operands
-            rgtOperand = interCode.stkOperand.pop()
-            rgtOpndType = interCode.stkType.pop()
-            lftOperand = interCode.stkOperand.pop()
-            lftOpndType = interCode.stkType.pop()
+    interCode.generateArithmeticQuadruple(['*', '/', '%'])
 
-            # Pop the operator
-            operator = interCode.stkOperator.pop()
 
-            # Validate the operation
-            resultType = semanticCube.verifyOperations(
-                operator, lftOpndType, rgtOpndType)
+def p_neupoint_add_wall(p):
+    '''
+    neupoint_add_wall : 
+    '''
+    interCode.stkOperator.append('(')
 
-            # Raise exception if it is a invalid operation
-            if(resultType == "error"):
-                raise Exception("Invalid operation {} between {} and {}".format(
-                    operator, lftOpndType, rgtOpndType))
 
-            # If the operation is valid, generate the memory direction to the result
-            resultDirection = 'T' + str(interCode.countTemporals)
-            interCode.countTemporals += 1
-
-            # Push the result and it's type
-            interCode.stkOperand.append(resultDirection)
-            interCode.stkType.append(resultType)
-
-            # Push the quadruple
-            interCode.stkQuadruples.append(
-                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
-
-            print(interCode.stkQuadruples)
+def p_neupoint_remove_wall(p):
+    '''
+    neupoint_remove_wall : 
+    '''
+    if(interCode.stkOperator.pop() != '('):
+        raise Exception('Parenthesis Missing')
 
 
 # ====================== Rule for syntax errors ======================
