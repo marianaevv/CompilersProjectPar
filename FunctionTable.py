@@ -51,7 +51,7 @@ class FunctionTable:
 
         Args:
             funcName (string): The function name
-            varList (list): A list of tuples with the format (VarType, VarName)
+            varList (list): A list of tuples with the format (DataType, VarName)
             flgParams (bool, optional): Flag to know if the list are 
             parameters of the current function. Defaults to False.
 
@@ -97,7 +97,7 @@ class FunctionTable:
 
             # Add the variable to the function variables table
             self.__functionTable[funcName]['varTable'][var[1]] = {
-                'varType': var[0],
+                'dataType': var[0],
                 'size': size,
                 'flgArray': flgArray,
                 'dimensions': dimensions
@@ -127,7 +127,7 @@ class FunctionTable:
             return self.__functionTable['global']['varTable'][varName]
 
         # Check on local function scope
-        elif varName in self.__functionTable[funcName]['varTable'][varName]:
+        elif varName in self.__functionTable[funcName]['varTable']:
             return self.__functionTable[funcName]['varTable'][varName]
 
         # If not, the variable do no exists

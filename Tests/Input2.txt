@@ -6,7 +6,7 @@ var
     float valor;
     int Matriz[3][8];
 
-int module fact(int j, int y, char a)
+module int fact(int j, int y, char a)
 var int iJ;
 {i = j + (p - j * 2 + j);
 if(j == 1) then
@@ -15,7 +15,7 @@ if(j == 1) then
  {return (j + fact(j));}
 }
 
-void module inicia(int y)
+module void inicia(int y)
 var int x;
 {
     x=0;

@@ -249,11 +249,11 @@ def p_identifier(p):
     p[0] = p[1]
 
 
+# --------------- Variables Neural Points ---------------
 def p_neupoint_add_vars(p):
     '''
-    neupoint_add_vars : 
+    neupoint_add_vars :
     '''
-    print("Adding to ", interCode.currentFunction)
     funcTable.addVariables(interCode.currentFunction, p[-1])
 
 
@@ -291,20 +291,15 @@ def p_function(p):
         raise Exception(
             'Function "{}" is void and does not need a return'.format(p[3]))
 
-    # for i in p:
-    #     print(i, end=' ')
-    # print()
-
     flgHaveReturn = False
 
 
 def p_parameters_list(p):
     '''
-    parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS
+    parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS neupoint_add_parameters
                     | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
-    if(len(p) == 4):
-        funcTable.addVariables(interCode.currentFunction, p[2], True)
+    pass
 
 
 def p_parameter(p):
@@ -333,8 +328,6 @@ def p_parameter(p):
 
 
 # --------------- Functions Neural Points ---------------
-
-
 def p_neupoint_add_function(p):
     '''
     neupoint_add_function : 
@@ -342,6 +335,13 @@ def p_neupoint_add_function(p):
     interCode.currentFunction = p[-1]
     # Create the function table
     funcTable.addNewFunction(interCode.currentFunction, p[-2])
+
+
+def p_neupoint_add_parameters(p):
+    '''
+    neupoint_add_parameters :
+    '''
+    funcTable.addVariables(interCode.currentFunction, p[-2], True)
 
 
 def p_neupoint_back_global(p):
@@ -542,17 +542,19 @@ def p_neupoint_add_operator(p):
     neupoint_add_operator : 
     '''
     interCode.stkOperand.append(p[-1])
-    # print(interCode.stkOperand)
 
 
 def p_neupoint_add_operand(p):
     '''
     neupoint_add_operand : 
     '''
-    interCode.stkOperator.append(p[-1])
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
 
-    # print(interCode.stkOperator)
-    # print()
+    # Add name and datatype to the stacks
+    interCode.stkOperator.append(p[-1])
+    interCode.stkType.append(operandType)
 
 
 def p_neupoint_add_cte_operand(p):
@@ -567,10 +569,6 @@ def p_neupoint_add_cte_operand(p):
             interCode.stkType.append('str')
     else:
         interCode.stkType.append(type(p[-1]).__name__)
-
-    # print(interCode.stkOperator)
-    # print(interCode.stkType)
-    # print()
 
 
 # ====================== Rule for syntax errors ======================
