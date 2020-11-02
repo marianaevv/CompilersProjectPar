@@ -12,6 +12,12 @@ class memory:
             'bool' = {},
             'char' = {}
         }
+        self.temporalMemory = {
+            'int' = {},
+            'float' = {},
+            'bool' = {},
+            'char' = {}
+        }
         self.constantsMemory = {
             'int' = {},
             'float' = {},
@@ -26,17 +32,17 @@ class memory:
 
         Each memory context will be divided into types context (int, bool, float, char, temp)
         avoiding the use of casting values.
-        
+
         """
         self.globalMem = 1000
-        self.localMem = 21000
-        self.constantMem = 41000
-        self.intMem = 1
+        self.localMem = 17000
+        self.constantMem = 33000
+        self.temporalMem = 49000
+        self.intMem = 0
         self.floatMem = 4000
         self.charMem = 8000
         self.boolMem = 12000
-        self.tempMem = 16000
-        self.topLimit = 19999
+        self.topLimit = 15999
 
     def saveVariableGlobal(self,variables):
         """
@@ -105,6 +111,39 @@ class memory:
                 self.localMemory[self.localMem+self.charMem] = var
                 self.charMem += 1
 
+    def saveVariableTemporal(self,variables):
+         """
+        Saves values into the Temporal context depending on the type of value
+        being save (int, float, char, bool)
+        
+        Example: temporalMemory = {
+                                'int': {
+                                        '8001' :'32',
+                                        '8002' :'24'
+                                        },
+                                'float' :{
+                                        '5002' :'55',
+                                        '5003' :'63'
+                                        }
+                                 }
+
+        Args:
+            variables (string): list with the values to store.
+        """
+         for var in variables:
+            if type(var) is bool:
+                self.temporalMemory[self.temporalMem+self.boolMem] = var
+                self.boolMem += 1
+            elif type(var) is int:
+                self.temporalMemory[self.temporalMem+self.intMem] = var
+                self.intMem += 1
+            elif type(var) is float:
+                self.temporalMemory[self.temporalMem+self.floatMem] = var
+                self.floatMem += 1
+            else:
+                self.temporalMemory[self.temporalMem+self.charMem] = var
+                self.charMem += 1
+
     def saveVariableConstant(self,variables):
          """
         Saves values into the Constant context depending on the type of value
@@ -170,9 +209,7 @@ class memory:
                     return self.get_value(mem_address, self.globalMemory, 'char')
                 if(mem_address >= (self.globalMem + self.boolMem) and mem_address < (self.globalMem + self.tempMem)):
                     return self.get_value(mem_address, self.globalMemory, 'bool')    
-                if(mem_address >= (self.globalMem + self.tempMem) and mem_address < (self.globalMem + self.topLimit)):
-                    return self.get_value(mem_address, self.globalMemory, 'temp')
-            if( mem_address >= self.localMem and mem_address < self.constantMem):
+            if( mem_address >= self.localMem and mem_address < self.temporalMem):
                 if(mem_address >= (self.localMem + self.intMem) and mem_address < (self.localMem + self.floatMem)):
                     return self.get_value(mem_address, self.localMemory, 'int')
                 if(mem_address >= (self.localMem + self.floatMem) and mem_address < (self.localMem + self.charMem)):
@@ -181,8 +218,15 @@ class memory:
                     return self.get_value(mem_address, self.localMemory, 'char')
                 if(mem_address >= (self.localMem + self.boolMem) and mem_address < (self.localMem + self.tempMem)):
                     return self.get_value(mem_address, self.localMemory, 'bool')    
-                if(mem_address >= (self.localMem + self.tempMem) and mem_address < (self.localMem + self.topLimit)):
-                    return self.get_value(mem_address, self.localMemory, 'temp')
+            if( mem_address >= self.temporalMem and mem_address < self.constantMem):
+                if(mem_address >= (self.temporalMem + self.intMem) and mem_address < (self.temporalMem + self.floatMem)):
+                    return self.get_value(mem_address, self.temporalMemory, 'int')
+                if(mem_address >= (self.temporalMem + self.floatMem) and mem_address < (self.temporalMem + self.charMem)):
+                    return self.get_value(mem_address, self.temporalMemory, 'float')
+                if(mem_address >= (self.temporalMem + self.charMem) and mem_address < (self.temporalMem + self.boolMem)):
+                    return self.get_value(mem_address, self.temporalMemory, 'char')
+                if(mem_address >= (self.temporalMem + self.boolMem) and mem_address < (self.temporalMem + self.tempMem)):
+                    return self.get_value(mem_address, self.temporalMemory, 'bool')    
             if( mem_address >= self.constantMem and mem_address < (self.constantMem + self.topLimit)):
                 if(mem_address >= (self.constantMem + self.intMem) and mem_address < (self.constantMem + self.floatMem)):
                     return self.get_value(mem_address, self.constantMem, 'int')
@@ -192,7 +236,5 @@ class memory:
                     return self.get_value(mem_address, self.constantMem, 'char')
                 if(mem_address >= (self.constantMem + self.boolMem) and mem_address < (self.constantMem + self.tempMem)):
                     return self.get_value(mem_address, self.constantMem, 'bool')    
-                if(mem_address >= (self.constantMem + self.tempMem) and mem_address < (self.constantMem + self.topLimit)):
-                    return self.get_value(mem_address, self.constantMem, 'temp')
         
        
