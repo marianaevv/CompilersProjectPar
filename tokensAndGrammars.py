@@ -36,7 +36,7 @@ tokens = [
     # Logical Operators
     'AND',
     'OR',
-    # Assignment Operators
+    # Asignment Operators
     'EQUALS',
     'PLUSEQUALS',
     'SUBSTRACTEQUALS',
@@ -401,7 +401,7 @@ def p_statutes_list(p):
 
 def p_statute(p):
     '''
-    statute : asignation
+    statute : assignment
             | reading
             | writing
             | decision
@@ -412,13 +412,13 @@ def p_statute(p):
     pass
 
 
-def p_asignation(p):
+def p_assignment(p):
     '''
-    asignation : identifier EQUALS expresion SEMICOLON
-               | identifier PLUSEQUALS expresion SEMICOLON
-               | identifier SUBSTRACTEQUALS expresion SEMICOLON
-               | identifier INCREMENT SEMICOLON
-               | identifier DECREMENT SEMICOLON
+    assignment : identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+               | identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     '''
     pass
 
@@ -526,7 +526,7 @@ def p_term(p):
 
 def p_factor(p):
     '''
-    factor : LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    factor : LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
            | CTEINT neupoint_add_cte_operand
            | CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
@@ -599,9 +599,29 @@ def p_neupoint_remove_wall(p):
     '''
     neupoint_remove_wall : 
     '''
-    if(interCode.stkOperator.pop() != '('):
+    openWall = interCode.stkOperator.pop()
+    if(openWall != '('):
         raise Exception('Parenthesis Missing')
 
+
+def p_neupoint_assignment_quad(p):
+    '''
+    neupoint_assignment_quad : 
+    '''
+    print(interCode.stkOperator)
+    print(interCode.stkOperand)
+    print(interCode.stkType)
+    interCode.generateAssignmentQuad()
+
+
+def p_neupoint_assignment_single_quad(p):
+    '''
+    neupoint_assignment_single_quad : 
+    '''
+    print(interCode.stkOperator)
+    print(interCode.stkOperand)
+    print(interCode.stkType)
+    interCode.generateAssignmentSingleQuad()
 
 # ====================== Rule for syntax errors ======================
 def p_error(p):

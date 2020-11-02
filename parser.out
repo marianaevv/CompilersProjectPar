@@ -54,18 +54,18 @@ Rule 48    block -> LEFTBRACKET statutes_list RIGHTBRACKET
 Rule 49    block -> LEFTBRACKET RIGHTBRACKET
 Rule 50    statutes_list -> statute statutes_list
 Rule 51    statutes_list -> statute
-Rule 52    statute -> asignation
+Rule 52    statute -> assignment
 Rule 53    statute -> reading
 Rule 54    statute -> writing
 Rule 55    statute -> decision
 Rule 56    statute -> loop
 Rule 57    statute -> function_return
 Rule 58    statute -> function_call SEMICOLON
-Rule 59    asignation -> identifier EQUALS expresion SEMICOLON
-Rule 60    asignation -> identifier PLUSEQUALS expresion SEMICOLON
-Rule 61    asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON
-Rule 62    asignation -> identifier INCREMENT SEMICOLON
-Rule 63    asignation -> identifier DECREMENT SEMICOLON
+Rule 59    assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+Rule 60    assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+Rule 61    assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+Rule 62    assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+Rule 63    assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
 Rule 64    reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
 Rule 65    writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
 Rule 66    writing_list -> CTESTRING COMMA writing_list
@@ -88,7 +88,7 @@ Rule 82    exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_op
 Rule 83    exp -> term neupoint_arithmetic_exp_quad
 Rule 84    term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
 Rule 85    term -> factor neupoint_arithmetic_term_quad
-Rule 86    factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+Rule 86    factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
 Rule 87    factor -> CTEINT neupoint_add_cte_operand
 Rule 88    factor -> CTEFLOAT neupoint_add_cte_operand
 Rule 89    factor -> CTECHAR neupoint_add_cte_operand
@@ -101,6 +101,8 @@ Rule 95    neupoint_arithmetic_exp_quad -> <empty>
 Rule 96    neupoint_arithmetic_term_quad -> <empty>
 Rule 97    neupoint_add_wall -> <empty>
 Rule 98    neupoint_remove_wall -> <empty>
+Rule 99    neupoint_assignment_quad -> <empty>
+Rule 100   neupoint_assignment_single_quad -> <empty>
 
 Terminals, with rules where they appear
 
@@ -157,7 +159,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
-asignation           : 52
+assignment           : 52
 block                : 1 2 3 4 26 27 70 70 71 72 73
 comparators          : 80
 conditional          : 72
@@ -179,13 +181,15 @@ ids_list             : 16 64
 loop                 : 56
 neupoint_add_cte_operand : 87 88 89
 neupoint_add_function : 26 27
-neupoint_add_operand : 91
-neupoint_add_operator : 80 82 84
+neupoint_add_operand : 59 60 61 62 63 91
+neupoint_add_operator : 59 60 61 62 63 80 82 84
 neupoint_add_parameters : 28
 neupoint_add_vars    : 8
 neupoint_add_wall    : 86
 neupoint_arithmetic_exp_quad : 82 83
 neupoint_arithmetic_term_quad : 84 85
+neupoint_assignment_quad : 59 60 61
+neupoint_assignment_single_quad : 62 63
 neupoint_back_global : 1 3
 neupoint_remove_wall : 86
 non_conditional      : 73
@@ -565,18 +569,18 @@ state 37
     (49) block -> LEFTBRACKET . RIGHTBRACKET
     (50) statutes_list -> . statute statutes_list
     (51) statutes_list -> . statute
-    (52) statute -> . asignation
+    (52) statute -> . assignment
     (53) statute -> . reading
     (54) statute -> . writing
     (55) statute -> . decision
     (56) statute -> . loop
     (57) statute -> . function_return
     (58) statute -> . function_call SEMICOLON
-    (59) asignation -> . identifier EQUALS expresion SEMICOLON
-    (60) asignation -> . identifier PLUSEQUALS expresion SEMICOLON
-    (61) asignation -> . identifier SUBSTRACTEQUALS expresion SEMICOLON
-    (62) asignation -> . identifier INCREMENT SEMICOLON
-    (63) asignation -> . identifier DECREMENT SEMICOLON
+    (59) assignment -> . identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (60) assignment -> . identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (61) assignment -> . identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (62) assignment -> . identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (63) assignment -> . identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     (64) reading -> . READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
     (65) writing -> . WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
     (70) decision -> . IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
@@ -602,7 +606,7 @@ state 37
 
     statutes_list                  shift and go to state 45
     statute                        shift and go to state 47
-    asignation                     shift and go to state 48
+    assignment                     shift and go to state 48
     reading                        shift and go to state 49
     writing                        shift and go to state 50
     decision                       shift and go to state 51
@@ -721,18 +725,18 @@ state 47
     (51) statutes_list -> statute .
     (50) statutes_list -> . statute statutes_list
     (51) statutes_list -> . statute
-    (52) statute -> . asignation
+    (52) statute -> . assignment
     (53) statute -> . reading
     (54) statute -> . writing
     (55) statute -> . decision
     (56) statute -> . loop
     (57) statute -> . function_return
     (58) statute -> . function_call SEMICOLON
-    (59) asignation -> . identifier EQUALS expresion SEMICOLON
-    (60) asignation -> . identifier PLUSEQUALS expresion SEMICOLON
-    (61) asignation -> . identifier SUBSTRACTEQUALS expresion SEMICOLON
-    (62) asignation -> . identifier INCREMENT SEMICOLON
-    (63) asignation -> . identifier DECREMENT SEMICOLON
+    (59) assignment -> . identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (60) assignment -> . identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (61) assignment -> . identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (62) assignment -> . identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (63) assignment -> . identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     (64) reading -> . READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
     (65) writing -> . WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
     (70) decision -> . IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
@@ -758,7 +762,7 @@ state 47
 
     statute                        shift and go to state 47
     statutes_list                  shift and go to state 73
-    asignation                     shift and go to state 48
+    assignment                     shift and go to state 48
     reading                        shift and go to state 49
     writing                        shift and go to state 50
     decision                       shift and go to state 51
@@ -771,16 +775,16 @@ state 47
 
 state 48
 
-    (52) statute -> asignation .
+    (52) statute -> assignment .
 
-    READ            reduce using rule 52 (statute -> asignation .)
-    WRITE           reduce using rule 52 (statute -> asignation .)
-    IF              reduce using rule 52 (statute -> asignation .)
-    RETURN          reduce using rule 52 (statute -> asignation .)
-    ID              reduce using rule 52 (statute -> asignation .)
-    WHILE           reduce using rule 52 (statute -> asignation .)
-    FOR             reduce using rule 52 (statute -> asignation .)
-    RIGHTBRACKET    reduce using rule 52 (statute -> asignation .)
+    READ            reduce using rule 52 (statute -> assignment .)
+    WRITE           reduce using rule 52 (statute -> assignment .)
+    IF              reduce using rule 52 (statute -> assignment .)
+    RETURN          reduce using rule 52 (statute -> assignment .)
+    ID              reduce using rule 52 (statute -> assignment .)
+    WHILE           reduce using rule 52 (statute -> assignment .)
+    FOR             reduce using rule 52 (statute -> assignment .)
+    RIGHTBRACKET    reduce using rule 52 (statute -> assignment .)
 
 
 state 49
@@ -862,31 +866,33 @@ state 54
 
 state 55
 
-    (59) asignation -> identifier . EQUALS expresion SEMICOLON
-    (60) asignation -> identifier . PLUSEQUALS expresion SEMICOLON
-    (61) asignation -> identifier . SUBSTRACTEQUALS expresion SEMICOLON
-    (62) asignation -> identifier . INCREMENT SEMICOLON
-    (63) asignation -> identifier . DECREMENT SEMICOLON
+    (59) assignment -> identifier . neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (60) assignment -> identifier . neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (61) assignment -> identifier . neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (62) assignment -> identifier . neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (63) assignment -> identifier . neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (93) neupoint_add_operand -> .
 
-    EQUALS          shift and go to state 75
-    PLUSEQUALS      shift and go to state 76
-    SUBSTRACTEQUALS shift and go to state 77
-    INCREMENT       shift and go to state 78
-    DECREMENT       shift and go to state 79
+    EQUALS          reduce using rule 93 (neupoint_add_operand -> .)
+    PLUSEQUALS      reduce using rule 93 (neupoint_add_operand -> .)
+    SUBSTRACTEQUALS reduce using rule 93 (neupoint_add_operand -> .)
+    INCREMENT       reduce using rule 93 (neupoint_add_operand -> .)
+    DECREMENT       reduce using rule 93 (neupoint_add_operand -> .)
 
+    neupoint_add_operand           shift and go to state 75
 
 state 56
 
     (64) reading -> READ . LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
 
-    LEFTPARENTHESIS shift and go to state 80
+    LEFTPARENTHESIS shift and go to state 76
 
 
 state 57
 
     (65) writing -> WRITE . LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON
 
-    LEFTPARENTHESIS shift and go to state 81
+    LEFTPARENTHESIS shift and go to state 77
 
 
 state 58
@@ -894,7 +900,7 @@ state 58
     (70) decision -> IF . LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
     (71) decision -> IF . LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block
 
-    LEFTPARENTHESIS shift and go to state 82
+    LEFTPARENTHESIS shift and go to state 78
 
 
 state 59
@@ -905,7 +911,7 @@ state 59
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 83
+    block                          shift and go to state 79
 
 state 60
 
@@ -915,13 +921,13 @@ state 60
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 84
+    block                          shift and go to state 80
 
 state 61
 
     (76) function_return -> RETURN . LEFTPARENTHESIS exp RIGHTPARENTHESIS SEMICOLON
 
-    LEFTPARENTHESIS shift and go to state 85
+    LEFTPARENTHESIS shift and go to state 81
 
 
 state 62
@@ -931,8 +937,8 @@ state 62
     (19) identifier -> ID . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> ID .
 
-    LEFTPARENTHESIS shift and go to state 86
-    LEFTSQRBRACKET  shift and go to state 87
+    LEFTPARENTHESIS shift and go to state 82
+    LEFTSQRBRACKET  shift and go to state 83
     EQUALS          reduce using rule 20 (identifier -> ID .)
     PLUSEQUALS      reduce using rule 20 (identifier -> ID .)
     SUBSTRACTEQUALS reduce using rule 20 (identifier -> ID .)
@@ -951,11 +957,11 @@ state 62
     DIFFERENT       reduce using rule 20 (identifier -> ID .)
     OR              reduce using rule 20 (identifier -> ID .)
     AND             reduce using rule 20 (identifier -> ID .)
-    SEMICOLON       reduce using rule 20 (identifier -> ID .)
     COMMA           reduce using rule 20 (identifier -> ID .)
     RIGHTPARENTHESIS reduce using rule 20 (identifier -> ID .)
     RIGHTSQRBRACKET reduce using rule 20 (identifier -> ID .)
     TO              reduce using rule 20 (identifier -> ID .)
+    SEMICOLON       reduce using rule 20 (identifier -> ID .)
     DO              reduce using rule 20 (identifier -> ID .)
 
 
@@ -963,14 +969,14 @@ state 63
 
     (74) conditional -> WHILE . LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
 
-    LEFTPARENTHESIS shift and go to state 88
+    LEFTPARENTHESIS shift and go to state 84
 
 
 state 64
 
     (75) non_conditional -> FOR . ID EQUALS exp TO exp DO
 
-    ID              shift and go to state 89
+    ID              shift and go to state 85
 
 
 state 65
@@ -994,7 +1000,7 @@ state 67
     (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT . RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
     (14) decla_identifier -> ID LEFTSQRBRACKET CTEINT . RIGHTSQRBRACKET
 
-    RIGHTSQRBRACKET shift and go to state 90
+    RIGHTSQRBRACKET shift and go to state 86
 
 
 state 68
@@ -1008,8 +1014,8 @@ state 68
     VAR             shift and go to state 8
     LEFTBRACKET     shift and go to state 37
 
-    vars                           shift and go to state 91
-    block                          shift and go to state 92
+    vars                           shift and go to state 87
+    block                          shift and go to state 88
 
 state 69
 
@@ -1021,13 +1027,13 @@ state 69
     (6) data_type -> . FLOAT
     (7) data_type -> . CHAR
 
-    RIGHTPARENTHESIS shift and go to state 94
+    RIGHTPARENTHESIS shift and go to state 90
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
     CHAR            shift and go to state 19
 
-    parameter                      shift and go to state 93
-    data_type                      shift and go to state 95
+    parameter                      shift and go to state 89
+    data_type                      shift and go to state 91
 
 state 70
 
@@ -1037,7 +1043,7 @@ state 70
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 96
+    block                          shift and go to state 92
 
 state 71
 
@@ -1087,118 +1093,20 @@ state 74
 
 state 75
 
-    (59) asignation -> identifier EQUALS . expresion SEMICOLON
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
+    (59) assignment -> identifier neupoint_add_operand . EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (60) assignment -> identifier neupoint_add_operand . PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (61) assignment -> identifier neupoint_add_operand . SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (62) assignment -> identifier neupoint_add_operand . INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (63) assignment -> identifier neupoint_add_operand . DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
+    EQUALS          shift and go to state 93
+    PLUSEQUALS      shift and go to state 94
+    SUBSTRACTEQUALS shift and go to state 95
+    INCREMENT       shift and go to state 96
+    DECREMENT       shift and go to state 97
 
-    identifier                     shift and go to state 97
-    expresion                      shift and go to state 98
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
 
 state 76
-
-    (60) asignation -> identifier PLUSEQUALS . expresion SEMICOLON
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
-
-    identifier                     shift and go to state 97
-    expresion                      shift and go to state 107
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-
-state 77
-
-    (61) asignation -> identifier SUBSTRACTEQUALS . expresion SEMICOLON
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
-
-    identifier                     shift and go to state 97
-    expresion                      shift and go to state 108
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-
-state 78
-
-    (62) asignation -> identifier INCREMENT . SEMICOLON
-
-    SEMICOLON       shift and go to state 109
-
-
-state 79
-
-    (63) asignation -> identifier DECREMENT . SEMICOLON
-
-    SEMICOLON       shift and go to state 110
-
-
-state 80
 
     (64) reading -> READ LEFTPARENTHESIS . ids_list RIGHTPARENTHESIS SEMICOLON
     (16) ids_list -> . identifier COMMA ids_list
@@ -1207,12 +1115,12 @@ state 80
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    ID              shift and go to state 113
+    ID              shift and go to state 100
 
-    ids_list                       shift and go to state 111
-    identifier                     shift and go to state 112
+    ids_list                       shift and go to state 98
+    identifier                     shift and go to state 99
 
-state 81
+state 77
 
     (65) writing -> WRITE LEFTPARENTHESIS . writing_list RIGHTPARENTHESIS SEMICOLON
     (66) writing_list -> . CTESTRING COMMA writing_list
@@ -1225,7 +1133,7 @@ state 81
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1236,22 +1144,22 @@ state 81
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    CTESTRING       shift and go to state 115
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    CTESTRING       shift and go to state 103
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    writing_list                   shift and go to state 114
-    expresion                      shift and go to state 116
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    writing_list                   shift and go to state 102
+    expresion                      shift and go to state 104
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 82
+state 78
 
     (70) decision -> IF LEFTPARENTHESIS . expresion RIGHTPARENTHESIS THEN block ELSE block
     (71) decision -> IF LEFTPARENTHESIS . expresion RIGHTPARENTHESIS THEN block
@@ -1261,7 +1169,7 @@ state 82
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1272,20 +1180,20 @@ state 82
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 117
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion                      shift and go to state 113
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 83
+state 79
 
     (72) loop -> conditional block .
 
@@ -1299,7 +1207,7 @@ state 83
     RIGHTBRACKET    reduce using rule 72 (loop -> conditional block .)
 
 
-state 84
+state 80
 
     (73) loop -> non_conditional block .
 
@@ -1313,14 +1221,14 @@ state 84
     RIGHTBRACKET    reduce using rule 73 (loop -> non_conditional block .)
 
 
-state 85
+state 81
 
     (76) function_return -> RETURN LEFTPARENTHESIS . exp RIGHTPARENTHESIS SEMICOLON
     (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1331,19 +1239,19 @@ state 85
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    exp                            shift and go to state 118
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    exp                            shift and go to state 114
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 86
+state 82
 
     (77) function_call -> ID LEFTPARENTHESIS . expresion_list RIGHTPARENTHESIS
     (78) expresion_list -> . expresion COMMA expresion_list
@@ -1354,7 +1262,7 @@ state 86
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1365,21 +1273,21 @@ state 86
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion_list                 shift and go to state 119
-    expresion                      shift and go to state 120
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion_list                 shift and go to state 115
+    expresion                      shift and go to state 116
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 87
+state 83
 
     (18) identifier -> ID LEFTSQRBRACKET . expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (19) identifier -> ID LEFTSQRBRACKET . expresion RIGHTSQRBRACKET
@@ -1389,7 +1297,7 @@ state 87
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1400,20 +1308,20 @@ state 87
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 121
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion                      shift and go to state 117
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 88
+state 84
 
     (74) conditional -> WHILE LEFTPARENTHESIS . expresion RIGHTPARENTHESIS DO
     (80) expresion -> . exp comparators neupoint_add_operator exp
@@ -1422,7 +1330,7 @@ state 88
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1433,38 +1341,38 @@ state 88
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 122
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion                      shift and go to state 118
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 89
+state 85
 
     (75) non_conditional -> FOR ID . EQUALS exp TO exp DO
 
-    EQUALS          shift and go to state 123
+    EQUALS          shift and go to state 119
 
 
-state 90
+state 86
 
     (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET . LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET
     (14) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .
 
-    LEFTSQRBRACKET  shift and go to state 124
+    LEFTSQRBRACKET  shift and go to state 120
     COMMA           reduce using rule 14 (decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .)
     SEMICOLON       reduce using rule 14 (decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .)
     RIGHTPARENTHESIS reduce using rule 14 (decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .)
 
 
-state 91
+state 87
 
     (26) function -> MODULE return_type ID neupoint_add_function parameters_list vars . block
     (48) block -> . LEFTBRACKET statutes_list RIGHTBRACKET
@@ -1472,9 +1380,9 @@ state 91
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 125
+    block                          shift and go to state 121
 
-state 92
+state 88
 
     (27) function -> MODULE return_type ID neupoint_add_function parameters_list block .
 
@@ -1482,14 +1390,14 @@ state 92
     MAIN            reduce using rule 27 (function -> MODULE return_type ID neupoint_add_function parameters_list block .)
 
 
-state 93
+state 89
 
     (28) parameters_list -> LEFTPARENTHESIS parameter . RIGHTPARENTHESIS neupoint_add_parameters
 
-    RIGHTPARENTHESIS shift and go to state 126
+    RIGHTPARENTHESIS shift and go to state 122
 
 
-state 94
+state 90
 
     (29) parameters_list -> LEFTPARENTHESIS RIGHTPARENTHESIS .
 
@@ -1497,7 +1405,7 @@ state 94
     LEFTBRACKET     reduce using rule 29 (parameters_list -> LEFTPARENTHESIS RIGHTPARENTHESIS .)
 
 
-state 95
+state 91
 
     (30) parameter -> data_type . decla_identifier COMMA parameter
     (31) parameter -> data_type . decla_identifier
@@ -1507,50 +1415,138 @@ state 95
 
     ID              shift and go to state 31
 
-    decla_identifier               shift and go to state 127
+    decla_identifier               shift and go to state 123
 
-state 96
+state 92
 
     (1) program -> PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block .
 
     $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block .)
 
 
+state 93
+
+    (59) assignment -> identifier neupoint_add_operand EQUALS . neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (92) neupoint_add_operator -> .
+
+    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
+    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
+    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
+    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
+    ID              reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 124
+
+state 94
+
+    (60) assignment -> identifier neupoint_add_operand PLUSEQUALS . neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (92) neupoint_add_operator -> .
+
+    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
+    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
+    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
+    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
+    ID              reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 125
+
+state 95
+
+    (61) assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS . neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+    (92) neupoint_add_operator -> .
+
+    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
+    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
+    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
+    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
+    ID              reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 126
+
+state 96
+
+    (62) assignment -> identifier neupoint_add_operand INCREMENT . neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (92) neupoint_add_operator -> .
+
+    SEMICOLON       reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 127
+
 state 97
 
-    (91) factor -> identifier . neupoint_add_operand
-    (93) neupoint_add_operand -> .
+    (63) assignment -> identifier neupoint_add_operand DECREMENT . neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    (92) neupoint_add_operator -> .
 
-    MULTIPLY        reduce using rule 93 (neupoint_add_operand -> .)
-    DIVIDE          reduce using rule 93 (neupoint_add_operand -> .)
-    MOD             reduce using rule 93 (neupoint_add_operand -> .)
-    PLUS            reduce using rule 93 (neupoint_add_operand -> .)
-    MINUS           reduce using rule 93 (neupoint_add_operand -> .)
-    COMPARISON      reduce using rule 93 (neupoint_add_operand -> .)
-    GREATERHANOREQUAL reduce using rule 93 (neupoint_add_operand -> .)
-    LESSTHANOREQUAL reduce using rule 93 (neupoint_add_operand -> .)
-    GREATERTHAN     reduce using rule 93 (neupoint_add_operand -> .)
-    LESSTHAN        reduce using rule 93 (neupoint_add_operand -> .)
-    DIFFERENT       reduce using rule 93 (neupoint_add_operand -> .)
-    OR              reduce using rule 93 (neupoint_add_operand -> .)
-    AND             reduce using rule 93 (neupoint_add_operand -> .)
-    SEMICOLON       reduce using rule 93 (neupoint_add_operand -> .)
-    COMMA           reduce using rule 93 (neupoint_add_operand -> .)
-    RIGHTPARENTHESIS reduce using rule 93 (neupoint_add_operand -> .)
-    RIGHTSQRBRACKET reduce using rule 93 (neupoint_add_operand -> .)
-    TO              reduce using rule 93 (neupoint_add_operand -> .)
-    DO              reduce using rule 93 (neupoint_add_operand -> .)
+    SEMICOLON       reduce using rule 92 (neupoint_add_operator -> .)
 
-    neupoint_add_operand           shift and go to state 128
+    neupoint_add_operator          shift and go to state 128
 
 state 98
 
-    (59) asignation -> identifier EQUALS expresion . SEMICOLON
+    (64) reading -> READ LEFTPARENTHESIS ids_list . RIGHTPARENTHESIS SEMICOLON
 
-    SEMICOLON       shift and go to state 129
+    RIGHTPARENTHESIS shift and go to state 129
 
 
 state 99
+
+    (16) ids_list -> identifier . COMMA ids_list
+    (17) ids_list -> identifier .
+
+    COMMA           shift and go to state 130
+    RIGHTPARENTHESIS reduce using rule 17 (ids_list -> identifier .)
+
+
+state 100
+
+    (18) identifier -> ID . LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> ID . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> ID .
+
+    LEFTSQRBRACKET  shift and go to state 83
+    COMMA           reduce using rule 20 (identifier -> ID .)
+    RIGHTPARENTHESIS reduce using rule 20 (identifier -> ID .)
+
+
+state 101
+
+    (86) factor -> LEFTPARENTHESIS . neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (97) neupoint_add_wall -> .
+
+    LEFTPARENTHESIS reduce using rule 97 (neupoint_add_wall -> .)
+    CTEINT          reduce using rule 97 (neupoint_add_wall -> .)
+    CTEFLOAT        reduce using rule 97 (neupoint_add_wall -> .)
+    CTECHAR         reduce using rule 97 (neupoint_add_wall -> .)
+    ID              reduce using rule 97 (neupoint_add_wall -> .)
+
+    neupoint_add_wall              shift and go to state 131
+
+state 102
+
+    (65) writing -> WRITE LEFTPARENTHESIS writing_list . RIGHTPARENTHESIS SEMICOLON
+
+    RIGHTPARENTHESIS shift and go to state 132
+
+
+state 103
+
+    (66) writing_list -> CTESTRING . COMMA writing_list
+    (68) writing_list -> CTESTRING .
+
+    COMMA           shift and go to state 133
+    RIGHTPARENTHESIS reduce using rule 68 (writing_list -> CTESTRING .)
+
+
+state 104
+
+    (67) writing_list -> expresion . COMMA writing_list
+    (69) writing_list -> expresion .
+
+    COMMA           shift and go to state 134
+    RIGHTPARENTHESIS reduce using rule 69 (writing_list -> expresion .)
+
+
+state 105
 
     (80) expresion -> exp . comparators neupoint_add_operator exp
     (81) expresion -> exp .
@@ -1563,22 +1559,22 @@ state 99
     (41) comparators -> . OR
     (42) comparators -> . AND
 
-    SEMICOLON       reduce using rule 81 (expresion -> exp .)
     COMMA           reduce using rule 81 (expresion -> exp .)
     RIGHTPARENTHESIS reduce using rule 81 (expresion -> exp .)
     RIGHTSQRBRACKET reduce using rule 81 (expresion -> exp .)
-    COMPARISON      shift and go to state 131
-    GREATERHANOREQUAL shift and go to state 132
-    LESSTHANOREQUAL shift and go to state 133
-    GREATERTHAN     shift and go to state 134
-    LESSTHAN        shift and go to state 135
-    DIFFERENT       shift and go to state 136
-    OR              shift and go to state 137
-    AND             shift and go to state 138
+    SEMICOLON       reduce using rule 81 (expresion -> exp .)
+    COMPARISON      shift and go to state 136
+    GREATERHANOREQUAL shift and go to state 137
+    LESSTHANOREQUAL shift and go to state 138
+    GREATERTHAN     shift and go to state 139
+    LESSTHAN        shift and go to state 140
+    DIFFERENT       shift and go to state 141
+    OR              shift and go to state 142
+    AND             shift and go to state 143
 
-    comparators                    shift and go to state 130
+    comparators                    shift and go to state 135
 
-state 100
+state 106
 
     (82) exp -> term . neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
     (83) exp -> term . neupoint_arithmetic_exp_quad
@@ -1594,16 +1590,16 @@ state 100
     DIFFERENT       reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     OR              reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     AND             reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
-    SEMICOLON       reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     COMMA           reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     RIGHTPARENTHESIS reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     RIGHTSQRBRACKET reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     TO              reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
+    SEMICOLON       reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
     DO              reduce using rule 95 (neupoint_arithmetic_exp_quad -> .)
 
-    neupoint_arithmetic_exp_quad   shift and go to state 139
+    neupoint_arithmetic_exp_quad   shift and go to state 144
 
-state 101
+state 107
 
     (84) term -> factor . neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> factor . neupoint_arithmetic_term_quad
@@ -1622,29 +1618,16 @@ state 101
     DIFFERENT       reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     OR              reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     AND             reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
-    SEMICOLON       reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     COMMA           reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     RIGHTPARENTHESIS reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     RIGHTSQRBRACKET reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     TO              reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
+    SEMICOLON       reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
     DO              reduce using rule 96 (neupoint_arithmetic_term_quad -> .)
 
-    neupoint_arithmetic_term_quad  shift and go to state 140
+    neupoint_arithmetic_term_quad  shift and go to state 145
 
-state 102
-
-    (86) factor -> LEFTPARENTHESIS . neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (97) neupoint_add_wall -> .
-
-    LEFTPARENTHESIS reduce using rule 97 (neupoint_add_wall -> .)
-    CTEINT          reduce using rule 97 (neupoint_add_wall -> .)
-    CTEFLOAT        reduce using rule 97 (neupoint_add_wall -> .)
-    CTECHAR         reduce using rule 97 (neupoint_add_wall -> .)
-    ID              reduce using rule 97 (neupoint_add_wall -> .)
-
-    neupoint_add_wall              shift and go to state 141
-
-state 103
+state 108
 
     (87) factor -> CTEINT . neupoint_add_cte_operand
     (94) neupoint_add_cte_operand -> .
@@ -1662,16 +1645,16 @@ state 103
     DIFFERENT       reduce using rule 94 (neupoint_add_cte_operand -> .)
     OR              reduce using rule 94 (neupoint_add_cte_operand -> .)
     AND             reduce using rule 94 (neupoint_add_cte_operand -> .)
-    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     COMMA           reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTPARENTHESIS reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTSQRBRACKET reduce using rule 94 (neupoint_add_cte_operand -> .)
     TO              reduce using rule 94 (neupoint_add_cte_operand -> .)
+    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     DO              reduce using rule 94 (neupoint_add_cte_operand -> .)
 
-    neupoint_add_cte_operand       shift and go to state 142
+    neupoint_add_cte_operand       shift and go to state 146
 
-state 104
+state 109
 
     (88) factor -> CTEFLOAT . neupoint_add_cte_operand
     (94) neupoint_add_cte_operand -> .
@@ -1689,16 +1672,16 @@ state 104
     DIFFERENT       reduce using rule 94 (neupoint_add_cte_operand -> .)
     OR              reduce using rule 94 (neupoint_add_cte_operand -> .)
     AND             reduce using rule 94 (neupoint_add_cte_operand -> .)
-    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     COMMA           reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTPARENTHESIS reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTSQRBRACKET reduce using rule 94 (neupoint_add_cte_operand -> .)
     TO              reduce using rule 94 (neupoint_add_cte_operand -> .)
+    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     DO              reduce using rule 94 (neupoint_add_cte_operand -> .)
 
-    neupoint_add_cte_operand       shift and go to state 143
+    neupoint_add_cte_operand       shift and go to state 147
 
-state 105
+state 110
 
     (89) factor -> CTECHAR . neupoint_add_cte_operand
     (94) neupoint_add_cte_operand -> .
@@ -1716,16 +1699,16 @@ state 105
     DIFFERENT       reduce using rule 94 (neupoint_add_cte_operand -> .)
     OR              reduce using rule 94 (neupoint_add_cte_operand -> .)
     AND             reduce using rule 94 (neupoint_add_cte_operand -> .)
-    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     COMMA           reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTPARENTHESIS reduce using rule 94 (neupoint_add_cte_operand -> .)
     RIGHTSQRBRACKET reduce using rule 94 (neupoint_add_cte_operand -> .)
     TO              reduce using rule 94 (neupoint_add_cte_operand -> .)
+    SEMICOLON       reduce using rule 94 (neupoint_add_cte_operand -> .)
     DO              reduce using rule 94 (neupoint_add_cte_operand -> .)
 
-    neupoint_add_cte_operand       shift and go to state 144
+    neupoint_add_cte_operand       shift and go to state 148
 
-state 106
+state 111
 
     (90) factor -> function_call .
 
@@ -1742,162 +1725,95 @@ state 106
     DIFFERENT       reduce using rule 90 (factor -> function_call .)
     OR              reduce using rule 90 (factor -> function_call .)
     AND             reduce using rule 90 (factor -> function_call .)
-    SEMICOLON       reduce using rule 90 (factor -> function_call .)
     COMMA           reduce using rule 90 (factor -> function_call .)
     RIGHTPARENTHESIS reduce using rule 90 (factor -> function_call .)
     RIGHTSQRBRACKET reduce using rule 90 (factor -> function_call .)
     TO              reduce using rule 90 (factor -> function_call .)
+    SEMICOLON       reduce using rule 90 (factor -> function_call .)
     DO              reduce using rule 90 (factor -> function_call .)
-
-
-state 107
-
-    (60) asignation -> identifier PLUSEQUALS expresion . SEMICOLON
-
-    SEMICOLON       shift and go to state 145
-
-
-state 108
-
-    (61) asignation -> identifier SUBSTRACTEQUALS expresion . SEMICOLON
-
-    SEMICOLON       shift and go to state 146
-
-
-state 109
-
-    (62) asignation -> identifier INCREMENT SEMICOLON .
-
-    READ            reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    WRITE           reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    IF              reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    RETURN          reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    ID              reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    WHILE           reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    FOR             reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 62 (asignation -> identifier INCREMENT SEMICOLON .)
-
-
-state 110
-
-    (63) asignation -> identifier DECREMENT SEMICOLON .
-
-    READ            reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    WRITE           reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    IF              reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    RETURN          reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    ID              reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    WHILE           reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    FOR             reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 63 (asignation -> identifier DECREMENT SEMICOLON .)
-
-
-state 111
-
-    (64) reading -> READ LEFTPARENTHESIS ids_list . RIGHTPARENTHESIS SEMICOLON
-
-    RIGHTPARENTHESIS shift and go to state 147
 
 
 state 112
 
-    (16) ids_list -> identifier . COMMA ids_list
-    (17) ids_list -> identifier .
+    (91) factor -> identifier . neupoint_add_operand
+    (93) neupoint_add_operand -> .
 
-    COMMA           shift and go to state 148
-    RIGHTPARENTHESIS reduce using rule 17 (ids_list -> identifier .)
+    MULTIPLY        reduce using rule 93 (neupoint_add_operand -> .)
+    DIVIDE          reduce using rule 93 (neupoint_add_operand -> .)
+    MOD             reduce using rule 93 (neupoint_add_operand -> .)
+    PLUS            reduce using rule 93 (neupoint_add_operand -> .)
+    MINUS           reduce using rule 93 (neupoint_add_operand -> .)
+    COMPARISON      reduce using rule 93 (neupoint_add_operand -> .)
+    GREATERHANOREQUAL reduce using rule 93 (neupoint_add_operand -> .)
+    LESSTHANOREQUAL reduce using rule 93 (neupoint_add_operand -> .)
+    GREATERTHAN     reduce using rule 93 (neupoint_add_operand -> .)
+    LESSTHAN        reduce using rule 93 (neupoint_add_operand -> .)
+    DIFFERENT       reduce using rule 93 (neupoint_add_operand -> .)
+    OR              reduce using rule 93 (neupoint_add_operand -> .)
+    AND             reduce using rule 93 (neupoint_add_operand -> .)
+    COMMA           reduce using rule 93 (neupoint_add_operand -> .)
+    RIGHTPARENTHESIS reduce using rule 93 (neupoint_add_operand -> .)
+    RIGHTSQRBRACKET reduce using rule 93 (neupoint_add_operand -> .)
+    TO              reduce using rule 93 (neupoint_add_operand -> .)
+    SEMICOLON       reduce using rule 93 (neupoint_add_operand -> .)
+    DO              reduce using rule 93 (neupoint_add_operand -> .)
 
+    neupoint_add_operand           shift and go to state 149
 
 state 113
-
-    (18) identifier -> ID . LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> ID . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> ID .
-
-    LEFTSQRBRACKET  shift and go to state 87
-    COMMA           reduce using rule 20 (identifier -> ID .)
-    RIGHTPARENTHESIS reduce using rule 20 (identifier -> ID .)
-
-
-state 114
-
-    (65) writing -> WRITE LEFTPARENTHESIS writing_list . RIGHTPARENTHESIS SEMICOLON
-
-    RIGHTPARENTHESIS shift and go to state 149
-
-
-state 115
-
-    (66) writing_list -> CTESTRING . COMMA writing_list
-    (68) writing_list -> CTESTRING .
-
-    COMMA           shift and go to state 150
-    RIGHTPARENTHESIS reduce using rule 68 (writing_list -> CTESTRING .)
-
-
-state 116
-
-    (67) writing_list -> expresion . COMMA writing_list
-    (69) writing_list -> expresion .
-
-    COMMA           shift and go to state 151
-    RIGHTPARENTHESIS reduce using rule 69 (writing_list -> expresion .)
-
-
-state 117
 
     (70) decision -> IF LEFTPARENTHESIS expresion . RIGHTPARENTHESIS THEN block ELSE block
     (71) decision -> IF LEFTPARENTHESIS expresion . RIGHTPARENTHESIS THEN block
 
-    RIGHTPARENTHESIS shift and go to state 152
+    RIGHTPARENTHESIS shift and go to state 150
 
 
-state 118
+state 114
 
     (76) function_return -> RETURN LEFTPARENTHESIS exp . RIGHTPARENTHESIS SEMICOLON
 
-    RIGHTPARENTHESIS shift and go to state 153
+    RIGHTPARENTHESIS shift and go to state 151
 
 
-state 119
+state 115
 
     (77) function_call -> ID LEFTPARENTHESIS expresion_list . RIGHTPARENTHESIS
 
-    RIGHTPARENTHESIS shift and go to state 154
+    RIGHTPARENTHESIS shift and go to state 152
 
 
-state 120
+state 116
 
     (78) expresion_list -> expresion . COMMA expresion_list
     (79) expresion_list -> expresion .
 
-    COMMA           shift and go to state 155
+    COMMA           shift and go to state 153
     RIGHTPARENTHESIS reduce using rule 79 (expresion_list -> expresion .)
 
 
-state 121
+state 117
 
     (18) identifier -> ID LEFTSQRBRACKET expresion . RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (19) identifier -> ID LEFTSQRBRACKET expresion . RIGHTSQRBRACKET
 
-    RIGHTSQRBRACKET shift and go to state 156
+    RIGHTSQRBRACKET shift and go to state 154
 
 
-state 122
+state 118
 
     (74) conditional -> WHILE LEFTPARENTHESIS expresion . RIGHTPARENTHESIS DO
 
-    RIGHTPARENTHESIS shift and go to state 157
+    RIGHTPARENTHESIS shift and go to state 155
 
 
-state 123
+state 119
 
     (75) non_conditional -> FOR ID EQUALS . exp TO exp DO
     (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -1908,26 +1824,26 @@ state 123
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    exp                            shift and go to state 158
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    exp                            shift and go to state 156
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 124
+state 120
 
     (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET . CTEINT RIGHTSQRBRACKET
 
-    CTEINT          shift and go to state 159
+    CTEINT          shift and go to state 157
 
 
-state 125
+state 121
 
     (26) function -> MODULE return_type ID neupoint_add_function parameters_list vars block .
 
@@ -1935,7 +1851,7 @@ state 125
     MAIN            reduce using rule 26 (function -> MODULE return_type ID neupoint_add_function parameters_list vars block .)
 
 
-state 126
+state 122
 
     (28) parameters_list -> LEFTPARENTHESIS parameter RIGHTPARENTHESIS . neupoint_add_parameters
     (33) neupoint_add_parameters -> .
@@ -1943,57 +1859,274 @@ state 126
     VAR             reduce using rule 33 (neupoint_add_parameters -> .)
     LEFTBRACKET     reduce using rule 33 (neupoint_add_parameters -> .)
 
-    neupoint_add_parameters        shift and go to state 160
+    neupoint_add_parameters        shift and go to state 158
 
-state 127
+state 123
 
     (30) parameter -> data_type decla_identifier . COMMA parameter
     (31) parameter -> data_type decla_identifier .
 
-    COMMA           shift and go to state 161
+    COMMA           shift and go to state 159
     RIGHTPARENTHESIS reduce using rule 31 (parameter -> data_type decla_identifier .)
 
 
+state 124
+
+    (59) assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator . expresion neupoint_assignment_quad SEMICOLON
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    identifier                     shift and go to state 112
+    expresion                      shift and go to state 160
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+
+state 125
+
+    (60) assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator . expresion neupoint_assignment_quad SEMICOLON
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    identifier                     shift and go to state 112
+    expresion                      shift and go to state 161
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+
+state 126
+
+    (61) assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator . expresion neupoint_assignment_quad SEMICOLON
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    identifier                     shift and go to state 112
+    expresion                      shift and go to state 162
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+
+state 127
+
+    (62) assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator . neupoint_assignment_single_quad SEMICOLON
+    (100) neupoint_assignment_single_quad -> .
+
+    SEMICOLON       reduce using rule 100 (neupoint_assignment_single_quad -> .)
+
+    neupoint_assignment_single_quad shift and go to state 163
+
 state 128
 
-    (91) factor -> identifier neupoint_add_operand .
+    (63) assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator . neupoint_assignment_single_quad SEMICOLON
+    (100) neupoint_assignment_single_quad -> .
 
-    MULTIPLY        reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    DIVIDE          reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    MOD             reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    PLUS            reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    MINUS           reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    COMPARISON      reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    GREATERHANOREQUAL reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    LESSTHANOREQUAL reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    GREATERTHAN     reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    LESSTHAN        reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    DIFFERENT       reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    OR              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    AND             reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    SEMICOLON       reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    COMMA           reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    RIGHTPARENTHESIS reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    RIGHTSQRBRACKET reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    TO              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
-    DO              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    SEMICOLON       reduce using rule 100 (neupoint_assignment_single_quad -> .)
 
+    neupoint_assignment_single_quad shift and go to state 164
 
 state 129
 
-    (59) asignation -> identifier EQUALS expresion SEMICOLON .
+    (64) reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS . SEMICOLON
 
-    READ            reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    IF              reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    RETURN          reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    ID              reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 59 (asignation -> identifier EQUALS expresion SEMICOLON .)
+    SEMICOLON       shift and go to state 165
 
 
 state 130
+
+    (16) ids_list -> identifier COMMA . ids_list
+    (16) ids_list -> . identifier COMMA ids_list
+    (17) ids_list -> . identifier
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    ID              shift and go to state 100
+
+    identifier                     shift and go to state 99
+    ids_list                       shift and go to state 166
+
+state 131
+
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall . expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    expresion                      shift and go to state 167
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
+
+state 132
+
+    (65) writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS . SEMICOLON
+
+    SEMICOLON       shift and go to state 168
+
+
+state 133
+
+    (66) writing_list -> CTESTRING COMMA . writing_list
+    (66) writing_list -> . CTESTRING COMMA writing_list
+    (67) writing_list -> . expresion COMMA writing_list
+    (68) writing_list -> . CTESTRING
+    (69) writing_list -> . expresion
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    CTESTRING       shift and go to state 103
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    writing_list                   shift and go to state 169
+    expresion                      shift and go to state 104
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
+
+state 134
+
+    (67) writing_list -> expresion COMMA . writing_list
+    (66) writing_list -> . CTESTRING COMMA writing_list
+    (67) writing_list -> . expresion COMMA writing_list
+    (68) writing_list -> . CTESTRING
+    (69) writing_list -> . expresion
+    (80) expresion -> . exp comparators neupoint_add_operator exp
+    (81) expresion -> . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    CTESTRING       shift and go to state 103
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    expresion                      shift and go to state 104
+    writing_list                   shift and go to state 170
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
+
+state 135
 
     (80) expresion -> exp comparators . neupoint_add_operator exp
     (92) neupoint_add_operator -> .
@@ -2004,9 +2137,9 @@ state 130
     CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
     ID              reduce using rule 92 (neupoint_add_operator -> .)
 
-    neupoint_add_operator          shift and go to state 162
+    neupoint_add_operator          shift and go to state 171
 
-state 131
+state 136
 
     (35) comparators -> COMPARISON .
 
@@ -2017,7 +2150,7 @@ state 131
     ID              reduce using rule 35 (comparators -> COMPARISON .)
 
 
-state 132
+state 137
 
     (36) comparators -> GREATERHANOREQUAL .
 
@@ -2028,7 +2161,7 @@ state 132
     ID              reduce using rule 36 (comparators -> GREATERHANOREQUAL .)
 
 
-state 133
+state 138
 
     (37) comparators -> LESSTHANOREQUAL .
 
@@ -2039,7 +2172,7 @@ state 133
     ID              reduce using rule 37 (comparators -> LESSTHANOREQUAL .)
 
 
-state 134
+state 139
 
     (38) comparators -> GREATERTHAN .
 
@@ -2050,7 +2183,7 @@ state 134
     ID              reduce using rule 38 (comparators -> GREATERTHAN .)
 
 
-state 135
+state 140
 
     (39) comparators -> LESSTHAN .
 
@@ -2061,7 +2194,7 @@ state 135
     ID              reduce using rule 39 (comparators -> LESSTHAN .)
 
 
-state 136
+state 141
 
     (40) comparators -> DIFFERENT .
 
@@ -2072,7 +2205,7 @@ state 136
     ID              reduce using rule 40 (comparators -> DIFFERENT .)
 
 
-state 137
+state 142
 
     (41) comparators -> OR .
 
@@ -2083,7 +2216,7 @@ state 137
     ID              reduce using rule 41 (comparators -> OR .)
 
 
-state 138
+state 143
 
     (42) comparators -> AND .
 
@@ -2094,7 +2227,7 @@ state 138
     ID              reduce using rule 42 (comparators -> AND .)
 
 
-state 139
+state 144
 
     (82) exp -> term neupoint_arithmetic_exp_quad . exp_operator neupoint_add_operator exp
     (83) exp -> term neupoint_arithmetic_exp_quad .
@@ -2109,18 +2242,18 @@ state 139
     DIFFERENT       reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     OR              reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     AND             reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
-    SEMICOLON       reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     COMMA           reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     RIGHTPARENTHESIS reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     RIGHTSQRBRACKET reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     TO              reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
+    SEMICOLON       reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
     DO              reduce using rule 83 (exp -> term neupoint_arithmetic_exp_quad .)
-    PLUS            shift and go to state 164
-    MINUS           shift and go to state 165
+    PLUS            shift and go to state 173
+    MINUS           shift and go to state 174
 
-    exp_operator                   shift and go to state 163
+    exp_operator                   shift and go to state 172
 
-state 140
+state 145
 
     (84) term -> factor neupoint_arithmetic_term_quad . term_operator neupoint_add_operator term
     (85) term -> factor neupoint_arithmetic_term_quad .
@@ -2138,52 +2271,19 @@ state 140
     DIFFERENT       reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     OR              reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     AND             reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
-    SEMICOLON       reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     COMMA           reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     RIGHTPARENTHESIS reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     RIGHTSQRBRACKET reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     TO              reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
+    SEMICOLON       reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
     DO              reduce using rule 85 (term -> factor neupoint_arithmetic_term_quad .)
-    MULTIPLY        shift and go to state 167
-    DIVIDE          shift and go to state 168
-    MOD             shift and go to state 169
+    MULTIPLY        shift and go to state 176
+    DIVIDE          shift and go to state 177
+    MOD             shift and go to state 178
 
-    term_operator                  shift and go to state 166
+    term_operator                  shift and go to state 175
 
-state 141
-
-    (86) factor -> LEFTPARENTHESIS neupoint_add_wall . expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
-
-    expresion                      shift and go to state 170
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
-
-state 142
+state 146
 
     (87) factor -> CTEINT neupoint_add_cte_operand .
 
@@ -2200,15 +2300,15 @@ state 142
     DIFFERENT       reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     OR              reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     AND             reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
-    SEMICOLON       reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     COMMA           reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     RIGHTPARENTHESIS reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     RIGHTSQRBRACKET reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     TO              reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
+    SEMICOLON       reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
     DO              reduce using rule 87 (factor -> CTEINT neupoint_add_cte_operand .)
 
 
-state 143
+state 147
 
     (88) factor -> CTEFLOAT neupoint_add_cte_operand .
 
@@ -2225,15 +2325,15 @@ state 143
     DIFFERENT       reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     OR              reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     AND             reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
-    SEMICOLON       reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     COMMA           reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     RIGHTPARENTHESIS reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     RIGHTSQRBRACKET reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     TO              reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
+    SEMICOLON       reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
     DO              reduce using rule 88 (factor -> CTEFLOAT neupoint_add_cte_operand .)
 
 
-state 144
+state 148
 
     (89) factor -> CTECHAR neupoint_add_cte_operand .
 
@@ -2250,164 +2350,55 @@ state 144
     DIFFERENT       reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     OR              reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     AND             reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
-    SEMICOLON       reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     COMMA           reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     RIGHTPARENTHESIS reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     RIGHTSQRBRACKET reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     TO              reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
+    SEMICOLON       reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
     DO              reduce using rule 89 (factor -> CTECHAR neupoint_add_cte_operand .)
 
 
-state 145
-
-    (60) asignation -> identifier PLUSEQUALS expresion SEMICOLON .
-
-    READ            reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    IF              reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    RETURN          reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    ID              reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 60 (asignation -> identifier PLUSEQUALS expresion SEMICOLON .)
-
-
-state 146
-
-    (61) asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .
-
-    READ            reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    WRITE           reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    IF              reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    RETURN          reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    ID              reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    WHILE           reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    FOR             reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-    RIGHTBRACKET    reduce using rule 61 (asignation -> identifier SUBSTRACTEQUALS expresion SEMICOLON .)
-
-
-state 147
-
-    (64) reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS . SEMICOLON
-
-    SEMICOLON       shift and go to state 171
-
-
-state 148
-
-    (16) ids_list -> identifier COMMA . ids_list
-    (16) ids_list -> . identifier COMMA ids_list
-    (17) ids_list -> . identifier
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    ID              shift and go to state 113
-
-    identifier                     shift and go to state 112
-    ids_list                       shift and go to state 172
-
 state 149
 
-    (65) writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS . SEMICOLON
+    (91) factor -> identifier neupoint_add_operand .
 
-    SEMICOLON       shift and go to state 173
+    MULTIPLY        reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    DIVIDE          reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    MOD             reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    PLUS            reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    MINUS           reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    COMPARISON      reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    GREATERHANOREQUAL reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    LESSTHANOREQUAL reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    GREATERTHAN     reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    LESSTHAN        reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    DIFFERENT       reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    OR              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    AND             reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    COMMA           reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    RIGHTPARENTHESIS reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    RIGHTSQRBRACKET reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    TO              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    SEMICOLON       reduce using rule 91 (factor -> identifier neupoint_add_operand .)
+    DO              reduce using rule 91 (factor -> identifier neupoint_add_operand .)
 
 
 state 150
 
-    (66) writing_list -> CTESTRING COMMA . writing_list
-    (66) writing_list -> . CTESTRING COMMA writing_list
-    (67) writing_list -> . expresion COMMA writing_list
-    (68) writing_list -> . CTESTRING
-    (69) writing_list -> . expresion
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    CTESTRING       shift and go to state 115
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
-
-    writing_list                   shift and go to state 174
-    expresion                      shift and go to state 116
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
-
-state 151
-
-    (67) writing_list -> expresion COMMA . writing_list
-    (66) writing_list -> . CTESTRING COMMA writing_list
-    (67) writing_list -> . expresion COMMA writing_list
-    (68) writing_list -> . CTESTRING
-    (69) writing_list -> . expresion
-    (80) expresion -> . exp comparators neupoint_add_operator exp
-    (81) expresion -> . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
-
-    CTESTRING       shift and go to state 115
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
-
-    expresion                      shift and go to state 116
-    writing_list                   shift and go to state 175
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
-
-state 152
-
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS . THEN block ELSE block
     (71) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS . THEN block
 
-    THEN            shift and go to state 176
+    THEN            shift and go to state 179
 
 
-state 153
+state 151
 
     (76) function_return -> RETURN LEFTPARENTHESIS exp RIGHTPARENTHESIS . SEMICOLON
 
-    SEMICOLON       shift and go to state 177
+    SEMICOLON       shift and go to state 180
 
 
-state 154
+state 152
 
     (77) function_call -> ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS .
 
@@ -2432,7 +2423,7 @@ state 154
     DO              reduce using rule 77 (function_call -> ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS .)
 
 
-state 155
+state 153
 
     (78) expresion_list -> expresion COMMA . expresion_list
     (78) expresion_list -> . expresion COMMA expresion_list
@@ -2443,7 +2434,7 @@ state 155
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2454,31 +2445,33 @@ state 155
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 120
-    expresion_list                 shift and go to state 178
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion                      shift and go to state 116
+    expresion_list                 shift and go to state 181
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 156
+state 154
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET . LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (19) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .
 
-    LEFTSQRBRACKET  shift and go to state 179
+    LEFTSQRBRACKET  shift and go to state 182
     EQUALS          reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     PLUSEQUALS      reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     SUBSTRACTEQUALS reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     INCREMENT       reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DECREMENT       reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    COMMA           reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    RIGHTPARENTHESIS reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     MULTIPLY        reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DIVIDE          reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     MOD             reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
@@ -2492,36 +2485,34 @@ state 156
     DIFFERENT       reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     OR              reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     AND             reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    SEMICOLON       reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    COMMA           reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    RIGHTPARENTHESIS reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     RIGHTSQRBRACKET reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     TO              reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    SEMICOLON       reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DO              reduce using rule 19 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+
+
+state 155
+
+    (74) conditional -> WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS . DO
+
+    DO              shift and go to state 183
+
+
+state 156
+
+    (75) non_conditional -> FOR ID EQUALS exp . TO exp DO
+
+    TO              shift and go to state 184
 
 
 state 157
 
-    (74) conditional -> WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS . DO
+    (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT . RIGHTSQRBRACKET
 
-    DO              shift and go to state 180
+    RIGHTSQRBRACKET shift and go to state 185
 
 
 state 158
-
-    (75) non_conditional -> FOR ID EQUALS exp . TO exp DO
-
-    TO              shift and go to state 181
-
-
-state 159
-
-    (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT . RIGHTSQRBRACKET
-
-    RIGHTSQRBRACKET shift and go to state 182
-
-
-state 160
 
     (28) parameters_list -> LEFTPARENTHESIS parameter RIGHTPARENTHESIS neupoint_add_parameters .
 
@@ -2529,7 +2520,7 @@ state 160
     LEFTBRACKET     reduce using rule 28 (parameters_list -> LEFTPARENTHESIS parameter RIGHTPARENTHESIS neupoint_add_parameters .)
 
 
-state 161
+state 159
 
     (30) parameter -> data_type decla_identifier COMMA . parameter
     (30) parameter -> . data_type decla_identifier COMMA parameter
@@ -2542,128 +2533,51 @@ state 161
     FLOAT           shift and go to state 18
     CHAR            shift and go to state 19
 
-    data_type                      shift and go to state 95
-    parameter                      shift and go to state 183
+    data_type                      shift and go to state 91
+    parameter                      shift and go to state 186
+
+state 160
+
+    (59) assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion . neupoint_assignment_quad SEMICOLON
+    (99) neupoint_assignment_quad -> .
+
+    SEMICOLON       reduce using rule 99 (neupoint_assignment_quad -> .)
+
+    neupoint_assignment_quad       shift and go to state 187
+
+state 161
+
+    (60) assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion . neupoint_assignment_quad SEMICOLON
+    (99) neupoint_assignment_quad -> .
+
+    SEMICOLON       reduce using rule 99 (neupoint_assignment_quad -> .)
+
+    neupoint_assignment_quad       shift and go to state 188
 
 state 162
 
-    (80) expresion -> exp comparators neupoint_add_operator . exp
-    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
-    (83) exp -> . term neupoint_arithmetic_exp_quad
-    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
-    (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
-    (87) factor -> . CTEINT neupoint_add_cte_operand
-    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
-    (89) factor -> . CTECHAR neupoint_add_cte_operand
-    (90) factor -> . function_call
-    (91) factor -> . identifier neupoint_add_operand
-    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
-    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-    (20) identifier -> . ID
+    (61) assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion . neupoint_assignment_quad SEMICOLON
+    (99) neupoint_assignment_quad -> .
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
-    ID              shift and go to state 62
+    SEMICOLON       reduce using rule 99 (neupoint_assignment_quad -> .)
 
-    exp                            shift and go to state 184
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    neupoint_assignment_quad       shift and go to state 189
 
 state 163
 
-    (82) exp -> term neupoint_arithmetic_exp_quad exp_operator . neupoint_add_operator exp
-    (92) neupoint_add_operator -> .
+    (62) assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad . SEMICOLON
 
-    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
-    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
-    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
-    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
-    ID              reduce using rule 92 (neupoint_add_operator -> .)
+    SEMICOLON       shift and go to state 190
 
-    neupoint_add_operator          shift and go to state 185
 
 state 164
 
-    (43) exp_operator -> PLUS .
+    (63) assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad . SEMICOLON
 
-    LEFTPARENTHESIS reduce using rule 43 (exp_operator -> PLUS .)
-    CTEINT          reduce using rule 43 (exp_operator -> PLUS .)
-    CTEFLOAT        reduce using rule 43 (exp_operator -> PLUS .)
-    CTECHAR         reduce using rule 43 (exp_operator -> PLUS .)
-    ID              reduce using rule 43 (exp_operator -> PLUS .)
+    SEMICOLON       shift and go to state 191
 
 
 state 165
-
-    (44) exp_operator -> MINUS .
-
-    LEFTPARENTHESIS reduce using rule 44 (exp_operator -> MINUS .)
-    CTEINT          reduce using rule 44 (exp_operator -> MINUS .)
-    CTEFLOAT        reduce using rule 44 (exp_operator -> MINUS .)
-    CTECHAR         reduce using rule 44 (exp_operator -> MINUS .)
-    ID              reduce using rule 44 (exp_operator -> MINUS .)
-
-
-state 166
-
-    (84) term -> factor neupoint_arithmetic_term_quad term_operator . neupoint_add_operator term
-    (92) neupoint_add_operator -> .
-
-    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
-    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
-    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
-    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
-    ID              reduce using rule 92 (neupoint_add_operator -> .)
-
-    neupoint_add_operator          shift and go to state 186
-
-state 167
-
-    (45) term_operator -> MULTIPLY .
-
-    LEFTPARENTHESIS reduce using rule 45 (term_operator -> MULTIPLY .)
-    CTEINT          reduce using rule 45 (term_operator -> MULTIPLY .)
-    CTEFLOAT        reduce using rule 45 (term_operator -> MULTIPLY .)
-    CTECHAR         reduce using rule 45 (term_operator -> MULTIPLY .)
-    ID              reduce using rule 45 (term_operator -> MULTIPLY .)
-
-
-state 168
-
-    (46) term_operator -> DIVIDE .
-
-    LEFTPARENTHESIS reduce using rule 46 (term_operator -> DIVIDE .)
-    CTEINT          reduce using rule 46 (term_operator -> DIVIDE .)
-    CTEFLOAT        reduce using rule 46 (term_operator -> DIVIDE .)
-    CTECHAR         reduce using rule 46 (term_operator -> DIVIDE .)
-    ID              reduce using rule 46 (term_operator -> DIVIDE .)
-
-
-state 169
-
-    (47) term_operator -> MOD .
-
-    LEFTPARENTHESIS reduce using rule 47 (term_operator -> MOD .)
-    CTEINT          reduce using rule 47 (term_operator -> MOD .)
-    CTEFLOAT        reduce using rule 47 (term_operator -> MOD .)
-    CTECHAR         reduce using rule 47 (term_operator -> MOD .)
-    ID              reduce using rule 47 (term_operator -> MOD .)
-
-
-state 170
-
-    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion . RIGHTPARENTHESIS neupoint_remove_wall
-
-    RIGHTPARENTHESIS shift and go to state 187
-
-
-state 171
 
     (64) reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON .
 
@@ -2677,14 +2591,23 @@ state 171
     RIGHTBRACKET    reduce using rule 64 (reading -> READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON .)
 
 
-state 172
+state 166
 
     (16) ids_list -> identifier COMMA ids_list .
 
     RIGHTPARENTHESIS reduce using rule 16 (ids_list -> identifier COMMA ids_list .)
 
 
-state 173
+state 167
+
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion . neupoint_remove_wall RIGHTPARENTHESIS
+    (98) neupoint_remove_wall -> .
+
+    RIGHTPARENTHESIS reduce using rule 98 (neupoint_remove_wall -> .)
+
+    neupoint_remove_wall           shift and go to state 192
+
+state 168
 
     (65) writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON .
 
@@ -2698,21 +2621,132 @@ state 173
     RIGHTBRACKET    reduce using rule 65 (writing -> WRITE LEFTPARENTHESIS writing_list RIGHTPARENTHESIS SEMICOLON .)
 
 
-state 174
+state 169
 
     (66) writing_list -> CTESTRING COMMA writing_list .
 
     RIGHTPARENTHESIS reduce using rule 66 (writing_list -> CTESTRING COMMA writing_list .)
 
 
-state 175
+state 170
 
     (67) writing_list -> expresion COMMA writing_list .
 
     RIGHTPARENTHESIS reduce using rule 67 (writing_list -> expresion COMMA writing_list .)
 
 
+state 171
+
+    (80) expresion -> exp comparators neupoint_add_operator . exp
+    (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+    (83) exp -> . term neupoint_arithmetic_exp_quad
+    (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+    (85) term -> . factor neupoint_arithmetic_term_quad
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+    (87) factor -> . CTEINT neupoint_add_cte_operand
+    (88) factor -> . CTEFLOAT neupoint_add_cte_operand
+    (89) factor -> . CTECHAR neupoint_add_cte_operand
+    (90) factor -> . function_call
+    (91) factor -> . identifier neupoint_add_operand
+    (77) function_call -> . ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    (18) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
+    (20) identifier -> . ID
+
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
+    ID              shift and go to state 62
+
+    exp                            shift and go to state 193
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
+
+state 172
+
+    (82) exp -> term neupoint_arithmetic_exp_quad exp_operator . neupoint_add_operator exp
+    (92) neupoint_add_operator -> .
+
+    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
+    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
+    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
+    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
+    ID              reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 194
+
+state 173
+
+    (43) exp_operator -> PLUS .
+
+    LEFTPARENTHESIS reduce using rule 43 (exp_operator -> PLUS .)
+    CTEINT          reduce using rule 43 (exp_operator -> PLUS .)
+    CTEFLOAT        reduce using rule 43 (exp_operator -> PLUS .)
+    CTECHAR         reduce using rule 43 (exp_operator -> PLUS .)
+    ID              reduce using rule 43 (exp_operator -> PLUS .)
+
+
+state 174
+
+    (44) exp_operator -> MINUS .
+
+    LEFTPARENTHESIS reduce using rule 44 (exp_operator -> MINUS .)
+    CTEINT          reduce using rule 44 (exp_operator -> MINUS .)
+    CTEFLOAT        reduce using rule 44 (exp_operator -> MINUS .)
+    CTECHAR         reduce using rule 44 (exp_operator -> MINUS .)
+    ID              reduce using rule 44 (exp_operator -> MINUS .)
+
+
+state 175
+
+    (84) term -> factor neupoint_arithmetic_term_quad term_operator . neupoint_add_operator term
+    (92) neupoint_add_operator -> .
+
+    LEFTPARENTHESIS reduce using rule 92 (neupoint_add_operator -> .)
+    CTEINT          reduce using rule 92 (neupoint_add_operator -> .)
+    CTEFLOAT        reduce using rule 92 (neupoint_add_operator -> .)
+    CTECHAR         reduce using rule 92 (neupoint_add_operator -> .)
+    ID              reduce using rule 92 (neupoint_add_operator -> .)
+
+    neupoint_add_operator          shift and go to state 195
+
 state 176
+
+    (45) term_operator -> MULTIPLY .
+
+    LEFTPARENTHESIS reduce using rule 45 (term_operator -> MULTIPLY .)
+    CTEINT          reduce using rule 45 (term_operator -> MULTIPLY .)
+    CTEFLOAT        reduce using rule 45 (term_operator -> MULTIPLY .)
+    CTECHAR         reduce using rule 45 (term_operator -> MULTIPLY .)
+    ID              reduce using rule 45 (term_operator -> MULTIPLY .)
+
+
+state 177
+
+    (46) term_operator -> DIVIDE .
+
+    LEFTPARENTHESIS reduce using rule 46 (term_operator -> DIVIDE .)
+    CTEINT          reduce using rule 46 (term_operator -> DIVIDE .)
+    CTEFLOAT        reduce using rule 46 (term_operator -> DIVIDE .)
+    CTECHAR         reduce using rule 46 (term_operator -> DIVIDE .)
+    ID              reduce using rule 46 (term_operator -> DIVIDE .)
+
+
+state 178
+
+    (47) term_operator -> MOD .
+
+    LEFTPARENTHESIS reduce using rule 47 (term_operator -> MOD .)
+    CTEINT          reduce using rule 47 (term_operator -> MOD .)
+    CTEFLOAT        reduce using rule 47 (term_operator -> MOD .)
+    CTECHAR         reduce using rule 47 (term_operator -> MOD .)
+    ID              reduce using rule 47 (term_operator -> MOD .)
+
+
+state 179
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN . block ELSE block
     (71) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN . block
@@ -2721,9 +2755,9 @@ state 176
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 188
+    block                          shift and go to state 196
 
-state 177
+state 180
 
     (76) function_return -> RETURN LEFTPARENTHESIS exp RIGHTPARENTHESIS SEMICOLON .
 
@@ -2737,14 +2771,14 @@ state 177
     RIGHTBRACKET    reduce using rule 76 (function_return -> RETURN LEFTPARENTHESIS exp RIGHTPARENTHESIS SEMICOLON .)
 
 
-state 178
+state 181
 
     (78) expresion_list -> expresion COMMA expresion_list .
 
     RIGHTPARENTHESIS reduce using rule 78 (expresion_list -> expresion COMMA expresion_list .)
 
 
-state 179
+state 182
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET . expresion RIGHTSQRBRACKET
     (80) expresion -> . exp comparators neupoint_add_operator exp
@@ -2753,7 +2787,7 @@ state 179
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2764,34 +2798,34 @@ state 179
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    expresion                      shift and go to state 189
-    exp                            shift and go to state 99
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    expresion                      shift and go to state 197
+    exp                            shift and go to state 105
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 180
+state 183
 
     (74) conditional -> WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO .
 
     LEFTBRACKET     reduce using rule 74 (conditional -> WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO .)
 
 
-state 181
+state 184
 
     (75) non_conditional -> FOR ID EQUALS exp TO . exp DO
     (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2802,19 +2836,19 @@ state 181
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    exp                            shift and go to state 190
-    term                           shift and go to state 100
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    exp                            shift and go to state 198
+    term                           shift and go to state 106
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 182
+state 185
 
     (13) decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .
 
@@ -2823,31 +2857,87 @@ state 182
     RIGHTPARENTHESIS reduce using rule 13 (decla_identifier -> ID LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET LEFTSQRBRACKET CTEINT RIGHTSQRBRACKET .)
 
 
-state 183
+state 186
 
     (30) parameter -> data_type decla_identifier COMMA parameter .
 
     RIGHTPARENTHESIS reduce using rule 30 (parameter -> data_type decla_identifier COMMA parameter .)
 
 
-state 184
+state 187
+
+    (59) assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad . SEMICOLON
+
+    SEMICOLON       shift and go to state 199
+
+
+state 188
+
+    (60) assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad . SEMICOLON
+
+    SEMICOLON       shift and go to state 200
+
+
+state 189
+
+    (61) assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad . SEMICOLON
+
+    SEMICOLON       shift and go to state 201
+
+
+state 190
+
+    (62) assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .
+
+    READ            reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    WRITE           reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    IF              reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    RETURN          reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    ID              reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    WHILE           reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    FOR             reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 62 (assignment -> identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+
+
+state 191
+
+    (63) assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .
+
+    READ            reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    WRITE           reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    IF              reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    RETURN          reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    ID              reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    WHILE           reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    FOR             reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 63 (assignment -> identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON .)
+
+
+state 192
+
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall . RIGHTPARENTHESIS
+
+    RIGHTPARENTHESIS shift and go to state 202
+
+
+state 193
 
     (80) expresion -> exp comparators neupoint_add_operator exp .
 
-    SEMICOLON       reduce using rule 80 (expresion -> exp comparators neupoint_add_operator exp .)
     COMMA           reduce using rule 80 (expresion -> exp comparators neupoint_add_operator exp .)
     RIGHTPARENTHESIS reduce using rule 80 (expresion -> exp comparators neupoint_add_operator exp .)
     RIGHTSQRBRACKET reduce using rule 80 (expresion -> exp comparators neupoint_add_operator exp .)
+    SEMICOLON       reduce using rule 80 (expresion -> exp comparators neupoint_add_operator exp .)
 
 
-state 185
+state 194
 
     (82) exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator . exp
     (82) exp -> . term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
     (83) exp -> . term neupoint_arithmetic_exp_quad
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2858,24 +2948,24 @@ state 185
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    term                           shift and go to state 100
-    exp                            shift and go to state 191
-    factor                         shift and go to state 101
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    term                           shift and go to state 106
+    exp                            shift and go to state 203
+    factor                         shift and go to state 107
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 186
+state 195
 
     (84) term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator . term
     (84) term -> . factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
     (85) term -> . factor neupoint_arithmetic_term_quad
-    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall
+    (86) factor -> . LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
     (87) factor -> . CTEINT neupoint_add_cte_operand
     (88) factor -> . CTEFLOAT neupoint_add_cte_operand
     (89) factor -> . CTECHAR neupoint_add_cte_operand
@@ -2886,50 +2976,23 @@ state 186
     (19) identifier -> . ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
     (20) identifier -> . ID
 
-    LEFTPARENTHESIS shift and go to state 102
-    CTEINT          shift and go to state 103
-    CTEFLOAT        shift and go to state 104
-    CTECHAR         shift and go to state 105
+    LEFTPARENTHESIS shift and go to state 101
+    CTEINT          shift and go to state 108
+    CTEFLOAT        shift and go to state 109
+    CTECHAR         shift and go to state 110
     ID              shift and go to state 62
 
-    factor                         shift and go to state 101
-    term                           shift and go to state 192
-    function_call                  shift and go to state 106
-    identifier                     shift and go to state 97
+    factor                         shift and go to state 107
+    term                           shift and go to state 204
+    function_call                  shift and go to state 111
+    identifier                     shift and go to state 112
 
-state 187
-
-    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS . neupoint_remove_wall
-    (98) neupoint_remove_wall -> .
-
-    MULTIPLY        reduce using rule 98 (neupoint_remove_wall -> .)
-    DIVIDE          reduce using rule 98 (neupoint_remove_wall -> .)
-    MOD             reduce using rule 98 (neupoint_remove_wall -> .)
-    PLUS            reduce using rule 98 (neupoint_remove_wall -> .)
-    MINUS           reduce using rule 98 (neupoint_remove_wall -> .)
-    COMPARISON      reduce using rule 98 (neupoint_remove_wall -> .)
-    GREATERHANOREQUAL reduce using rule 98 (neupoint_remove_wall -> .)
-    LESSTHANOREQUAL reduce using rule 98 (neupoint_remove_wall -> .)
-    GREATERTHAN     reduce using rule 98 (neupoint_remove_wall -> .)
-    LESSTHAN        reduce using rule 98 (neupoint_remove_wall -> .)
-    DIFFERENT       reduce using rule 98 (neupoint_remove_wall -> .)
-    OR              reduce using rule 98 (neupoint_remove_wall -> .)
-    AND             reduce using rule 98 (neupoint_remove_wall -> .)
-    SEMICOLON       reduce using rule 98 (neupoint_remove_wall -> .)
-    COMMA           reduce using rule 98 (neupoint_remove_wall -> .)
-    RIGHTPARENTHESIS reduce using rule 98 (neupoint_remove_wall -> .)
-    RIGHTSQRBRACKET reduce using rule 98 (neupoint_remove_wall -> .)
-    TO              reduce using rule 98 (neupoint_remove_wall -> .)
-    DO              reduce using rule 98 (neupoint_remove_wall -> .)
-
-    neupoint_remove_wall           shift and go to state 193
-
-state 188
+state 196
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block . ELSE block
     (71) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .
 
-    ELSE            shift and go to state 194
+    ELSE            shift and go to state 205
     READ            reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
     WRITE           reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
     IF              reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
@@ -2940,21 +3003,88 @@ state 188
     RIGHTBRACKET    reduce using rule 71 (decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block .)
 
 
-state 189
+state 197
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion . RIGHTSQRBRACKET
 
-    RIGHTSQRBRACKET shift and go to state 195
+    RIGHTSQRBRACKET shift and go to state 206
 
 
-state 190
+state 198
 
     (75) non_conditional -> FOR ID EQUALS exp TO exp . DO
 
-    DO              shift and go to state 196
+    DO              shift and go to state 207
 
 
-state 191
+state 199
+
+    (59) assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .
+
+    READ            reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WRITE           reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    IF              reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RETURN          reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    ID              reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WHILE           reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    FOR             reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 59 (assignment -> identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+
+
+state 200
+
+    (60) assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .
+
+    READ            reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WRITE           reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    IF              reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RETURN          reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    ID              reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WHILE           reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    FOR             reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 60 (assignment -> identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+
+
+state 201
+
+    (61) assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .
+
+    READ            reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WRITE           reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    IF              reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RETURN          reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    ID              reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    WHILE           reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    FOR             reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+    RIGHTBRACKET    reduce using rule 61 (assignment -> identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON .)
+
+
+state 202
+
+    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .
+
+    MULTIPLY        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    DIVIDE          reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    MOD             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    PLUS            reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    MINUS           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    COMPARISON      reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    GREATERHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    LESSTHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    GREATERTHAN     reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    LESSTHAN        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    DIFFERENT       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    OR              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    AND             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    COMMA           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    RIGHTPARENTHESIS reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    RIGHTSQRBRACKET reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    TO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    SEMICOLON       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+    DO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS .)
+
+
+state 203
 
     (82) exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .
 
@@ -2966,15 +3096,15 @@ state 191
     DIFFERENT       reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     OR              reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     AND             reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
-    SEMICOLON       reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     COMMA           reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     RIGHTPARENTHESIS reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     RIGHTSQRBRACKET reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     TO              reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
+    SEMICOLON       reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
     DO              reduce using rule 82 (exp -> term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp .)
 
 
-state 192
+state 204
 
     (84) term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .
 
@@ -2988,40 +3118,15 @@ state 192
     DIFFERENT       reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     OR              reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     AND             reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
-    SEMICOLON       reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     COMMA           reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     RIGHTPARENTHESIS reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     RIGHTSQRBRACKET reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     TO              reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
+    SEMICOLON       reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
     DO              reduce using rule 84 (term -> factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term .)
 
 
-state 193
-
-    (86) factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .
-
-    MULTIPLY        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    DIVIDE          reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    MOD             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    PLUS            reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    MINUS           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    COMPARISON      reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    GREATERHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    LESSTHANOREQUAL reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    GREATERTHAN     reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    LESSTHAN        reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    DIFFERENT       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    OR              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    AND             reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    SEMICOLON       reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    COMMA           reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    RIGHTPARENTHESIS reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    RIGHTSQRBRACKET reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    TO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-    DO              reduce using rule 86 (factor -> LEFTPARENTHESIS neupoint_add_wall expresion RIGHTPARENTHESIS neupoint_remove_wall .)
-
-
-state 194
+state 205
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE . block
     (48) block -> . LEFTBRACKET statutes_list RIGHTBRACKET
@@ -3029,9 +3134,9 @@ state 194
 
     LEFTBRACKET     shift and go to state 37
 
-    block                          shift and go to state 197
+    block                          shift and go to state 208
 
-state 195
+state 206
 
     (18) identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .
 
@@ -3040,6 +3145,8 @@ state 195
     SUBSTRACTEQUALS reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     INCREMENT       reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DECREMENT       reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    COMMA           reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    RIGHTPARENTHESIS reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     MULTIPLY        reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DIVIDE          reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     MOD             reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
@@ -3053,22 +3160,20 @@ state 195
     DIFFERENT       reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     OR              reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     AND             reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    SEMICOLON       reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    COMMA           reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
-    RIGHTPARENTHESIS reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     RIGHTSQRBRACKET reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     TO              reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
+    SEMICOLON       reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
     DO              reduce using rule 18 (identifier -> ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET .)
 
 
-state 196
+state 207
 
     (75) non_conditional -> FOR ID EQUALS exp TO exp DO .
 
     LEFTBRACKET     reduce using rule 75 (non_conditional -> FOR ID EQUALS exp TO exp DO .)
 
 
-state 197
+state 208
 
     (70) decision -> IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block .
 

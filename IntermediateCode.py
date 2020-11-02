@@ -62,3 +62,71 @@ class IntermediateCode:
                     Quadruple(operator, lftOperand, rgtOperand, resultDirection))
 
                 print(self.stkQuadruples)
+
+    def generateAssignmentQuad(self):
+        """
+        Function to generate the quadruplo of assignments
+
+        Raises:
+            Exception: If the operands types are different
+        """
+
+        # Pop the last operands
+        rgtOperand = self.stkOperand.pop()
+        rgtOpndType = self.stkType.pop()
+        lftOperand = self.stkOperand.pop()
+        lftOpndType = self.stkType.pop()
+
+        # Pop the operator
+        operator = self.stkOperator.pop()
+
+        # Raise exception if it is a invalid operation
+        if(lftOpndType != rgtOpndType):
+            raise Exception("Cannot asign a {} to a {}".format(
+                rgtOpndType, lftOpndType))
+
+        if(operator == '='):
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple(operator, rgtOperand, None, lftOperand))
+
+        elif(operator == '+='):
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple('+', lftOperand, rgtOperand, lftOperand))
+
+        elif(operator == '-='):
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple('-', lftOperand, rgtOperand, lftOperand))
+
+        print(self.stkQuadruples)
+
+    def generateAssignmentSingleQuad(self):
+
+        # Pop the last operands
+        lftOperand = self.stkOperand.pop()
+        lftOpndType = self.stkType.pop()
+
+        # Pop the operator
+        operator = self.stkOperator.pop()
+
+        # Raise exception if it is a invalid operation
+        if(lftOpndType not in ['int', 'float']):
+            if(operator == '++'):
+                actionName = 'increment'
+            else:
+                actionName = 'decrement'
+            raise Exception("Cannot {} a {}".format(actionName, lftOpndType))
+
+        if(operator == '++'):
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple('+', lftOperand, 1, lftOperand))
+
+        elif(operator == '--'):
+            # Push the quadruple
+            self.stkQuadruples.append(
+                Quadruple('-', lftOperand, 1, lftOperand))
+
+        print(self.stkQuadruples)

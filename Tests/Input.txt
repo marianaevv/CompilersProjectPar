@@ -1,11 +1,12 @@
 program global;
 var
-    int iI, je, p;
+    int A, B, C;
     float i, JJ;
     char c;
     int Arreglo[10];
 
 main ()
 {
-    iI = (i + iI) * (12 - i / JJ;
+    A++;
+    Arreglo--;
 }
