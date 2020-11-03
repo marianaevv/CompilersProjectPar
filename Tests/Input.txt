@@ -1,24 +1,28 @@
-program global;
-var
-    int A, B, C;
-    float D, JJ;
-    char c;
-    int Arreglo[10];
-
-module void fact(int j, int y, char a)
-{
-    j = j + (j * 2 + j);
-    if(j == 1) then{
-
-    }else {
-
+program patito;
+var 
+    int n, b;
+    float f;
+    
+    module void uno(int a){
+        a= a+b*a;
     }
-}
-
-main ()
-{
-    while(A)do
+    
+    module int dos(int a, int m, float g)
+    var
+        int i;
     {
-        A = A + 1;
+        i=b;
+        
+        while (i>0) do{
+            a = a + b * i + b;
+            i = i - 1;
+        }
+        uno(a);
+        return(a);
     }
-}
+    
+    main(){
+        n = 3; 
+        b = n + 1;
+        f = 3.14;
+    }

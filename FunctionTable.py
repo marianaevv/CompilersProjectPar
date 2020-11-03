@@ -4,12 +4,13 @@ class FunctionTable:
         """
         Initializes the dictionary that works as a variable table
         """
-        self.__functionTable = {
+        self.functionTable = {
             'global': {
                 'returnType': 'void',
                 'paramsNumber': 0,
                 'paramsType': [],
-                'varTable': {}
+                'varTable': {},
+                'numQuad': 0
             }
         }
 
@@ -28,31 +29,56 @@ class FunctionTable:
         """
 
         # Check if the function name is repeated
-        if funcName in self.__functionTable:
+        if funcName in self.functionTable:
             raise Exception('Function "{}" already exists'.format(funcName))
 
         # Check if the function name is already used a as variable name
-        for func in self.__functionTable.values():
+        for func in self.functionTable.values():
             if funcName in func['varTable']:
                 raise Exception(
                     '"{}" already exists as a variable'.format(funcName))
 
         # If all the validations were passed, then add the function to the table
-        self.__functionTable[funcName] = {
+        self.functionTable[funcName] = {
             'returnType': returnType,
             'paramsNumber': 0,
             'paramsType': [],
-            'varTable': {}
+            'varTable': {},
+            'numQuad': 0
         }
 
         if (returnType != 'void'):
             # Add the variable to store the return value
-            self.__functionTable['global']['varTable'][funcName] = {
+            self.functionTable['global']['varTable'][funcName] = {
                 'dataType': returnType,
                 'size': 1,
                 'flgArray': False,
                 'dimensions': 1
             }
+
+
+    def searchFunction(self, funcName):
+        """
+        Method to search a function
+
+        Args:
+            funcName (string): Function name
+
+        Raises:
+            Exception: If the function do not exists
+
+        Returns:
+            Dictionary: The dictionary with the function data
+        """
+
+        # Check on the functiontable
+        if funcName  in self.functionTable:
+            return self.functionTable[funcName]
+
+        # If not, the function do no exists
+        else:
+            raise Exception(
+                'The function "{}" has not been declared'.format(funcName))
 
     def addVariables(self, funcName, varList, flgParams=False):
         """
@@ -71,7 +97,7 @@ class FunctionTable:
         """
         # If the variables are parameters, store the amount
         if(flgParams):
-            self.__functionTable[funcName]['paramsNumber'] = len(varList)
+            self.functionTable[funcName]['paramsNumber'] = len(varList)
 
         for var in varList:
             flgArray = False
@@ -79,16 +105,16 @@ class FunctionTable:
             size = 1
 
             # Check if the variable name is already used as function name
-            if var[1] in self.__functionTable:
+            if var[1] in self.functionTable:
                 raise Exception(
                     'The name "{}" is already used as a function'.format(var[1]))
 
             # Check if the variable already exists on the global or local scope
-            elif var[1] in self.__functionTable['global']['varTable']:
+            elif var[1] in self.functionTable['global']['varTable']:
                 raise Exception(
                     'Variable "{}" already exists as a global variable'.format(var[1]))
                     
-            elif var[1] in self.__functionTable[funcName]['varTable']:
+            elif var[1] in self.functionTable[funcName]['varTable']:
                 raise Exception(
                     'Variable "{}" has already been declared'.format(var[1]))
 
@@ -106,7 +132,7 @@ class FunctionTable:
                     size = var[2]
 
             # Add the variable to the function variables table
-            self.__functionTable[funcName]['varTable'][var[1]] = {
+            self.functionTable[funcName]['varTable'][var[1]] = {
                 'dataType': var[0],
                 'size': size,
                 'flgArray': flgArray,
@@ -115,7 +141,7 @@ class FunctionTable:
 
             # If the variables are parameters, store the data type also on another list
             if(flgParams):
-                self.__functionTable[funcName]['paramsType'].append(var[0])
+                self.functionTable[funcName]['paramsType'].append(var[0])
 
     def searchVariable(self, funcName, varName):
         """
@@ -133,12 +159,12 @@ class FunctionTable:
         """
 
         # Check on the global scope
-        if varName in self.__functionTable['global']['varTable']:
-            return self.__functionTable['global']['varTable'][varName]
+        if varName in self.functionTable['global']['varTable']:
+            return self.functionTable['global']['varTable'][varName]
 
         # Check on local function scope
-        elif varName in self.__functionTable[funcName]['varTable']:
-            return self.__functionTable[funcName]['varTable'][varName]
+        elif varName in self.functionTable[funcName]['varTable']:
+            return self.functionTable[funcName]['varTable'][varName]
 
         # If not, the variable do no exists
         else:

@@ -34,13 +34,13 @@ class IntermediateCode:
 
         # If it is a arithmetic operator, make the validations...
         if(flgArithmetic):
-            # Check that there are operands and if the 
+            # Check that there are operands and if the
             # if the las operator is on the searched operators group
             if(self.stkOperator):
                 if(self.stkOperator[-1] in groupOperators):
                     insertQuad = True
 
-        # Or just push the quad if it is a logical 
+        # Or just push the quad if it is a logical
         # or relational operator
         else:
             insertQuad = True
@@ -153,7 +153,8 @@ class IntermediateCode:
 
         # Check the result data type
         if(resultType != 'bool'):
-            raise Exception("Invalid operation, the condition need to result on a bool.")
+            raise Exception(
+                "Invalid operation, the condition need to result on a bool.")
 
         # Push the quadruple
         self.stkQuadruples.append(Quadruple('GOTOF', resultValue, None, None))
@@ -166,13 +167,13 @@ class IntermediateCode:
         self.stkQuadruples.append(Quadruple('GOTO', None, None, None))
 
         # Pop the jump quad
-        endLine = self.stkJumps.pop()
+        falseLine = self.stkJumps.pop()
 
         # Append the new jump
         self.stkJumps.append(len(self.stkQuadruples) - 1)
 
         # Fill the GotoF
-        self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+        self.stkQuadruples[falseLine].result = len(self.stkQuadruples)
 
     def endConditionQuad(self):
         # Pop the jump quad
@@ -181,12 +182,10 @@ class IntermediateCode:
         # Fill the Goto
         self.stkQuadruples[endLine].result = len(self.stkQuadruples)
 
-        print("here")
-
-    def endWhile(self):
+    def endWhileQuad(self):
         # Get the jump
         endLine = self.stkJumps.pop()
-        
+
         # Get the return jump
         returnLine = self.stkJumps.pop()
 
@@ -195,3 +194,24 @@ class IntermediateCode:
 
         # Fill the end line
         self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+
+    def returnFunctionQuad(self, funcName, returnType):
+        actualType = self.stkType.pop()
+
+        # If the function is void and have a return
+        if(returnType == 'void'):
+            raise Exception(
+                'Function "{}" is void and does not need a return'.format(funcName))
+
+        # If the returned value is different from the function return type
+        if(returnType != actualType):
+            raise Exception(
+                'Error trying to return a {} when function "{}" returns a {}'.format(
+                    actualType, funcName, returnType))
+
+        # Push the returned value
+        self.stkQuadruples.append(
+            Quadruple('RETURN', None, None, self.stkOperand.pop()))
+
+    def endFunctionQuad(self):
+        self.stkQuadruples.append(Quadruple('ENDFUNC', None, None, None))

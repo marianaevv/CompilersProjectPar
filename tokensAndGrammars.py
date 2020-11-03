@@ -170,6 +170,15 @@ def p_program(p):
             | PROGRAM ID SEMICOLON functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
             | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
+    print(interCode.stkOperator)
+    print(interCode.stkOperand)
+    print(interCode.stkType)
+    cont = 0
+    for i in interCode.stkQuadruples:
+        print(cont, i)
+        cont += 1
+    print(interCode.stkJumps)
+    print()
 
 
 # ====================== Variables ======================
@@ -275,22 +284,10 @@ def p_functions_list(p):
 
 def p_function(p):
     '''
-    function : MODULE return_type ID neupoint_add_function parameters_list vars block
-             | MODULE return_type ID neupoint_add_function parameters_list block
+    function : MODULE return_type ID neupoint_add_function parameters_list vars neupoint_start_function block neupoint_check_for_return neupoint_end_function
+             | MODULE return_type ID neupoint_add_function parameters_list neupoint_start_function block neupoint_check_for_return neupoint_end_function
     '''
-    global flgHaveReturn
-
-    # Makes the validation if the function is not void and does not have a return
-    if(p[2] != 'void' and not flgHaveReturn):
-        raise Exception(
-            'Function "{}" need a return of type {}'.format(p[3], p[2]))
-
-    # or if the function is void and have a return
-    elif(p[1] == 'void' and flgHaveReturn):
-        raise Exception(
-            'Function "{}" is void and does not need a return'.format(p[3]))
-
-    flgHaveReturn = False
+    pass
 
 
 def p_parameters_list(p):
@@ -350,6 +347,47 @@ def p_neupoint_back_global(p):
     interCode.currentFunction = 'global'
 
 
+def p_neupoint_start_function(p):
+    '''
+    neupoint_start_function : 
+    '''
+
+    funcTable.functionTable[interCode.currentFunction]['numQuad'] = len(
+        interCode.stkQuadruples) + 1
+
+
+def p_neupoint_check_for_return(p):
+    '''
+    neupoint_check_for_return : 
+    '''
+
+    # Get the name and return type
+    if(p[-8] == 'module'):
+        returnType = p[-7]
+
+    else:
+        returnType = p[-6]
+
+    global flgHaveReturn
+
+    # Makes the validation if the function is not void and does not have a return
+    if(returnType != 'void' and not flgHaveReturn):
+        raise Exception(
+            'Function "{}" need a return of type {}'.format(interCode.currentFunction, returnType))
+
+    flgHaveReturn = False
+
+def p_neupoint_end_function(p):
+    '''
+    neupoint_end_function : 
+    '''
+
+    # Insert the end quadruple of a function
+    interCode.endFunctionQuad()
+
+    # Release the Local Variable Table
+    funcTable.functionTable[interCode.currentFunction]['varTable'] = {}
+
 # ====================== Operators ======================
 def p_comparators(p):
     '''
@@ -400,19 +438,14 @@ def p_statutes_list(p):
 def p_statute(p):
     '''
     statute : assignment
+            | function_return
             | reading
             | writing
             | decision
             | loop
-            | function_return
-            | function_call SEMICOLON
+            | function_call_void
     '''
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
-    print(interCode.stkQuadruples)
-    print(interCode.stkJumps)
-    print()
+    pass
 
 
 def p_assignment(p):
@@ -487,10 +520,23 @@ def p_function_return(p):
     global flgHaveReturn
     flgHaveReturn = True
 
+    # Search the function data
+    funcData = funcTable.searchFunction(interCode.currentFunction)
+
+    # Validate the return type
+    interCode.returnFunctionQuad(interCode.currentFunction, funcData['returnType'])
+
+
+
+def p_function_call_void(p):
+    '''
+    function_call_void : function_call SEMICOLON
+    '''
+    pass
 
 def p_function_call(p):
     '''
-    function_call : ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    function_call : ID neupoint_search_function LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
     '''
     pass
 
@@ -665,13 +711,21 @@ def p_neupoint_while_start(p):
     # Push the jump quad num
     interCode.stkJumps.append(len(interCode.stkQuadruples))
 
+
 def p_neupoint_while_end(p):
     '''
     neupoint_while_end : 
     '''
     # Push the jump quad num
-    interCode.endWhile()
+    interCode.endWhileQuad()
 
+
+def p_neupoint_search_function(p):
+    '''
+    neupoint_search_function : 
+    '''
+    print("Here")
+    funcTable.searchFunction(interCode.currentFunction)
 
 # ====================== Rule for syntax errors ======================
 def p_error(p):
