@@ -16,6 +16,10 @@ interCode = IntermediateCode()
 flgError = False
 flgHaveReturn = False
 
+# Global variables
+countArgs = 0
+callingFunc = ""
+
 # Tokens definition
 tokens = [
     # Arithmetic Operators
@@ -377,6 +381,7 @@ def p_neupoint_check_for_return(p):
 
     flgHaveReturn = False
 
+
 def p_neupoint_end_function(p):
     '''
     neupoint_end_function : 
@@ -387,6 +392,7 @@ def p_neupoint_end_function(p):
 
     # Release the Local Variable Table
     funcTable.functionTable[interCode.currentFunction]['varTable'] = {}
+
 
 # ====================== Operators ======================
 def p_comparators(p):
@@ -524,8 +530,8 @@ def p_function_return(p):
     funcData = funcTable.searchFunction(interCode.currentFunction)
 
     # Validate the return type
-    interCode.returnFunctionQuad(interCode.currentFunction, funcData['returnType'])
-
+    interCode.returnFunctionQuad(
+        interCode.currentFunction, funcData['returnType'])
 
 
 def p_function_call_void(p):
@@ -534,17 +540,19 @@ def p_function_call_void(p):
     '''
     pass
 
+
 def p_function_call(p):
     '''
-    function_call : ID neupoint_search_function LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    function_call : ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall ags_list neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
+                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS
     '''
     pass
 
 
-def p_expresion_list(p):
+def p_ags_list(p):
     '''
-    expresion_list : expresion COMMA expresion_list
-                   | expresion
+    ags_list : expresion neupoint_validate_args COMMA ags_list
+             | expresion neupoint_validate_args
     '''
     pass
 
@@ -720,12 +728,84 @@ def p_neupoint_while_end(p):
     interCode.endWhileQuad()
 
 
-def p_neupoint_search_function(p):
+def p_neupoint_validate_function(p):
     '''
-    neupoint_search_function : 
+    neupoint_validate_function : 
     '''
-    print("Here")
-    funcTable.searchFunction(interCode.currentFunction)
+    global callingFunc
+    callingFunc = p[-1]
+
+    # Validate that function exists
+    funcTable.searchFunction(callingFunc)
+
+
+def p_neupoint_era_quad(p):
+    '''
+    neupoint_era_quad : 
+    '''
+    global callingFunc
+    # Get the num of variables
+    numVars = funcTable.searchFunction(callingFunc)['numVars']
+
+    # Append the ERA quadruple
+    interCode.eraQuad(numVars)
+
+    # Initilize the args counter
+    global countArgs
+    countArgs = 0
+
+
+def p_neupoint_validate_args(p):
+    '''
+    neupoint_validate_args : 
+    '''
+    global countArgs
+    global callingFunc
+
+    # Get the data type of the arguments
+    argType = funcTable.searchFunction(callingFunc)['paramsType']
+
+    # Check if there are more args
+    if(countArgs > len(argType) - 1):
+        raise Exception('Sending {} arguments but function "{}" needs {}'.format(
+            countArgs + 1, callingFunc, len(argType)))
+
+    # Validate the type are correct and push the quad
+    interCode.argumentQuad(argType[countArgs], countArgs)
+
+    # Increase the argument counter
+    countArgs += 1
+
+
+def p_neupoint_validate_num_args(p):
+    '''
+    neupoint_validate_num_args : 
+    '''
+    global countArgs
+    global callingFunc
+
+    # Get the data type of the arguments
+    paramsNumber = funcTable.searchFunction(callingFunc)['paramsNumber']
+
+    # Check if there are less args
+    if(countArgs < paramsNumber):
+        raise Exception('Sending {} arguments but function "{}" needs {}'.format(
+            countArgs, callingFunc, paramsNumber))
+
+
+def p_neupoint_gosub_quad(p):
+    '''
+    neupoint_gosub_quad : 
+    '''
+    # Remove the wall
+    interCode.stkOperator.pop()
+
+    # Get the called func data
+    funcData = funcTable.functionTable[callingFunc]
+
+    # Add the GOSUB quad
+    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'])
+
 
 # ====================== Rule for syntax errors ======================
 def p_error(p):

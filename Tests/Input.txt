@@ -7,7 +7,7 @@ var
         a= a+b*a;
     }
     
-    module int dos(int a, int m, float g)
+    module void dos(int a, int m, float g)
     var
         int i;
     {
@@ -17,11 +17,11 @@ var
             a = a + b * i + b;
             i = i - 1;
         }
-        uno(a);
-        return(a);
+        uno(n);
     }
     
     main(){
+        dos(n, n, f);
         n = 3; 
         b = n + 1;
         f = 3.14;

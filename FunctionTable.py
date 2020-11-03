@@ -10,6 +10,7 @@ class FunctionTable:
                 'paramsNumber': 0,
                 'paramsType': [],
                 'varTable': {},
+                'numVars': 0,
                 'numQuad': 0
             }
         }
@@ -44,6 +45,7 @@ class FunctionTable:
             'paramsNumber': 0,
             'paramsType': [],
             'varTable': {},
+            'numVars': 0,
             'numQuad': 0
         }
 
@@ -98,6 +100,9 @@ class FunctionTable:
         # If the variables are parameters, store the amount
         if(flgParams):
             self.functionTable[funcName]['paramsNumber'] = len(varList)
+
+        # Add the amount of variables
+        self.functionTable[funcName]['numVars'] += len(varList)
 
         for var in varList:
             flgArray = False

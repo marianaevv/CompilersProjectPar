@@ -14,6 +14,7 @@ class IntermediateCode:
         self.stkQuadruples = list()
 
         self.countTemporals = 0
+        self.countReturns = 0
 
         self.currentFunction = 'global'
 
@@ -215,3 +216,31 @@ class IntermediateCode:
 
     def endFunctionQuad(self):
         self.stkQuadruples.append(Quadruple('ENDFUNC', None, None, None))
+
+    def eraQuad(self, numVars):
+        self.stkQuadruples.append(Quadruple('ERA', None, None, numVars))
+
+    def argumentQuad(self, varType, argNum):
+        # Pop the arg value
+        argValue = self.stkOperand.pop()
+        argType = self.stkType.pop()
+
+        # Validate the data type
+        if(varType != argType):
+            raise Exception("The argument is {} but needs to be {}".format(argType, varType))
+
+        # Push the quadruple
+        self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNum))
+
+
+    def gosubQuad(self, returnType, numQuad):
+        
+        if(returnType == 'void'):
+            returnVal = None
+        else:
+            returnVal = 'R' + str(self.countReturns)
+
+            self.stkType.append(returnType)
+            self.stkOperand.append(returnVal)
+
+        self.stkQuadruples.append(Quadruple('GOSUB', returnVal, None, numQuad))
