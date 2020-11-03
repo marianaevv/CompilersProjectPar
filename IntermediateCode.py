@@ -145,3 +145,53 @@ class IntermediateCode:
             # Push the quadruple
             self.stkQuadruples.append(
                 Quadruple('-', lftOperand, 1, lftOperand))
+
+    def generateConditionQuad(self):
+        # Pop the last operands
+        resultValue = self.stkOperand.pop()
+        resultType = self.stkType.pop()
+
+        # Check the result data type
+        if(resultType != 'bool'):
+            raise Exception("Invalid operation, the condition need to result on a bool.")
+
+        # Push the quadruple
+        self.stkQuadruples.append(Quadruple('GOTOF', resultValue, None, None))
+
+        # Add the jump quad to come back later
+        self.stkJumps.append(len(self.stkQuadruples) - 1)
+
+    def elseConditionQuad(self):
+        # Push the Goto quad
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, None))
+
+        # Pop the jump quad
+        endLine = self.stkJumps.pop()
+
+        # Append the new jump
+        self.stkJumps.append(len(self.stkQuadruples) - 1)
+
+        # Fill the GotoF
+        self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+
+    def endConditionQuad(self):
+        # Pop the jump quad
+        endLine = self.stkJumps.pop()
+
+        # Fill the Goto
+        self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+
+        print("here")
+
+    def endWhile(self):
+        # Get the jump
+        endLine = self.stkJumps.pop()
+        
+        # Get the return jump
+        returnLine = self.stkJumps.pop()
+
+        # Push the return quad
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, returnLine))
+
+        # Fill the end line
+        self.stkQuadruples[endLine].result = len(self.stkQuadruples)

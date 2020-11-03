@@ -5,19 +5,20 @@ var
     char c;
     int Arreglo[10];
 
-module int fact(int j, int y, char a)
-var int iJ;
-{j = j + (j * 2 + j);
-if(j == 1) then
- { return(j);}
+module void fact(int j, int y, char a)
+{
+    j = j + (j * 2 + j);
+    if(j == 1) then{
 
-return (2);
+    }else {
+
+    }
 }
 
 main ()
 {
-    if(A < B & B < C ) then {
-
-    A += A + C - A * (B % C);
+    while(A)do
+    {
+        A = A + 1;
     }
 }

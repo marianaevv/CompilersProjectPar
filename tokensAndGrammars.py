@@ -411,6 +411,7 @@ def p_statute(p):
     print(interCode.stkOperand)
     print(interCode.stkType)
     print(interCode.stkQuadruples)
+    print(interCode.stkJumps)
     print()
 
 
@@ -451,30 +452,30 @@ def p_writing_list(p):
 
 def p_decision(p):
     '''
-    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
-             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block
+    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad THEN block ELSE neupoint_else_conditional_quad block neupoint_end_conditional_quad
+             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad THEN block neupoint_end_conditional_quad
     '''
     pass
 
 
 def p_loop(p):
     '''
-    loop : conditional block
-         | non_conditional block
+    loop : conditional
+         | non_conditional
     '''
     pass
 
 
 def p_conditional(p):
     '''
-    conditional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    conditional : WHILE neupoint_while_start LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad DO block neupoint_while_end
     '''
     pass
 
 
 def p_non_conditional(p):
     '''
-    non_conditional : FOR ID EQUALS exp TO exp DO
+    non_conditional : FOR ID EQUALS exp TO exp DO block
     '''
     pass
 
@@ -628,15 +629,51 @@ def p_neupoint_assignment_single_quad(p):
     '''
     interCode.generateAssignmentSingleQuad()
 
+
 def p_neupoint_logical_relational_opt(p):
     '''
     neupoint_logical_relational_opt : 
     '''
     interCode.generateOperatorQuadruple(flgArithmetic=False)
 
+
+def p_neupoint_conditional_quad(p):
+    '''
+    neupoint_conditional_quad : 
+    '''
+    interCode.generateConditionQuad()
+
+
+def p_neupoint_else_conditional_quad(p):
+    '''
+    neupoint_else_conditional_quad : 
+    '''
+    interCode.elseConditionQuad()
+
+
+def p_neupoint_end_conditional_quad(p):
+    '''
+    neupoint_end_conditional_quad : 
+    '''
+    interCode.endConditionQuad()
+
+
+def p_neupoint_while_start(p):
+    '''
+    neupoint_while_start : 
+    '''
+    # Push the jump quad num
+    interCode.stkJumps.append(len(interCode.stkQuadruples))
+
+def p_neupoint_while_end(p):
+    '''
+    neupoint_while_end : 
+    '''
+    # Push the jump quad num
+    interCode.endWhile()
+
+
 # ====================== Rule for syntax errors ======================
-
-
 def p_error(p):
     global flgError
     flgError = True
