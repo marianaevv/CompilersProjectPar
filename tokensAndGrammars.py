@@ -244,14 +244,6 @@ def p_decla_identifier(p):
         p[0] = p[1]
 
 
-def p_ids_list(p):
-    '''
-    ids_list : identifier COMMA ids_list
-             | identifier
-    '''
-    pass
-
-
 def p_identifier(p):
     '''
     identifier : ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
@@ -467,9 +459,18 @@ def p_assignment(p):
 
 def p_reading(p):
     '''
-    reading : READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
+    reading : READ LEFTPARENTHESIS reading_list RIGHTPARENTHESIS SEMICOLON
     '''
     pass
+
+
+def p_reading_list(p):
+    '''
+    reading_list : identifier neupoint_add_operand  COMMA reading_list
+                 | identifier neupoint_add_operand
+    '''
+    # Push the writing quad
+    interCode.readQuad()
 
 
 def p_writing(p):
@@ -481,10 +482,10 @@ def p_writing(p):
 
 def p_writing_list(p):
     '''
-    writing_list : CTESTRING COMMA writing_list
-                 | expresion COMMA writing_list
-                 | CTESTRING
-                 | expresion
+    writing_list : CTESTRING neupoint_add_cte_operand neupoint_write_quad COMMA writing_list
+                 | expresion neupoint_write_quad COMMA writing_list
+                 | CTESTRING neupoint_add_cte_operand neupoint_write_quad
+                 | expresion neupoint_write_quad
     '''
     pass
 
@@ -514,10 +515,30 @@ def p_conditional(p):
 
 def p_non_conditional(p):
     '''
-    non_conditional : FOR ID EQUALS exp TO exp DO block
+    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad TO exp DO block
     '''
     pass
 
+def p_neupoint_add_operand_integer(p):
+    '''
+    neupoint_add_operand_integer : 
+    '''
+    print(p[-1])
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
+
+    if(operandType != 'int'): 
+        raise Exception("Variable used in a FOR must be an integer")
+
+    # Add name and datatype to the stacks
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+
+def p_neupoint_for_condition(p):
+    '''
+    neupoint_for_condition : 
+    '''
 
 def p_function_return(p):
     '''
@@ -805,6 +826,13 @@ def p_neupoint_gosub_quad(p):
 
     # Add the GOSUB quad
     interCode.gosubQuad(funcData['returnType'], funcData['numQuad'])
+
+
+def p_neupoint_write_quad(p):
+    '''
+    neupoint_write_quad : 
+    '''
+    interCode.writeQuad()
 
 
 # ====================== Rule for syntax errors ======================

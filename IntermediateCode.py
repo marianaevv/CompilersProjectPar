@@ -148,6 +148,13 @@ class IntermediateCode:
                 Quadruple('-', lftOperand, 1, lftOperand))
 
     def generateConditionQuad(self):
+        """
+        Generate the GOTOF quadruple when start a IF/Then statement
+
+        Raises:
+            Exception: If the expression inside the parenthesis is not a bool
+        """
+
         # Pop the last operands
         resultValue = self.stkOperand.pop()
         resultType = self.stkType.pop()
@@ -164,6 +171,10 @@ class IntermediateCode:
         self.stkJumps.append(len(self.stkQuadruples) - 1)
 
     def elseConditionQuad(self):
+        """
+        Function to generate the GOTO quad when uing a else statement
+        Also, filling the past GOTOF quad
+        """
         # Push the Goto quad
         self.stkQuadruples.append(Quadruple('GOTO', None, None, None))
 
@@ -177,6 +188,9 @@ class IntermediateCode:
         self.stkQuadruples[falseLine].result = len(self.stkQuadruples)
 
     def endConditionQuad(self):
+        """
+        Function to fill the GOTOF or GOTO quads from a IF-THEN ELSE
+        """
         # Pop the jump quad
         endLine = self.stkJumps.pop()
 
@@ -184,6 +198,9 @@ class IntermediateCode:
         self.stkQuadruples[endLine].result = len(self.stkQuadruples)
 
     def endWhileQuad(self):
+        """
+        Generate the GOTO Quad when starting a While
+        """
         # Get the jump
         endLine = self.stkJumps.pop()
 
@@ -197,6 +214,18 @@ class IntermediateCode:
         self.stkQuadruples[endLine].result = len(self.stkQuadruples)
 
     def returnFunctionQuad(self, funcName, returnType):
+        """
+        Generate the RETURN Quad of the return statement.
+        Making the needed validation.
+
+        Args:
+            funcName (string): Name of the function the return is inside
+            returnType (string): Data type of the returned value
+
+        Raises:
+            Exception: If the function is void and has a return
+            Exception: If the returned data type is different than the expected
+        """
         actualType = self.stkType.pop()
 
         # If the function is void and have a return
@@ -215,26 +244,52 @@ class IntermediateCode:
             Quadruple('RETURN', None, None, self.stkOperand.pop()))
 
     def endFunctionQuad(self):
+        """
+        Generate the ENDFUNC quad
+        """
         self.stkQuadruples.append(Quadruple('ENDFUNC', None, None, None))
 
     def eraQuad(self, numVars):
+        """
+        Generate the ERA quad when calling a function
+
+        Args:
+            numVars (integert): Number of variables that the function has
+        """
         self.stkQuadruples.append(Quadruple('ERA', None, None, numVars))
 
     def argumentQuad(self, varType, argNum):
+        """
+        Generate the quad per argument sended to a function. Also checks that
+        the user do not send more thant the expécted amount.
+
+        Args:
+            varType (string): Data type of the expected argument
+            argNum (integer): Number of the expected argument
+
+        Raises:
+            Exception: If there are more arguments than the called function needs
+        """
         # Pop the arg value
         argValue = self.stkOperand.pop()
         argType = self.stkType.pop()
 
         # Validate the data type
         if(varType != argType):
-            raise Exception("The argument is {} but needs to be {}".format(argType, varType))
+            raise Exception(
+                "The argument is {} but needs to be {}".format(argType, varType))
 
         # Push the quadruple
         self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNum))
 
-
     def gosubQuad(self, returnType, numQuad):
-        
+        """
+        Generate the GOSUB quad when calling a function
+
+        Args:
+            returnType (string): Data type the called functon returns
+            numQuad (integer): The number of the quadrupĺe where the called function starts
+        """
         if(returnType == 'void'):
             returnVal = None
         else:
@@ -244,3 +299,25 @@ class IntermediateCode:
             self.stkOperand.append(returnVal)
 
         self.stkQuadruples.append(Quadruple('GOSUB', returnVal, None, numQuad))
+
+    def writeQuad(self):
+        """
+        Generate the quadruple of the WRITE function
+        """
+        # Get the value to print
+        toWriteVal = self.stkOperand.pop()
+        self.stkType.pop()
+
+        # Push the quad
+        self.stkQuadruples.append(Quadruple('WRITE', None, None, toWriteVal))
+
+    def readQuad(self):
+        """
+        Generate the quadruple of the READ function
+        """
+        # Get were to store the data
+        toReadDir = self.stkOperand.pop()
+        self.stkType.pop()
+
+        # Push the quad
+        self.stkQuadruples.append(Quadruple('READ', None, None, toReadDir))

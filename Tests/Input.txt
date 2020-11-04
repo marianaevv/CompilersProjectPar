@@ -5,6 +5,10 @@ var
     
     module void uno(int a){
         a= a+b*a;
+
+        for n = 10 to 100 do {
+
+        }
     }
     
     module void dos(int a, int m, float g)
@@ -18,6 +22,9 @@ var
             i = i - 1;
         }
         uno(n);
+        write("HOLA");
+        write(n, "HI");
+        read(n, n);
     }
     
     main(){
