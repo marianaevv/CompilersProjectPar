@@ -27,6 +27,12 @@ class memory:
             'bool' = {},
             'char' = {}
         }
+        self.backupLocalMemory = {
+            'local': []
+        }
+        self.backupLocalTempMemory = {
+            'temporal' : []
+        }
         self.constantsMemory = {
             'int' = {},
             'float' = {},
@@ -274,6 +280,12 @@ class memory:
         Reinitialize values for local context and temporal local context so other function can start de count.
 
         """
+    def backupLocalMemory (self):
+        """
+        Saves de values of both local Memory and local temporal Memory in another structure
+        """
+        self.backupLocalMemory['local'].append(self.localMemory)
+        self.backupLocalTempMemory['temporal'].append(self.localTemporalMemory)
 
     def resetLocalCounters(self):
         self.localIntCounter = 0
