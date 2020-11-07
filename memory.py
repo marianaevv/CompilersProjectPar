@@ -308,50 +308,50 @@ class memory:
         Args:
             mem_address: Memory address 
         """
-            if( mem_address >= self.globalBase and mem_address < self.globalTempBase):
-                if(mem_address >= (self.globalBase + self.intMem) and mem_address < (self.globalBase + self.floatMem)):
-                    return self.get_value(mem_address, self.globalMemory, 'int')
-                if(mem_address >= (self.globalBase + self.floatMem) and mem_address <(self.globalBase + self.charMem)):
-                    return self.get_value(mem_address, self.globalMemory, 'float')
-                if(mem_address >= (self.globalBase + self.charMem) and mem_address < (self.globalBase + self.boolMem)):
-                    return self.get_value(mem_address, self.globalMemory, 'char')
-                if(mem_address >= (self.globalBase + self.boolMem) and mem_address < (self.globalBase + self.topLimit)):
-                    return self.get_value(mem_address, self.globalMemory, 'bool')
-            if( mem_address >= self.globalTempBase and mem_address < self.localBase):
-                if(mem_address >= (self.globalTempBase + self.intMem) and mem_address < (self.globalTempBase + self.floatMem)):
-                    return self.get_value(mem_address, self.globalTemporalMemory, 'int')
-                if(mem_address >= (self.globalTempBase + self.floatMem) and mem_address <(self.globalTempBase + self.charMem)):
-                    return self.get_value(mem_address, self.globalTemporalMemory, 'float')
-                if(mem_address >= (self.globalTempBase + self.charMem) and mem_address < (self.globalTempBase + self.boolMem)):
-                    return self.get_value(mem_address, self.globalTemporalMemory, 'char')
-                if(mem_address >= (self.globalTempBase + self.boolMem) and mem_address < (self.globalTempBase + self.topLimit)):
-                    return self.get_value(mem_address, self.globalTemporalMemory, 'bool')    
-            if( mem_address >= self.localBase and mem_address < self.localTempBase):
-                if(mem_address >= (self.localBase + self.intMem) and mem_address < (self.localBase + self.floatMem)):
-                    return self.get_value(mem_address, self.localMemory, 'int')
-                if(mem_address >= (self.localBase + self.floatMem) and mem_address < (self.localBase + self.charMem)):
-                    return self.get_value(mem_address, self.localMemory, 'float')
-                if(mem_address >= (self.localBase + self.charMem) and mem_address < (self.localBase + self.boolMem)):
-                    return self.get_value(mem_address, self.localMemory, 'char')
-                if(mem_address >= (self.localBase + self.boolMem) and mem_address < (self.localBase + self.topLimit)):
-                    return self.get_value(mem_address, self.localMemory, 'bool')        
-            if( mem_address >= self.localTempBase and mem_address < self.constantBase):
-                if(mem_address >= (self.localTempBase + self.intMem) and mem_address < (self.localTempBase + self.floatMem)):
-                    return self.get_value(mem_address, self.localTemporalMemory, 'int')
-                if(mem_address >= (self.localTempBase + self.floatMem) and mem_address < (self.localTempBase + self.charMem)):
-                    return self.get_value(mem_address, self.localTemporalMemory, 'float')
-                if(mem_address >= (self.localTempBase + self.charMem) and mem_address < (self.localTempBase + self.boolMem)):
-                    return self.get_value(mem_address, self.localTemporalMemory, 'char')
-                if(mem_address >= (self.localTempBase + self.boolMem) and mem_address < (self.localTempBase + self.topLimit)):
-                    return self.get_value(mem_address, self.localTemporalMemory, 'bool') 
-            if( mem_address >= self.constantBase and mem_address < (self.constantBase + self.topLimit)):
-                if(mem_address >= (self.constantBase + self.intMem) and mem_address < (self.constantBase + self.floatMem)):
-                    return self.get_value(mem_address, self.constantMemory, 'int')
-                if(mem_address >= (self.constantBase + self.floatMem) and mem_address < (self.constantBase + self.charMem)):
-                    return self.get_value(mem_address, self.constantMemory, 'float')
-                if(mem_address >= (self.constantBase + self.charMem) and mem_address < (self.constantBase + self.boolMem)):
-                    return self.get_value(mem_address, self.constantMemory, 'char')
-                if(mem_address >= (self.constantBase + self.boolMem) and mem_address < (self.constantBase + self.topLimit)):
-                    return self.get_value(mem_address, self.constantMemory, 'bool')    
+        if( mem_address >= self.globalBase and mem_address < self.globalTempBase):
+            if(mem_address >= (self.globalBase + self.intMem) and mem_address < (self.globalBase + self.floatMem)):
+                return self.get_value(mem_address, self.globalMemory, 'int')
+            if(mem_address >= (self.globalBase + self.floatMem) and mem_address <(self.globalBase + self.charMem)):
+                 return self.get_value(mem_address, self.globalMemory, 'float')
+            if(mem_address >= (self.globalBase + self.charMem) and mem_address < (self.globalBase + self.boolMem)):
+                return self.get_value(mem_address, self.globalMemory, 'char')
+            if(mem_address >= (self.globalBase + self.boolMem) and mem_address < (self.globalBase + self.topLimit)):
+                return self.get_value(mem_address, self.globalMemory, 'bool')
+        if( mem_address >= self.globalTempBase and mem_address < self.localBase):
+            if(mem_address >= (self.globalTempBase + self.intMem) and mem_address < (self.globalTempBase + self.floatMem)):
+                return self.get_value(mem_address, self.globalTemporalMemory, 'int')
+            if(mem_address >= (self.globalTempBase + self.floatMem) and mem_address <(self.globalTempBase + self.charMem)):
+                return self.get_value(mem_address, self.globalTemporalMemory, 'float')
+            if(mem_address >= (self.globalTempBase + self.charMem) and mem_address < (self.globalTempBase + self.boolMem)):
+               return self.get_value(mem_address, self.globalTemporalMemory, 'char')
+            if(mem_address >= (self.globalTempBase + self.boolMem) and mem_address < (self.globalTempBase + self.topLimit)):
+                return self.get_value(mem_address, self.globalTemporalMemory, 'bool')    
+        if( mem_address >= self.localBase and mem_address < self.localTempBase):
+            if(mem_address >= (self.localBase + self.intMem) and mem_address < (self.localBase + self.floatMem)):
+                return self.get_value(mem_address, self.localMemory, 'int')
+            if(mem_address >= (self.localBase + self.floatMem) and mem_address < (self.localBase + self.charMem)):
+                return self.get_value(mem_address, self.localMemory, 'float')
+            if(mem_address >= (self.localBase + self.charMem) and mem_address < (self.localBase + self.boolMem)):
+                return self.get_value(mem_address, self.localMemory, 'char')
+            if(mem_address >= (self.localBase + self.boolMem) and mem_address < (self.localBase + self.topLimit)):
+                return self.get_value(mem_address, self.localMemory, 'bool')        
+        if( mem_address >= self.localTempBase and mem_address < self.constantBase):
+            if(mem_address >= (self.localTempBase + self.intMem) and mem_address < (self.localTempBase + self.floatMem)):
+                return self.get_value(mem_address, self.localTemporalMemory, 'int')
+            if(mem_address >= (self.localTempBase + self.floatMem) and mem_address < (self.localTempBase + self.charMem)):
+                return self.get_value(mem_address, self.localTemporalMemory, 'float')
+            if(mem_address >= (self.localTempBase + self.charMem) and mem_address < (self.localTempBase + self.boolMem)):
+                return self.get_value(mem_address, self.localTemporalMemory, 'char')
+            if(mem_address >= (self.localTempBase + self.boolMem) and mem_address < (self.localTempBase + self.topLimit)):
+                return self.get_value(mem_address, self.localTemporalMemory, 'bool') 
+        if( mem_address >= self.constantBase and mem_address < (self.constantBase + self.topLimit)):
+            if(mem_address >= (self.constantBase + self.intMem) and mem_address < (self.constantBase + self.floatMem)):
+                return self.get_value(mem_address, self.constantMemory, 'int')
+            if(mem_address >= (self.constantBase + self.floatMem) and mem_address < (self.constantBase + self.charMem)):
+                return self.get_value(mem_address, self.constantMemory, 'float')
+            if(mem_address >= (self.constantBase + self.charMem) and mem_address < (self.constantBase + self.boolMem)):
+                return self.get_value(mem_address, self.constantMemory, 'char')
+            if(mem_address >= (self.constantBase + self.boolMem) and mem_address < (self.constantBase + self.topLimit)):
+                return self.get_value(mem_address, self.constantMemory, 'bool')    
         
        
