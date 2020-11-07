@@ -5,15 +5,20 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+from IntermediateCode import IntermediateCode
 from FunctionTable import FunctionTable
 
 # Initialize the helper objects
 funcTable = FunctionTable()
-
+interCode = IntermediateCode()
 
 # Flags to make certain validations
 flgError = False
 flgHaveReturn = False
+
+# Global variables
+countArgs = 0
+callingFunc = ""
 
 # Tokens definition
 tokens = [
@@ -35,7 +40,7 @@ tokens = [
     # Logical Operators
     'AND',
     'OR',
-    # Assignment Operators
+    # Asignment Operators
     'EQUALS',
     'PLUSEQUALS',
     'SUBSTRACTEQUALS',
@@ -114,7 +119,7 @@ t_ignore = ' \t'
 
 def t_CTECHAR(token):
     r'"([^"])"'
-    token.value = str(token.value)
+    token.value = str(token.value)[1]
     return token
 
 
@@ -164,10 +169,20 @@ lexer = lex.lex()
 # ====================== Main ======================
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON functions_list MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+    program : PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+            | PROGRAM ID SEMICOLON functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
             | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
     '''
+    print(interCode.stkOperator)
+    print(interCode.stkOperand)
+    print(interCode.stkType)
+    cont = 0
+    for i in interCode.stkQuadruples:
+        print(cont, i)
+        cont += 1
+    print(interCode.stkJumps)
+    print()
 
 
 # ====================== Variables ======================
@@ -182,19 +197,14 @@ def p_data_type(p):
 
 def p_vars(p):
     '''
-    vars : VAR vars_lists
+    vars : VAR vars_lists neupoint_add_vars
     '''
-    # Add the variables to the current function
-    if(p[-3] == 'program'):
-        funcTable.addVariables('global', p[2])
-    else:
-        funcTable.addVariables(p[-3], p[2])
+    pass
 
 
 def p_vars_lists(p):
     '''
     vars_lists : data_type decla_ids_list SEMICOLON vars_lists
-               | data_type decla_ids_list SEMICOLON functions_list
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
@@ -234,21 +244,21 @@ def p_decla_identifier(p):
         p[0] = p[1]
 
 
-def p_ids_list(p):
-    '''
-    ids_list : identifier COMMA ids_list
-             | identifier
-    '''
-    pass
-
-
 def p_identifier(p):
     '''
     identifier : ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
                | ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
                | ID
     '''
-    pass
+    p[0] = p[1]
+
+
+# --------------- Variables Neural Points ---------------
+def p_neupoint_add_vars(p):
+    '''
+    neupoint_add_vars :
+    '''
+    funcTable.addVariables(interCode.currentFunction, p[-1])
 
 
 # ====================== Functions ======================
@@ -260,30 +270,6 @@ def p_return_type(p):
     p[0] = p[1]
 
 
-def p_function(p):
-    '''
-    function : return_type MODULE ID neupoint_add_function parameters_list vars block
-             | return_type MODULE ID neupoint_add_function parameters_list block
-    '''
-    global flgHaveReturn
-
-    # Makes the validation if the function is not void and does not have a return
-    if(p[1] != 'void' and not flgHaveReturn):
-        raise Exception(
-            'Function "{}" need a return of type {}'.format(p[3], p[1]))
-
-    # or if the function is void and have a return
-    elif(p[1] == 'void' and flgHaveReturn):
-        raise Exception(
-            'Function "{}" is void and does not need a return'.format(p[3]))
-
-    # for i in p:
-    #     print(i, end=' ')
-    # print()
-
-    flgHaveReturn = False
-
-
 def p_functions_list(p):
     '''
     functions_list : function functions_list
@@ -292,13 +278,20 @@ def p_functions_list(p):
     pass
 
 
+def p_function(p):
+    '''
+    function : MODULE return_type ID neupoint_add_function parameters_list vars neupoint_start_function block neupoint_check_for_return neupoint_end_function
+             | MODULE return_type ID neupoint_add_function parameters_list neupoint_start_function block neupoint_check_for_return neupoint_end_function
+    '''
+    pass
+
+
 def p_parameters_list(p):
     '''
-    parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS
+    parameters_list : LEFTPARENTHESIS parameter RIGHTPARENTHESIS neupoint_add_parameters
                     | LEFTPARENTHESIS RIGHTPARENTHESIS
     '''
-    if(len(p) == 4):
-        funcTable.addVariables(p[-2], p[2], True)
+    pass
 
 
 def p_parameter(p):
@@ -327,14 +320,70 @@ def p_parameter(p):
 
 
 # --------------- Functions Neural Points ---------------
-
-
 def p_neupoint_add_function(p):
-    """
+    '''
     neupoint_add_function : 
-    """
+    '''
+    interCode.currentFunction = p[-1]
     # Create the function table
-    funcTable.addNewFunction(p[-1], p[-3])
+    funcTable.addNewFunction(interCode.currentFunction, p[-2])
+
+
+def p_neupoint_add_parameters(p):
+    '''
+    neupoint_add_parameters :
+    '''
+    funcTable.addVariables(interCode.currentFunction, p[-2], True)
+
+
+def p_neupoint_back_global(p):
+    '''
+    neupoint_back_global : 
+    '''
+    interCode.currentFunction = 'global'
+
+
+def p_neupoint_start_function(p):
+    '''
+    neupoint_start_function : 
+    '''
+
+    funcTable.functionTable[interCode.currentFunction]['numQuad'] = len(
+        interCode.stkQuadruples) + 1
+
+
+def p_neupoint_check_for_return(p):
+    '''
+    neupoint_check_for_return : 
+    '''
+
+    # Get the name and return type
+    if(p[-8] == 'module'):
+        returnType = p[-7]
+
+    else:
+        returnType = p[-6]
+
+    global flgHaveReturn
+
+    # Makes the validation if the function is not void and does not have a return
+    if(returnType != 'void' and not flgHaveReturn):
+        raise Exception(
+            'Function "{}" need a return of type {}'.format(interCode.currentFunction, returnType))
+
+    flgHaveReturn = False
+
+
+def p_neupoint_end_function(p):
+    '''
+    neupoint_end_function : 
+    '''
+
+    # Insert the end quadruple of a function
+    interCode.endFunctionQuad()
+
+    # Release the Local Variable Table
+    funcTable.functionTable[interCode.currentFunction]['varTable'] = {}
 
 
 # ====================== Operators ======================
@@ -346,10 +395,8 @@ def p_comparators(p):
                 | GREATERTHAN
                 | LESSTHAN
                 | DIFFERENT
-                | OR
-                | AND
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_exp_operator(p):
@@ -357,7 +404,7 @@ def p_exp_operator(p):
     exp_operator : PLUS
                  | MINUS
     '''
-    pass
+    p[0] = p[1]
 
 
 def p_term_operator(p):
@@ -366,7 +413,7 @@ def p_term_operator(p):
                   | DIVIDE
                   | MOD
     '''
-    pass
+    p[0] = p[1]
 
 
 # ====================== Statutes ======================
@@ -388,33 +435,42 @@ def p_statutes_list(p):
 
 def p_statute(p):
     '''
-    statute : asignation
+    statute : assignment
+            | function_return
             | reading
             | writing
             | decision
             | loop
-            | function_return
-            | function_call SEMICOLON
+            | function_call_void
     '''
     pass
 
 
-def p_asignation(p):
+def p_assignment(p):
     '''
-    asignation : identifier EQUALS expresion SEMICOLON
-               | identifier PLUSEQUALS expresion SEMICOLON
-               | identifier SUBSTRACTEQUALS expresion SEMICOLON
-               | identifier INCREMENT SEMICOLON
-               | identifier DECREMENT SEMICOLON
+    assignment : identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+               | identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     '''
     pass
 
 
 def p_reading(p):
     '''
-    reading : READ LEFTPARENTHESIS ids_list RIGHTPARENTHESIS SEMICOLON
+    reading : READ LEFTPARENTHESIS reading_list RIGHTPARENTHESIS SEMICOLON
     '''
     pass
+
+
+def p_reading_list(p):
+    '''
+    reading_list : identifier neupoint_add_operand  COMMA reading_list
+                 | identifier neupoint_add_operand
+    '''
+    # Push the writing quad
+    interCode.readQuad()
 
 
 def p_writing(p):
@@ -426,43 +482,63 @@ def p_writing(p):
 
 def p_writing_list(p):
     '''
-    writing_list : CTESTRING COMMA writing_list
-                 | expresion COMMA writing_list
-                 | CTESTRING
-                 | expresion
+    writing_list : CTESTRING neupoint_add_cte_operand neupoint_write_quad COMMA writing_list
+                 | expresion neupoint_write_quad COMMA writing_list
+                 | CTESTRING neupoint_add_cte_operand neupoint_write_quad
+                 | expresion neupoint_write_quad
     '''
     pass
 
 
 def p_decision(p):
     '''
-    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block ELSE block
-             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS THEN block
+    decision : IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad THEN block ELSE neupoint_else_conditional_quad block neupoint_end_conditional_quad
+             | IF LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad THEN block neupoint_end_conditional_quad
     '''
     pass
 
 
 def p_loop(p):
     '''
-    loop : conditional block
-         | non_conditional block
+    loop : conditional
+         | non_conditional
     '''
     pass
 
 
 def p_conditional(p):
     '''
-    conditional : WHILE LEFTPARENTHESIS expresion RIGHTPARENTHESIS DO
+    conditional : WHILE neupoint_while_start LEFTPARENTHESIS expresion RIGHTPARENTHESIS neupoint_conditional_quad DO block neupoint_while_end
     '''
     pass
 
 
 def p_non_conditional(p):
     '''
-    non_conditional : FOR ID EQUALS exp TO exp DO
+    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad TO exp DO block
     '''
     pass
 
+def p_neupoint_add_operand_integer(p):
+    '''
+    neupoint_add_operand_integer : 
+    '''
+    print(p[-1])
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
+
+    if(operandType != 'int'): 
+        raise Exception("Variable used in a FOR must be an integer")
+
+    # Add name and datatype to the stacks
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+
+def p_neupoint_for_condition(p):
+    '''
+    neupoint_for_condition : 
+    '''
 
 def p_function_return(p):
     '''
@@ -471,68 +547,296 @@ def p_function_return(p):
     global flgHaveReturn
     flgHaveReturn = True
 
+    # Search the function data
+    funcData = funcTable.searchFunction(interCode.currentFunction)
 
-def p_function_call(p):
+    # Validate the return type
+    interCode.returnFunctionQuad(
+        interCode.currentFunction, funcData['returnType'])
+
+
+def p_function_call_void(p):
     '''
-    function_call : ID LEFTPARENTHESIS expresion_list RIGHTPARENTHESIS
+    function_call_void : function_call SEMICOLON
     '''
     pass
 
 
-def p_expresion_list(p):
+def p_function_call(p):
     '''
-    expresion_list : expresion COMMA expresion_list
-                   | expresion
+    function_call : ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall ags_list neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
+                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS
+    '''
+    pass
+
+
+def p_ags_list(p):
+    '''
+    ags_list : expresion neupoint_validate_args COMMA ags_list
+             | expresion neupoint_validate_args
     '''
     pass
 
 
 def p_expresion(p):
     '''
-    expresion : exp comparators exp
-              | exp
+    expresion : exp_relational AND neupoint_add_operator expresion neupoint_logical_relational_opt
+              | exp_relational OR neupoint_add_operator expresion neupoint_logical_relational_opt
+              | exp_relational
+    '''
+    pass
+
+
+def p_exp_relational(p):
+    '''
+    exp_relational : exp comparators neupoint_add_operator exp neupoint_logical_relational_opt
+                   | exp
     '''
     pass
 
 
 def p_exp(p):
     '''
-    exp : term exp_operator exp
-        | term
+    exp : term neupoint_arithmetic_exp_quad exp_operator neupoint_add_operator exp
+        | term neupoint_arithmetic_exp_quad
     '''
     pass
 
 
 def p_term(p):
     '''
-    term : factor term_operator term
-         | factor
+    term : factor neupoint_arithmetic_term_quad term_operator neupoint_add_operator term
+         | factor neupoint_arithmetic_term_quad
     '''
     pass
 
 
 def p_factor(p):
     '''
-    factor : LEFTPARENTHESIS expresion RIGHTPARENTHESIS
-           | exp_operator opt_value
-           | opt_value
+    factor : LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
+           | CTEINT neupoint_add_cte_operand
+           | CTEFLOAT neupoint_add_cte_operand
+           | CTECHAR neupoint_add_cte_operand
+           | function_call
+           | identifier neupoint_add_operand
     '''
-    pass
 
 
-def p_opt_value(p):
+# --------------- Expressions Neural Points ---------------
+def p_neupoint_add_operator(p):
     '''
-    opt_value : CTEINT
-              | CTEFLOAT
-              | CTECHAR
-              | function_call
-              | identifier
+    neupoint_add_operator : 
     '''
-    pass
+    interCode.stkOperator.append(p[-1])
 
 
+def p_neupoint_add_operand(p):
+    '''
+    neupoint_add_operand : 
+    '''
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
+
+    # Add name and datatype to the stacks
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+
+
+def p_neupoint_add_cte_operand(p):
+    '''
+    neupoint_add_cte_operand : 
+    '''
+    interCode.stkOperand.append(p[-1])
+    if(type(p[-1]).__name__ == 'str'):
+        if(len(p[-1]) == 1):
+            interCode.stkType.append('char')
+        else:
+            interCode.stkType.append('str')
+    else:
+        interCode.stkType.append(type(p[-1]).__name__)
+
+
+def p_neupoint_arithmetic_exp_quad(p):
+    '''
+    neupoint_arithmetic_exp_quad : 
+    '''
+
+    # If the last operator is a PLUS or MINUS..
+    interCode.generateOperatorQuadruple(['+', '-'])
+
+
+def p_neupoint_arithmetic_term_quad(p):
+    '''
+    neupoint_arithmetic_term_quad : 
+    '''
+
+    # If the last operator is a MULTIPLY, DIVIDE or MODULE..
+    interCode.generateOperatorQuadruple(['*', '/', '%'])
+
+
+def p_neupoint_add_wall(p):
+    '''
+    neupoint_add_wall : 
+    '''
+    interCode.stkOperator.append('(')
+
+
+def p_neupoint_remove_wall(p):
+    '''
+    neupoint_remove_wall : 
+    '''
+    openWall = interCode.stkOperator.pop()
+    if(openWall != '('):
+        raise Exception('Parenthesis Missing')
+
+
+def p_neupoint_assignment_quad(p):
+    '''
+    neupoint_assignment_quad : 
+    '''
+    interCode.generateAssignmentQuad()
+
+
+def p_neupoint_assignment_single_quad(p):
+    '''
+    neupoint_assignment_single_quad : 
+    '''
+    interCode.generateAssignmentSingleQuad()
+
+
+def p_neupoint_logical_relational_opt(p):
+    '''
+    neupoint_logical_relational_opt : 
+    '''
+    interCode.generateOperatorQuadruple(flgArithmetic=False)
+
+
+def p_neupoint_conditional_quad(p):
+    '''
+    neupoint_conditional_quad : 
+    '''
+    interCode.generateConditionQuad()
+
+
+def p_neupoint_else_conditional_quad(p):
+    '''
+    neupoint_else_conditional_quad : 
+    '''
+    interCode.elseConditionQuad()
+
+
+def p_neupoint_end_conditional_quad(p):
+    '''
+    neupoint_end_conditional_quad : 
+    '''
+    interCode.endConditionQuad()
+
+
+def p_neupoint_while_start(p):
+    '''
+    neupoint_while_start : 
+    '''
+    # Push the jump quad num
+    interCode.stkJumps.append(len(interCode.stkQuadruples))
+
+
+def p_neupoint_while_end(p):
+    '''
+    neupoint_while_end : 
+    '''
+    # Push the jump quad num
+    interCode.endWhileQuad()
+
+
+def p_neupoint_validate_function(p):
+    '''
+    neupoint_validate_function : 
+    '''
+    global callingFunc
+    callingFunc = p[-1]
+
+    # Validate that function exists
+    funcTable.searchFunction(callingFunc)
+
+
+def p_neupoint_era_quad(p):
+    '''
+    neupoint_era_quad : 
+    '''
+    global callingFunc
+    # Get the num of variables
+    numVars = funcTable.searchFunction(callingFunc)['numVars']
+
+    # Append the ERA quadruple
+    interCode.eraQuad(numVars)
+
+    # Initilize the args counter
+    global countArgs
+    countArgs = 0
+
+
+def p_neupoint_validate_args(p):
+    '''
+    neupoint_validate_args : 
+    '''
+    global countArgs
+    global callingFunc
+
+    # Get the data type of the arguments
+    argType = funcTable.searchFunction(callingFunc)['paramsType']
+
+    # Check if there are more args
+    if(countArgs > len(argType) - 1):
+        raise Exception('Sending {} arguments but function "{}" needs {}'.format(
+            countArgs + 1, callingFunc, len(argType)))
+
+    # Validate the type are correct and push the quad
+    interCode.argumentQuad(argType[countArgs], countArgs)
+
+    # Increase the argument counter
+    countArgs += 1
+
+
+def p_neupoint_validate_num_args(p):
+    '''
+    neupoint_validate_num_args : 
+    '''
+    global countArgs
+    global callingFunc
+
+    # Get the data type of the arguments
+    paramsNumber = funcTable.searchFunction(callingFunc)['paramsNumber']
+
+    # Check if there are less args
+    if(countArgs < paramsNumber):
+        raise Exception('Sending {} arguments but function "{}" needs {}'.format(
+            countArgs, callingFunc, paramsNumber))
+
+
+def p_neupoint_gosub_quad(p):
+    '''
+    neupoint_gosub_quad : 
+    '''
+    # Remove the wall
+    interCode.stkOperator.pop()
+
+    # Get the called func data
+    funcData = funcTable.functionTable[callingFunc]
+
+    # Add the GOSUB quad
+    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'])
+
+
+def p_neupoint_write_quad(p):
+    '''
+    neupoint_write_quad : 
+    '''
+    interCode.writeQuad()
+
+
+# ====================== Rule for syntax errors ======================
 def p_error(p):
-    # Error rule for syntax errors
     global flgError
     flgError = True
     print("\n-> No apropiado\n")
@@ -540,12 +844,6 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
-
-# Needed stacks (list on python)
-stackOperand = list()
-stackType = list()
-stackOperator = list()
-stackJumps = list()
 
 try:
     # Read the source file

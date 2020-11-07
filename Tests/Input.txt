@@ -1,36 +1,35 @@
-program global;
+program patito;
+var 
+    int n, b;
+    float f;
+    
+    module void uno(int a){
+        a= a+b*a;
 
+        for n = 10 to 100 do {
 
-var
-    int i, j, p;
-    int Arreglo[10];
-
-void module inicia(int y[10])
-var int x, w2[2][2], s2[10];
-{
-    x=0;
-    while(x<11)do
+        }
+    }
+    
+    module void dos(int a, int m, float g)
+    var
+        int i;
     {
-        Arreglo[x] = y * x;
-        x = x + 1;
+        i=b;
+        
+        while (i>0) do{
+            a = a + b * i + b;
+            i = i - 1;
+        }
+        uno(n);
+        write("HOLA");
+        write(n, "HI");
+        read(n, n);
     }
-}
-
-int module fact(int j, int y, char a)
-var int iJ;
-{i = j + (p - j * 2 + j);
-if(j == 1) then
- { return(j);}
- else
- {return (j + fact(j));}
-}
-
-
-main ()
-{
-    j = 3 + 0;
-
-    if(j >= 1) then {
-        a = 5;
+    
+    main(){
+        dos(n, n, f);
+        n = 3; 
+        b = n + 1;
+        f = 3.14;
     }
-}

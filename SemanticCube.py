@@ -147,10 +147,18 @@ class SemanticCube:
         }
 
     def verifyOperations(self, operator, leftOperand, rightOper):
-        '''
-        Function that checks the type of the operations and return
-        the result type of the operation or it is a invalid operation
-        '''
+        """
+        Function that checks the type of the operands and return the 
+        data type result of the operation or if its a invalid operation
+
+        Args:
+            operator (string): The operator string
+            leftOperand (string): Left operand data type
+            rightOper (string): Right operand data type
+
+        Returns:
+            string: The data type result of the operation or error
+        """
         ArithmeticOps = ['+', '-', '*', '%']
         Division = ['/']
         ComparisonOps = ['>=', '<=', '>', '<']
