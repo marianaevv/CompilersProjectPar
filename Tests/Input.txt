@@ -1,35 +1,11 @@
 program patito;
 var 
-    int n, b;
-    float f;
-    
-    module void uno(int a){
-        a= a+b*a;
+    int A, B, C, D, E, F, G, H, I, J, K;
 
-        for n = 10 to 100 do {
-
-        }
-    }
     
-    module void dos(int a, int m, float g)
-    var
-        int i;
-    {
-        i=b;
-        
-        while (i>0) do{
-            a = a + b * i + b;
-            i = i - 1;
+main(){
+        while (A > 0) do{
+        A = A - K * J;
+        G = G * J - K;
         }
-        uno(n);
-        write("HOLA");
-        write(n, "HI");
-        read(n, n);
-    }
-    
-    main(){
-        dos(n, n, f);
-        n = 3; 
-        b = n + 1;
-        f = 3.14;
-    }
+}
