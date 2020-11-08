@@ -17,7 +17,6 @@ class IntermediateCode:
         self.countReturns = 1
 
         self.currentFunction = 'global'
-        self.vcMemory = ''
 
 
     def generateGOTOMain(self):
@@ -353,7 +352,6 @@ class IntermediateCode:
 
         # Generate the memory direction of the VControl
         VControl = "VC"
-        self.vcMemory = VControl
 
         # Generate the quad
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VControl))
@@ -378,6 +376,8 @@ class IntermediateCode:
         # Pop the fianl expresion
         expOperand = self.stkOperand.pop()
 
+        print(self.stkOperand)
+
         # Generate the memory direction of the VFinal
         VFinal = "VF"
 
@@ -387,8 +387,7 @@ class IntermediateCode:
 
         # Generate quads
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VFinal))
-        self.stkQuadruples.append(
-            Quadruple('<', self.vcMemory, VFinal, tempBoolean))
+        self.stkQuadruples.append(Quadruple('<', self.stkOperand[-1], VFinal, tempBoolean))
 
         # Push the jump quad
         self.stkJumps.append(len(self.stkQuadruples) - 1)
