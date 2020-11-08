@@ -13,10 +13,11 @@ class IntermediateCode:
         self.stkJumps = list()
         self.stkQuadruples = list()
 
-        self.countTemporals = 0
-        self.countReturns = 0
+        self.countTemporals = 1
+        self.countReturns = 1
 
         self.currentFunction = 'global'
+        self.vcMemory = ''
 
     def generateOperatorQuadruple(self, groupOperators=None, flgArithmetic=True):
         """
@@ -84,7 +85,6 @@ class IntermediateCode:
         Raises:
             Exception: If the operands types are different
         """
-
         # Pop the last operands
         rgtOperand = self.stkOperand.pop()
         rgtOpndType = self.stkType.pop()
@@ -321,3 +321,87 @@ class IntermediateCode:
 
         # Push the quad
         self.stkQuadruples.append(Quadruple('READ', None, None, toReadDir))
+
+    def generateVControlQuad(self):
+        """
+        Generate the Quadruple where the VControl get the value
+        """
+
+        # Pop the memory direction of the ID
+        expOperand = self.stkOperand[-1]
+
+        # Generate the memory direction of the VControl
+        VControl = "VC"
+        self.vcMemory = VControl
+
+        # Generate the quad
+        self.stkQuadruples.append(Quadruple('=', expOperand, None, VControl))
+
+        # Push the VC memory direction
+        self.stkOperand.append(VControl)
+        self.stkType.append('int')
+
+    def generateVCVFComparisonQuad(self):
+        """
+        Generate the quads where the VControl and VFinal are compared
+
+        Raises:
+            Exception: If the goal expression is not an integer
+        """
+
+        print(self.stkOperand)
+
+        # Checks that the goal expresion is a integer
+        expType = self.stkType.pop()
+        if(expType != 'int'):
+            raise Exception("The final expression on a FOR must be an integer")
+
+        # Pop the fianl expresion
+        expOperand = self.stkOperand.pop()
+
+        # Generate the memory direction of the VFinal
+        VFinal = "VF"
+
+        # Generate memory for the temporal boolean
+        tempBoolean = "T" + str(self.countTemporals)
+        self.countTemporals += 1
+
+        # Generate quads
+        self.stkQuadruples.append(Quadruple('=', expOperand, None, VFinal))
+        self.stkQuadruples.append(
+            Quadruple('<', self.vcMemory, VFinal, tempBoolean))
+
+        # Push the jump quad
+        self.stkJumps.append(len(self.stkQuadruples) - 1)
+
+        # Generate the GOTOF quad
+        self.stkQuadruples.append(Quadruple('GOTOF', tempBoolean, None, None))
+
+        # Push the jump quad
+        self.stkJumps.append(len(self.stkQuadruples) - 1)
+
+    def fillForQuad(self):
+        """
+        Generate the last quads of the FOR and the GOTO if the condition 
+        still does not meet. Also fill the previous GOTOF quad.
+        """
+
+        # Pop the memory directions
+        VControl = self.stkOperand.pop()
+        IDMemory = self.stkOperand.pop()
+        self.stkType.pop()
+        self.stkType.pop()
+
+        # Generate the update quad
+        self.stkQuadruples.append(Quadruple('+', VControl, 1, VControl))
+        self.stkQuadruples.append(Quadruple('=', VControl, None, IDMemory))
+
+        # Get jumps
+        endFOR = self.stkJumps.pop()
+        returnFOR = self.stkJumps.pop()
+
+        # Generate the GOTO quad
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, returnFOR))
+
+        # Fill the jump quad
+        self.stkQuadruples[endFOR].result = len(self.stkQuadruples)

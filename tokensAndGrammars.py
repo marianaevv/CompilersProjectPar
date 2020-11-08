@@ -515,30 +515,10 @@ def p_conditional(p):
 
 def p_non_conditional(p):
     '''
-    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad TO exp DO block
+    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad neupoint_add_operand_for TO exp  neupoint_comparison_quad DO block neupoint_for_end
     '''
     pass
 
-def p_neupoint_add_operand_integer(p):
-    '''
-    neupoint_add_operand_integer : 
-    '''
-    print(p[-1])
-    # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
-
-    if(operandType != 'int'): 
-        raise Exception("Variable used in a FOR must be an integer")
-
-    # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
-
-def p_neupoint_for_condition(p):
-    '''
-    neupoint_for_condition : 
-    '''
 
 def p_function_return(p):
     '''
@@ -565,7 +545,7 @@ def p_function_call_void(p):
 def p_function_call(p):
     '''
     function_call : ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall ags_list neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
-                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS
+                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
     '''
     pass
 
@@ -833,6 +813,49 @@ def p_neupoint_write_quad(p):
     neupoint_write_quad : 
     '''
     interCode.writeQuad()
+
+
+def p_neupoint_add_operand_integer(p):
+    '''
+    neupoint_add_operand_integer : 
+    '''
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
+
+    if(operandType != 'int'):
+        raise Exception("Variable used in a FOR must be an integer")
+
+    # Add name and datatype to the stacks
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+
+
+def p_neupoint_add_operand_for(p):
+    '''
+    neupoint_add_operand_for : 
+    '''
+    # Generate the VControl Quad
+    interCode.generateVControlQuad()
+
+
+def p_neupoint_comparison_quad(p):
+    '''
+    neupoint_comparison_quad : 
+    '''
+    # Generate quads
+    interCode.generateVCVFComparisonQuad()
+
+
+def p_neupoint_for_end(p):
+    '''
+    neupoint_for_end : 
+    '''
+
+    # Generate las FOR quad and fill the GOTOs
+    interCode.fillForQuad()
 
 
 # ====================== Rule for syntax errors ======================

@@ -55,7 +55,8 @@ class FunctionTable:
                 'dataType': returnType,
                 'size': 1,
                 'flgArray': False,
-                'dimensions': 1
+                'dimensions': 1,
+                'memoryDirection' : 0
             }
 
 
@@ -141,7 +142,8 @@ class FunctionTable:
                 'dataType': var[0],
                 'size': size,
                 'flgArray': flgArray,
-                'dimensions': dimensions
+                'dimensions': dimensions,
+                'memoryDirection' : 'MEM'
             }
 
             # If the variables are parameters, store the data type also on another list
