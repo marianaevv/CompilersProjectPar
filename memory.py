@@ -1,12 +1,12 @@
-class memory:
+class Memory:
     def __init__(self):
         """
         Dictionaries to save values according to the context and the value type
         """
         self.globalMemory = {
-            'int' = {},
-            'float' = {},
-            'bool' = {},
+            'int' : {},
+            'float': {},
+            'bool': {},
             'char' = {}
         }
         self.globalTemporalMemory = {
