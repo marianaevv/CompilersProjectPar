@@ -1,55 +1,43 @@
-program Ejemplo;
+program patito;
 
 var
-    int i, j, p;
-    int Arreglo[10];
-    float valor;
-    int Matriz[3][8];
+    int i, j, k;
+    float f;
 
-module int fact(int j, int y, char a)
-var int iJ;
-{i = j + (p - j * 2 + j);
-if(j == 1) then
- { return(j);}
- else
- {return (j + fact(j));}
+module void uno(int a, int b){
+    if(a > 0) then{
+        i = a + b * j + i;
+        write(i + j);
+        uno(a - i, i);
+    
+    }else{
+        write(a + b);
+    }
 }
 
-module void inicia(int y)
+module int dos(int a, float g)
 var int x;
 {
-    x=0;
-    while(x<11)do
-    {
-        Arreglo[x] = y * x;
-        x = x + 1;
+    x = a;
+
+    while(a > 0) do{
+        a = a - k * j;
+        uno(a * 2, a + k);
+        g=g * j - k;
     }
+
+    return(i + k * j);
 }
 
 main ()
 {
-    read(p);
-    j = p * 2;
-    i = 10 % 2;
-    i += 10 % 2;
-    i -= 10 % 2;
-    a++;
-    a--;
-    inicia(p * A- 5);
-    for i = 0 to 9 do {
-        Arreglo[i] += Arreglo[i] * fact(Arreglo[i] - p);
-    }
+    i = 2;
+    k = i + 1;
+    f = 3.14;
 
-    for j = 0 to 2 do{
-        for k = 0 to 7 do
-            {
-                Matriz[j][i] = Arreglo[j + k - fact(p) + p * k] * p + j;
-            }
-    }
-
-    while(i >= 0) do
-    {
-        write("Resultado", Arreglo[i], fact(i + 2) * valor);
-        i = i - 1;
+    for i = 0 to 20 do{
+        write(dos(i + k, f * 3) + 3);
+        write(i, j * 2, f * 2 + 1.5);
+        i = i - k;
     }
 }

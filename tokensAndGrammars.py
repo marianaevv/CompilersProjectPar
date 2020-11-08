@@ -169,10 +169,10 @@ lexer = lex.lex()
 # ====================== Main ======================
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+    program : PROGRAM ID SEMICOLON neupoint_goto_main vars functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main vars MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
     '''
     print(interCode.stkOperator)
     print(interCode.stkOperand)
@@ -185,7 +185,30 @@ def p_program(p):
     print()
 
 
+def p_neupoint_goto_main(p):
+    '''
+    neupoint_goto_main : 
+    '''
+    interCode.generateGOTOMain()
+
+
+def p_neupoint_fill_goto_main(p):
+    '''
+    neupoint_fill_goto_main : 
+    '''
+    interCode.currentFunction = 'global'
+    interCode.fillGOTOMain()
+
+
+def p_neupoint_end(p):
+    '''
+    neupoint_end : 
+    '''
+    interCode.endQuad()
+
 # ====================== Variables ======================
+
+
 def p_data_type(p):
     '''
     data_type : INT
@@ -258,7 +281,7 @@ def p_neupoint_add_vars(p):
     '''
     neupoint_add_vars :
     '''
-    funcTable.addVariables(interCode.currentFunction, p[-1])
+    interCode.addVariablesToTables(funcTable, interCode.currentFunction, p[-1])
 
 
 # ====================== Functions ======================
@@ -326,21 +349,15 @@ def p_neupoint_add_function(p):
     '''
     interCode.currentFunction = p[-1]
     # Create the function table
-    funcTable.addNewFunction(interCode.currentFunction, p[-2])
+    interCode.addFunctionToTable(funcTable, interCode.currentFunction, p[-2])
 
 
 def p_neupoint_add_parameters(p):
     '''
     neupoint_add_parameters :
     '''
-    funcTable.addVariables(interCode.currentFunction, p[-2], True)
-
-
-def p_neupoint_back_global(p):
-    '''
-    neupoint_back_global : 
-    '''
-    interCode.currentFunction = 'global'
+    interCode.addVariablesToTables(
+        funcTable, interCode.currentFunction, p[-2], True)
 
 
 def p_neupoint_start_function(p):
@@ -515,30 +532,10 @@ def p_conditional(p):
 
 def p_non_conditional(p):
     '''
-    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad TO exp DO block
+    non_conditional : FOR ID neupoint_add_operand_integer EQUALS neupoint_add_operator exp neupoint_assignment_quad neupoint_add_operand_for TO exp  neupoint_comparison_quad DO block neupoint_for_end
     '''
     pass
 
-def p_neupoint_add_operand_integer(p):
-    '''
-    neupoint_add_operand_integer : 
-    '''
-    print(p[-1])
-    # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
-
-    if(operandType != 'int'): 
-        raise Exception("Variable used in a FOR must be an integer")
-
-    # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
-
-def p_neupoint_for_condition(p):
-    '''
-    neupoint_for_condition : 
-    '''
 
 def p_function_return(p):
     '''
@@ -565,7 +562,7 @@ def p_function_call_void(p):
 def p_function_call(p):
     '''
     function_call : ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall ags_list neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
-                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS
+                  | ID neupoint_validate_function LEFTPARENTHESIS neupoint_era_quad neupoint_add_wall neupoint_validate_num_args RIGHTPARENTHESIS neupoint_gosub_quad
     '''
     pass
 
@@ -635,12 +632,12 @@ def p_neupoint_add_operand(p):
     neupoint_add_operand : 
     '''
     # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
+    operandDat = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])
 
     # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(operandDat['memoryAddress'])
+    interCode.stkType.append(operandDat['dataType'])
 
 
 def p_neupoint_add_cte_operand(p):
@@ -835,6 +832,49 @@ def p_neupoint_write_quad(p):
     interCode.writeQuad()
 
 
+def p_neupoint_add_operand_integer(p):
+    '''
+    neupoint_add_operand_integer : 
+    '''
+    # Get the operand data type
+    operandType = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])['dataType']
+
+    if(operandType != 'int'):
+        raise Exception("Variable used in a FOR must be an integer")
+
+    # Add name and datatype to the stacks
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(p[-1])
+    interCode.stkType.append(operandType)
+
+
+def p_neupoint_add_operand_for(p):
+    '''
+    neupoint_add_operand_for : 
+    '''
+    # Generate the VControl Quad
+    interCode.generateVControlQuad()
+
+
+def p_neupoint_comparison_quad(p):
+    '''
+    neupoint_comparison_quad : 
+    '''
+    # Generate quads
+    interCode.generateVCVFComparisonQuad()
+
+
+def p_neupoint_for_end(p):
+    '''
+    neupoint_for_end : 
+    '''
+
+    # Generate las FOR quad and fill the GOTOs
+    interCode.fillForQuad()
+
+
 # ====================== Rule for syntax errors ======================
 def p_error(p):
     global flgError
@@ -847,7 +887,7 @@ parser = yacc.yacc()
 
 try:
     # Read the source file
-    fileName = './Tests/Input.txt'
+    fileName = './Tests/Input2.txt'
     f = open(fileName, "r")
     srcFile = f.read()
 
