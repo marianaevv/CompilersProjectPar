@@ -15,7 +15,7 @@ class FunctionTable:
             }
         }
 
-    def addNewFunction(self, funcName, returnType):
+    def addNewFunction(self, funcName, returnType, objMemory=None):
         """
         Add new function data into the Function Table after making 
         the needed validations.
@@ -50,13 +50,16 @@ class FunctionTable:
         }
 
         if (returnType != 'void'):
+            # Get the direction address
+            memAddress = objMemory.getGlobalAddress(returnType)
+
             # Add the variable to store the return value
             self.functionTable['global']['varTable'][funcName] = {
                 'dataType': returnType,
                 'size': 1,
                 'flgArray': False,
                 'dimensions': 1,
-                'memoryDirection' : 0
+                'memoryAddress' : memAddress
             }
 
 
@@ -83,7 +86,7 @@ class FunctionTable:
             raise Exception(
                 'The function "{}" has not been declared'.format(funcName))
 
-    def addVariables(self, funcName, varList, flgParams=False):
+    def addVariables(self, funcName, varList, flgParams=False, objMemory=None):
         """
         Adds the variables to its corresponding function
 
@@ -136,19 +139,27 @@ class FunctionTable:
                 # Or just store the array size
                 else:
                     size = var[2]
-
+                    
+            if(funcName == 'global'):
+                # Get the direction address
+                memAddress = objMemory.getGlobalAddress(var[0])
+            else:
+                memAddress = 'MEM'
+            
             # Add the variable to the function variables table
             self.functionTable[funcName]['varTable'][var[1]] = {
                 'dataType': var[0],
                 'size': size,
                 'flgArray': flgArray,
                 'dimensions': dimensions,
-                'memoryDirection' : 'MEM'
+                'memoryAddress' : memAddress
             }
 
             # If the variables are parameters, store the data type also on another list
             if(flgParams):
                 self.functionTable[funcName]['paramsType'].append(var[0])
+
+        print(self.functionTable)
 
     def searchVariable(self, funcName, varName):
         """

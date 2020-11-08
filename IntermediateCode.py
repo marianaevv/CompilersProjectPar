@@ -1,8 +1,9 @@
 from SemanticCube import SemanticCube
 from Quadruples import Quadruple
+from Memory import Memory
 
 semanticCube = SemanticCube()
-
+memoryObj = Memory()
 
 class IntermediateCode:
     def __init__(self):
@@ -18,6 +19,29 @@ class IntermediateCode:
 
         self.currentFunction = 'global'
 
+    def addFunctionToTable(self, funcTable, funcName, returnType):
+        """
+        To add a function to the Function Table while assigning 
+        a Memory Direction if it is not a void
+
+        Args:
+            funcTable (FunctionTableObj): A function table class
+            funcName (string): Name of the function 
+            returnType (string) : The function return type
+        """
+        funcTable.addNewFunction(funcName, returnType, memoryObj)
+
+    def addVariablesToTables(self, funcTable, funcName, listVars, flgParams=False):
+        """
+        To add variables to the Function Table while assigning 
+        a Memory Direction
+
+        Args:
+            funcTable (FunctionTableObj): A function table class
+            funcName (string): Name of the function 
+            listVars (list): List with the tupples variables (TypeVar, Name)
+        """
+        funcTable.addVariables(funcName, listVars, flgParams, objMemory=memoryObj)
 
     def generateGOTOMain(self):
         """
