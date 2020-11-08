@@ -376,8 +376,6 @@ class IntermediateCode:
         # Pop the fianl expresion
         expOperand = self.stkOperand.pop()
 
-        print(self.stkOperand)
-
         # Generate the memory direction of the VFinal
         VFinal = "VF"
 
