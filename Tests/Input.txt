@@ -1,22 +1,11 @@
 program patito;
 var 
     int A, B, C, D, E, F, G, H, I, J, K;
-    
+
     
 main(){
-    A = B + C * (D - E);
-    B = E - F;
-    for J = 1 to A + B * C do
-    {
-        for I = 10  to 100 do{
-            
+        while (A > 0) do{
+        A = A - K * J;
+        G = G * J - K;
         }
-        H = J * K + B;
-        if(B < H) then
-        {
-            B = H + J;
-            write(A + B * C, J);
-        }
-    }
-    F = A + B;
 }

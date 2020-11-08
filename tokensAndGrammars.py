@@ -169,10 +169,10 @@ lexer = lex.lex()
 # ====================== Main ======================
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON vars functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON vars MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON functions_list neupoint_back_global MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
-            | PROGRAM ID SEMICOLON MAIN LEFTPARENTHESIS RIGHTPARENTHESIS block
+    program : PROGRAM ID SEMICOLON neupoint_goto_main vars functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main vars MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
+            | PROGRAM ID SEMICOLON neupoint_goto_main MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
     '''
     print(interCode.stkOperator)
     print(interCode.stkOperand)
@@ -185,7 +185,30 @@ def p_program(p):
     print()
 
 
+def p_neupoint_goto_main(p):
+    '''
+    neupoint_goto_main : 
+    '''
+    interCode.generateGOTOMain()
+
+
+def p_neupoint_fill_goto_main(p):
+    '''
+    neupoint_fill_goto_main : 
+    '''
+    interCode.currentFunction = 'global'
+    interCode.fillGOTOMain()
+
+
+def p_neupoint_end(p):
+    '''
+    neupoint_end : 
+    '''
+    interCode.endQuad()
+
 # ====================== Variables ======================
+
+
 def p_data_type(p):
     '''
     data_type : INT
@@ -334,13 +357,6 @@ def p_neupoint_add_parameters(p):
     neupoint_add_parameters :
     '''
     funcTable.addVariables(interCode.currentFunction, p[-2], True)
-
-
-def p_neupoint_back_global(p):
-    '''
-    neupoint_back_global : 
-    '''
-    interCode.currentFunction = 'global'
 
 
 def p_neupoint_start_function(p):
@@ -870,7 +886,7 @@ parser = yacc.yacc()
 
 try:
     # Read the source file
-    fileName = './Tests/Input.txt'
+    fileName = './Tests/Input2.txt'
     f = open(fileName, "r")
     srcFile = f.read()
 

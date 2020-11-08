@@ -19,6 +19,28 @@ class IntermediateCode:
         self.currentFunction = 'global'
         self.vcMemory = ''
 
+
+    def generateGOTOMain(self):
+        """
+        Generate the quad to go to the main
+        """
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, None))
+
+
+    def fillGOTOMain(self):
+        """
+        Fill the GOTO Main quad
+        """
+        # Get the initial quad
+        self.stkQuadruples[0].result = len(self.stkQuadruples)
+
+    def endQuad(self):
+        """
+        Generate the END Quad
+        """
+        self.stkQuadruples.append(Quadruple('END', None, None, None))
+        
+
     def generateOperatorQuadruple(self, groupOperators=None, flgArithmetic=True):
         """
         Function to generate the operation quadruples
@@ -154,7 +176,6 @@ class IntermediateCode:
         Raises:
             Exception: If the expression inside the parenthesis is not a bool
         """
-
         # Pop the last operands
         resultValue = self.stkOperand.pop()
         resultType = self.stkType.pop()
@@ -348,8 +369,6 @@ class IntermediateCode:
         Raises:
             Exception: If the goal expression is not an integer
         """
-
-        print(self.stkOperand)
 
         # Checks that the goal expresion is a integer
         expType = self.stkType.pop()
