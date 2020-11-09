@@ -20,11 +20,10 @@ var int x;
 {
     x = a;
 
-    while(a > 0) do{
         a = a - k * j;
         uno(a * 2, a + k);
         g=g * j - k;
-    }
+
 
     return(i + k * j);
 }
@@ -40,4 +39,5 @@ main ()
         write(i, j * 2, f * 2 + 1.5);
         i = i - k;
     }
+    write("HOLA");
 }

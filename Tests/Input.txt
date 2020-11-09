@@ -1,11 +1,15 @@
 program patito;
 var 
     int A, B, C, D, E, F, G, H, I, J, K;
+    float Z;
 
+module float Prueba(){
+    I += 2;
+
+    return(3.14);
+}
     
 main(){
-        while (A > 0) do{
-        A = A - K * J;
-        G = G * J - K;
-        }
+    A = A - K * J;
+    Z = G * J - Prueba();
 }

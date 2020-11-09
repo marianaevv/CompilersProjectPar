@@ -144,7 +144,7 @@ class FunctionTable:
                 # Get the direction address
                 memAddress = objMemory.getGlobalAddress(var[0])
             else:
-                memAddress = 'MEM'
+                memAddress = objMemory.getVariableLocalAddress(var[0])
             
             # Add the variable to the function variables table
             self.functionTable[funcName]['varTable'][var[1]] = {

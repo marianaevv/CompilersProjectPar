@@ -632,26 +632,20 @@ def p_neupoint_add_operand(p):
     neupoint_add_operand : 
     '''
     # Get the operand data type
-    operandDat = funcTable.searchVariable(
+    operandData = funcTable.searchVariable(
         interCode.currentFunction, p[-1])
 
     # Add name and datatype to the stacks
-    interCode.stkOperand.append(operandDat['memoryAddress'])
-    interCode.stkType.append(operandDat['dataType'])
+    interCode.stkOperand.append(operandData['memoryAddress'])
+    interCode.stkType.append(operandData['dataType'])
 
 
 def p_neupoint_add_cte_operand(p):
     '''
     neupoint_add_cte_operand : 
     '''
-    interCode.stkOperand.append(p[-1])
-    if(type(p[-1]).__name__ == 'str'):
-        if(len(p[-1]) == 1):
-            interCode.stkType.append('char')
-        else:
-            interCode.stkType.append('str')
-    else:
-        interCode.stkType.append(type(p[-1]).__name__)
+    # Add a constant variable to the stacks and memory
+    interCode.addConstantValue(p[-1])
 
 
 def p_neupoint_arithmetic_exp_quad(p):
@@ -660,7 +654,7 @@ def p_neupoint_arithmetic_exp_quad(p):
     '''
 
     # If the last operator is a PLUS or MINUS..
-    interCode.generateOperatorQuadruple(['+', '-'])
+    interCode.generateOperatorQuadruple(interCode.currentFunction, ['+', '-'])
 
 
 def p_neupoint_arithmetic_term_quad(p):
@@ -669,7 +663,8 @@ def p_neupoint_arithmetic_term_quad(p):
     '''
 
     # If the last operator is a MULTIPLY, DIVIDE or MODULE..
-    interCode.generateOperatorQuadruple(['*', '/', '%'])
+    interCode.generateOperatorQuadruple(
+        interCode.currentFunction, ['*', '/', '%'])
 
 
 def p_neupoint_add_wall(p):
@@ -706,7 +701,8 @@ def p_neupoint_logical_relational_opt(p):
     '''
     neupoint_logical_relational_opt : 
     '''
-    interCode.generateOperatorQuadruple(flgArithmetic=False)
+    interCode.generateOperatorQuadruple(
+        interCode.currentFunction, flgArithmetic=False)
 
 
 def p_neupoint_conditional_quad(p):
@@ -822,7 +818,8 @@ def p_neupoint_gosub_quad(p):
     funcData = funcTable.functionTable[callingFunc]
 
     # Add the GOSUB quad
-    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'])
+    interCode.gosubQuad(funcData['returnType'],
+                        funcData['numQuad'], interCode.currentFunction)
 
 
 def p_neupoint_write_quad(p):
@@ -837,17 +834,17 @@ def p_neupoint_add_operand_integer(p):
     neupoint_add_operand_integer : 
     '''
     # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
+    operandData = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])
 
-    if(operandType != 'int'):
+    if(operandData['dataType'] != 'int'):
         raise Exception("Variable used in a FOR must be an integer")
 
     # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(operandData['memoryAddress'])
+    interCode.stkType.append(operandData['dataType'])
+    interCode.stkOperand.append(operandData['memoryAddress'])
+    interCode.stkType.append(operandData['dataType'])
 
 
 def p_neupoint_add_operand_for(p):
@@ -855,7 +852,7 @@ def p_neupoint_add_operand_for(p):
     neupoint_add_operand_for : 
     '''
     # Generate the VControl Quad
-    interCode.generateVControlQuad()
+    interCode.generateVControlQuad(interCode.currentFunction)
 
 
 def p_neupoint_comparison_quad(p):
@@ -863,7 +860,7 @@ def p_neupoint_comparison_quad(p):
     neupoint_comparison_quad : 
     '''
     # Generate quads
-    interCode.generateVCVFComparisonQuad()
+    interCode.generateVCVFComparisonQuad(interCode.currentFunction)
 
 
 def p_neupoint_for_end(p):

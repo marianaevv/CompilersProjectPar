@@ -61,6 +61,7 @@ class Memory:
         self.constantFloatCounter = 0
         self.constantBoolCounter = 0
         self.constantCharCounter = 0
+        self.constantStringCounter = 0
 
     def getGlobalAddress(self, varType, flgArray=False):
         """
@@ -98,7 +99,7 @@ class Memory:
             self.tempGlobalBoolCounter += 1
             return (13000 + self.tempGlobalBoolCounter - 1)
 
-    def saveVariableGlobalTemp(self, varType, flgArray=False):
+    def getVariableGlobalTempAddress(self, varType, flgArray=False):
         """
         Saves values into the Temporal Global context depending on the type of value
         being save (int, float, char, bool)
@@ -134,7 +135,7 @@ class Memory:
             self.globalBoolCounter += 1
             return (29000 + self.globalBoolCounter - 1)
 
-    def saveVariableLocal(self, varType, flgArray=False):
+    def getVariableLocalAddress(self, varType, flgArray=False):
         """
         Saves values into the Local context depending on the type of value
         being save (int, float, char, bool)
@@ -170,7 +171,7 @@ class Memory:
             self.localBoolCounter += 1
             return (45000 + self.localBoolCounter - 1)
 
-    def saveVariableLocalTemp(self, varType, flgArray=False):
+    def getVariableLocalTempAddress(self, varType, flgArray=False):
         """
         Saves values into the Local Temporal context depending on the type of value
         being save (int, float, char, bool)
@@ -206,7 +207,7 @@ class Memory:
             self.tempLocalBoolCounter += 1
             return (61000 + self.tempLocalBoolCounter - 1)
 
-    def saveVariableConstant(self, varType, flgArray=False):
+    def getVariableConstantAddress(self, varType, flgArray=False):
         """
         Saves values into the Constant context depending on the type of value
         being save (int, float, char, bool)
@@ -241,6 +242,10 @@ class Memory:
         elif(varType == 'bool'):
             self.constantBoolCounter += 1
             return (77000 + self.constantBoolCounter - 1)
+
+        elif(varType == 'str'):
+            self.constantStringCounter += 1
+            return (81000 + self.constantStringCounter - 1)
 
     def savesBackupLocalMemory(self):
         """
@@ -295,18 +300,18 @@ class Memory:
             elif(13000 <= mem_address < 17000):
                 varType = 'bool'
 
-            return self.get_value(mem_address, self.globalMemory, varType)    
+            return self.get_value(mem_address, self.globalMemory, varType)
         elif(17000 <= mem_address < 33000):
             if(17000 <= mem_address < 21000):
-                varType = 'int' 
+                varType = 'int'
             elif(21000 <= mem_address < 25000):
                 varType = 'float'
             elif(25000 <= mem_address < 29000):
                 varType = 'char'
             elif(29000 <= mem_address < 33000):
                 varType = 'bool'
-            
-            return self.get_value(mem_address, self.globalTemporalMemory, varType)  
+
+            return self.get_value(mem_address, self.globalTemporalMemory, varType)
         elif(33000 <= mem_address < 49000):
             if(33000 <= mem_address < 37000):
                 varType = 'int'
@@ -317,7 +322,7 @@ class Memory:
             elif(49000 <= mem_address < 53000):
                 varType = 'bool'
 
-            return self.get_value(mem_address, self.localMemory, varType)      
+            return self.get_value(mem_address, self.localMemory, varType)
         elif(49000 <= mem_address < 65000):
             if(49000 <= mem_address < 53000):
                 varType = 'int'
@@ -328,7 +333,7 @@ class Memory:
             elif(61000 <= mem_address < 65000):
                 varType = 'bool'
 
-            return self.get_value(mem_address, self.localTemporalMemory, varType)      
+            return self.get_value(mem_address, self.localTemporalMemory, varType)
         elif(65000 <= mem_address < 77000):
             if(65000 <= mem_address < 69000):
                 varType = 'int'
@@ -338,5 +343,7 @@ class Memory:
                 varType = 'char'
             elif(77000 <= mem_address < 81000):
                 varType = 'bool'
-          
-            return self.get_value(mem_address, self.constantsMemory, varType)  
+            elif(81000 <= mem_address < 85000):
+                varType = 'str'
+
+            return self.get_value(mem_address, self.constantsMemory, varType)
