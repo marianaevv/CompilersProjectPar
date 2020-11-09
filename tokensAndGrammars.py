@@ -281,7 +281,7 @@ def p_neupoint_add_vars(p):
     '''
     neupoint_add_vars :
     '''
-    funcTable.addVariables(interCode.currentFunction, p[-1])
+    interCode.addVariablesToTables(funcTable, interCode.currentFunction, p[-1])
 
 
 # ====================== Functions ======================
@@ -349,14 +349,15 @@ def p_neupoint_add_function(p):
     '''
     interCode.currentFunction = p[-1]
     # Create the function table
-    funcTable.addNewFunction(interCode.currentFunction, p[-2])
+    interCode.addFunctionToTable(funcTable, interCode.currentFunction, p[-2])
 
 
 def p_neupoint_add_parameters(p):
     '''
     neupoint_add_parameters :
     '''
-    funcTable.addVariables(interCode.currentFunction, p[-2], True)
+    interCode.addVariablesToTables(
+        funcTable, interCode.currentFunction, p[-2], True)
 
 
 def p_neupoint_start_function(p):
@@ -631,12 +632,12 @@ def p_neupoint_add_operand(p):
     neupoint_add_operand : 
     '''
     # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
+    operandDat = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])
 
     # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(operandDat['memoryAddress'])
+    interCode.stkType.append(operandDat['dataType'])
 
 
 def p_neupoint_add_cte_operand(p):
