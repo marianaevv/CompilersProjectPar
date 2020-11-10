@@ -36,5 +36,5 @@ class Quadruple:
         """
         Function that saves the format that is shown every time a quadruple is printed
         """
-        return "({}, {}, {}, {})".format(self.__mapOperators[self.operator], self.lftOperand, self.rghtOperand, self.result)
-        # return "({}, {}, {}, {})".format(self.operator, self.lftOperand, self.rghtOperand, self.result)
+        # return "({}, {}, {}, {})".format(self.__mapOperators[self.operator], self.lftOperand, self.rghtOperand, self.result)
+        return "({}, {}, {}, {})".format(self.operator, self.lftOperand, self.rghtOperand, self.result)

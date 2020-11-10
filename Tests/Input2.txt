@@ -35,8 +35,9 @@ main ()
     f = 3.14;
 
     for i = 0 to 20 do{
-        write(dos(i + k, f * 3) + 3);
-        write(i, j * 2, f * 2 + 1.5);
+        write(2);
+        write(2);
+        write("HOLA");
         i = i - k;
     }
     write("HOLA");

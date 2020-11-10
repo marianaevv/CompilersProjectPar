@@ -44,8 +44,8 @@ class IntermediateCode:
             flgParams (bool | optional): Is a flag to know if the variables are 
                                          or not parameters.
         """
-        funcTable.addVariables(
-            funcName, listVars, flgParams, objMemory=memoryObj)
+        funcTable.addVariables(funcName, listVars,
+                               flgParams, memoryObj=memoryObj)
 
     def addConstantValue(self, cteValue):
         """
@@ -65,7 +65,8 @@ class IntermediateCode:
             self.stkType.append(type(cteValue).__name__)
 
         # Get the memory address
-        memAddress = memoryObj.getVariableConstantAddress(self.stkType[-1])
+        memAddress = memoryObj.getMemoryAddressToConstant(self.stkType[-1],
+                                                          cteValue)
 
         # Push the memory address
         self.stkOperand.append(memAddress)
@@ -129,29 +130,25 @@ class IntermediateCode:
             operator = self.stkOperator.pop()
 
             # Validate the operation
-            resultType = semanticCube.verifyOperations(
-                operator, lftOpndType, rgtOpndType)
+            resultType = semanticCube.verifyOperations(operator,
+                                                       lftOpndType, rgtOpndType)
 
             # Raise exception if it is a invalid operation
             if(resultType == "error"):
                 raise Exception("Invalid operation {} between {} and {}".format(
                     operator, lftOpndType, rgtOpndType))
 
-            # If the operation is valid, generate the memory direction to the result
-            if(funcName == 'global'):
-                resultDirection = memoryObj.getVariableGlobalTempAddress(
-                    resultType)
-            else:
-                resultDirection = memoryObj.getVariableLocalTempAddress(
-                    resultType)
+            # Calculate the memory address
+            resultDirection = memoryObj.getMemoryAddress(resultType, 1,
+                                                         self.currentFunction, True)
 
             # Push the result and it's type
             self.stkOperand.append(resultDirection)
             self.stkType.append(resultType)
 
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple(operator, lftOperand, rgtOperand, resultDirection))
+            self.stkQuadruples.append(Quadruple(operator, lftOperand,
+                                                rgtOperand, resultDirection))
 
     def generateAssignmentQuad(self):
         """
@@ -171,23 +168,23 @@ class IntermediateCode:
 
         # Raise exception if it is a invalid operation
         if(lftOpndType != rgtOpndType):
-            raise Exception("Cannot asign a {} to a {}".format(
-                rgtOpndType, lftOpndType))
+            raise Exception("Cannot asign a {} to a {}".format(rgtOpndType,
+                                                               lftOpndType))
 
         if(operator == '='):
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple(operator, rgtOperand, None, lftOperand))
+            self.stkQuadruples.append(Quadruple(operator,
+                                                rgtOperand, None, lftOperand))
 
         elif(operator == '+='):
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple('+', lftOperand, rgtOperand, lftOperand))
+            self.stkQuadruples.append(Quadruple('+',
+                                                lftOperand, rgtOperand, lftOperand))
 
         elif(operator == '-='):
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple('-', lftOperand, rgtOperand, lftOperand))
+            self.stkQuadruples.append(Quadruple('-',
+                                                lftOperand, rgtOperand, lftOperand))
 
     def generateAssignmentSingleQuad(self):
         """
@@ -214,13 +211,13 @@ class IntermediateCode:
 
         if(operator == '++'):
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple('+', lftOperand, 1, lftOperand))
+            self.stkQuadruples.append(Quadruple('+',
+                                                lftOperand, 1, lftOperand))
 
         elif(operator == '--'):
             # Push the quadruple
-            self.stkQuadruples.append(
-                Quadruple('-', lftOperand, 1, lftOperand))
+            self.stkQuadruples.append(Quadruple('-',
+                                                lftOperand, 1, lftOperand))
 
     def generateConditionQuad(self):
         """
@@ -370,17 +367,15 @@ class IntermediateCode:
                                needs to be global or local.
         """
         if(returnType == 'void'):
-            returnVal = None
+            returnDir = None
         else:
-            if(funcName == 'global'):
-                returnVal = memoryObj.getVariableGlobalTempAddress(returnType)
-            else:
-                returnVal = memoryObj.getVariableLocalTempAddress(returnType)
+            returnDir = memoryObj.getMemoryAddress(returnType, 1,
+                                                   self.currentFunction, True)
 
             self.stkType.append(returnType)
-            self.stkOperand.append(returnVal)
+            self.stkOperand.append(returnDir)
 
-        self.stkQuadruples.append(Quadruple('GOSUB', returnVal, None, numQuad))
+        self.stkQuadruples.append(Quadruple('GOSUB', returnDir, None, numQuad))
 
     def writeQuad(self):
         """
@@ -417,10 +412,8 @@ class IntermediateCode:
         expOperand = self.stkOperand[-1]
 
         # Generate the memory direction of the VControl
-        if(funcName == 'global'):
-            VControl = memoryObj.getVariableGlobalTempAddress('int')
-        else:
-            VControl = memoryObj.getVariableLocalTempAddress('int')
+        VControl = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
 
         # Generate the quad
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VControl))
@@ -450,18 +443,17 @@ class IntermediateCode:
         expOperand = self.stkOperand.pop()
 
         # Generate the memory direction of the VFinal
+        VFinal = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
+
         # Generate memory for the temporal boolean
-        if(funcName == 'global'):
-            VFinal = memoryObj.getVariableGlobalTempAddress('int')
-            tempBoolean = memoryObj.getVariableGlobalTempAddress('bool')
-        else:
-            VFinal = memoryObj.getVariableLocalTempAddress('int')
-            tempBoolean = memoryObj.getVariableLocalTempAddress('bool')
+        tempBoolean = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
 
         # Generate quads
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VFinal))
-        self.stkQuadruples.append(
-            Quadruple('<', self.stkOperand[-1], VFinal, tempBoolean))
+        self.stkQuadruples.append(Quadruple('<', self.stkOperand[-1], VFinal,
+                                            tempBoolean))
 
         # Push the jump quad
         self.stkJumps.append(len(self.stkQuadruples) - 1)
