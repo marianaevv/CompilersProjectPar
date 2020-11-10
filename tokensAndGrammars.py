@@ -19,6 +19,7 @@ flgHaveReturn = False
 # Global variables
 countArgs = 0
 callingFunc = ""
+programName = ""
 
 # Tokens definition
 tokens = [
@@ -174,21 +175,20 @@ def p_program(p):
             | PROGRAM ID SEMICOLON neupoint_goto_main functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
             | PROGRAM ID SEMICOLON neupoint_goto_main MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
     '''
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
-    cont = 0
-    for i in interCode.stkQuadruples:
-        print(cont, i)
-        cont += 1
-    print(interCode.stkJumps)
-    print()
+    global programName
+
+    p[0] = "Program {} was compiled succesfully".format(programName)
+
+    # Generate the object code
+    interCode.compileCode(funcTable, programName)
 
 
 def p_neupoint_goto_main(p):
     '''
     neupoint_goto_main : 
     '''
+    global programName
+    programName = p[-2]
     interCode.generateGOTOMain()
 
 

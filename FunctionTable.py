@@ -95,7 +95,7 @@ class FunctionTable:
             varList (list): A list of tuples with the format (DataType, VarName)
             flgParams (bool, optional): Flag to know if the list are 
             parameters of the current function. Defaults to False.
-            memoryObj: (Memory Obj): To calculate the direction address of the var
+            memoryObj: (Memory Obj): To calculate the memory address of the var
 
         Raises:
             Exception: If the function is already used

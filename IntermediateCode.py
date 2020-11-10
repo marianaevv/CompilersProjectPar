@@ -1,6 +1,9 @@
 from SemanticCube import SemanticCube
+from Quadruples import QuadrupleEncoder
 from Quadruples import Quadruple
 from Memory import Memory
+
+import json
 
 semanticCube = SemanticCube()
 memoryObj = Memory()
@@ -23,7 +26,7 @@ class IntermediateCode:
     def addFunctionToTable(self, funcTable, funcName, returnType):
         """
         To add a function to the Function Table while assigning 
-        a Memory Direction if it is not a void
+        a Memory Address if it is not a void
 
         Args:
             funcTable (FunctionTableObj): A function table class
@@ -35,7 +38,7 @@ class IntermediateCode:
     def addVariablesToTables(self, funcTable, funcName, listVars, flgParams=False):
         """
         To add variables to the Function Table while assigning 
-        a Memory Direction
+        a Memory Address
 
         Args:
             funcTable (FunctionTableObj): A function table class
@@ -49,7 +52,7 @@ class IntermediateCode:
 
     def addConstantValue(self, cteValue):
         """
-        To push the constant data type and its memory direction to the
+        To push the constant data type and its memory address to the
         stacks
 
         Args:
@@ -139,16 +142,16 @@ class IntermediateCode:
                     operator, lftOpndType, rgtOpndType))
 
             # Calculate the memory address
-            resultDirection = memoryObj.getMemoryAddress(resultType, 1,
-                                                         self.currentFunction, True)
+            resultAddress = memoryObj.getMemoryAddress(resultType, 1,
+                                                       self.currentFunction, True)
 
             # Push the result and it's type
-            self.stkOperand.append(resultDirection)
+            self.stkOperand.append(resultAddress)
             self.stkType.append(resultType)
 
             # Push the quadruple
             self.stkQuadruples.append(Quadruple(operator, lftOperand,
-                                                rgtOperand, resultDirection))
+                                                rgtOperand, resultAddress))
 
     def generateAssignmentQuad(self):
         """
@@ -408,17 +411,17 @@ class IntermediateCode:
                                needs to be global or local.
         """
 
-        # Pop the memory direction of the ID
+        # Pop the memory address of the ID
         expOperand = self.stkOperand[-1]
 
-        # Generate the memory direction of the VControl
+        # Generate the memory address of the VControl
         VControl = memoryObj.getMemoryAddress(
             'int', 1, self.currentFunction, True)
 
         # Generate the quad
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VControl))
 
-        # Push the VC memory direction
+        # Push the VC memory address
         self.stkOperand.append(VControl)
         self.stkType.append('int')
 
@@ -442,7 +445,7 @@ class IntermediateCode:
         # Pop the fianl expresion
         expOperand = self.stkOperand.pop()
 
-        # Generate the memory direction of the VFinal
+        # Generate the memory address of the VFinal
         VFinal = memoryObj.getMemoryAddress(
             'int', 1, self.currentFunction, True)
 
@@ -470,7 +473,7 @@ class IntermediateCode:
         still does not meet. Also fill the previous GOTOF quad.
         """
 
-        # Pop the memory directions
+        # Pop the memory address
         VControl = self.stkOperand.pop()
         IDMemory = self.stkOperand.pop()
         self.stkType.pop()
@@ -489,3 +492,32 @@ class IntermediateCode:
 
         # Fill the jump quad
         self.stkQuadruples[endFOR].result = len(self.stkQuadruples)
+
+
+    def compileCode(self, funcTable, programName):
+        """
+        Function to write the object code file after compile the input code.
+        The Quadruples, constant values and function table are dumped into a JSON to facilate the reading for the
+        virtual machine.
+
+        Args:
+            funcTable (FunctionTable Obj): The function table object
+            programName (string): Name of the input program
+        """
+
+        # Switch keys to values and viciversa, to have the memory addresses as keys on 
+        # the dictionary
+        constantValues = {value:key for key,value in memoryObj.constantValues.items()}
+
+        # Encode the quadruple list
+        encodedQuads = list(map(lambda Quad: QuadrupleEncoder().encode(Quad), self.stkQuadruples))
+
+        compiledCode = {
+            "FuncTable" : funcTable.functionTable,
+            "ConstantValues": constantValues,
+            "Quadruples": encodedQuads
+        }
+
+        # Dump the compiled data into a JSON 
+        with open("{}.json".format(programName), 'w') as compiledFile:
+            json.dump(compiledCode, compiledFile, separators = (',',':'))
