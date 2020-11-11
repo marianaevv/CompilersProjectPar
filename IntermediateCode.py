@@ -359,7 +359,7 @@ class IntermediateCode:
         # Push the quadruple
         self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNum))
 
-    def gosubQuad(self, returnType, numQuad, funcName):
+    def gosubQuad(self, returnType, numQuad, funcName, returnAddress):
         """
         Generate the GOSUB quad when calling a function
 
@@ -368,6 +368,7 @@ class IntermediateCode:
             numQuad (integer): The number of the quadrupĺe where the called function starts
             funcName (string): Name of the current function to know if the memory address
                                needs to be global or local.
+            returnAddress (integer): Memory address of the return value from the called function
         """
         if(returnType == 'void'):
             returnDir = None
@@ -378,7 +379,13 @@ class IntermediateCode:
             self.stkType.append(returnType)
             self.stkOperand.append(returnDir)
 
-        self.stkQuadruples.append(Quadruple('GOSUB', returnDir, None, numQuad))
+        # Generate GOSUB Quad to execute a function and update the return data
+        self.stkQuadruples.append(Quadruple('GOSUB', None, None, numQuad))
+
+        # Generate assignation quad to store the returned value in a termporal value
+        if(returnAddress != None):
+            self.stkQuadruples.append(Quadruple('=', returnAddress, None, returnDir))
+
 
     def writeQuad(self):
         """

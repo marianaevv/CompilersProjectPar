@@ -1,8 +1,9 @@
-program patito;
+program patito3;
 
 var
-    int i, j, k;
+    int i, j, k, A;
     float f;
+    char C[10], cd;
 
 module void uno(int a, int b){
     if(a > 0) then{
@@ -34,11 +35,8 @@ main ()
     k = i + 1;
     f = 3.14;
 
-    for i = 0 to 20 do{
-        write(2);
-        write(2);
-        write("HOLA");
-        i = i - k;
+    for A = 0 to 20 do{
+        write(dos(i, f) + dos(i, f));
+        A = A - k;
     }
-    write("HOLA");
 }

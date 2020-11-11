@@ -182,6 +182,8 @@ def p_program(p):
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
+    print(interCode.stkOperand)
+
 
 def p_neupoint_goto_main(p):
     '''
@@ -663,8 +665,8 @@ def p_neupoint_arithmetic_term_quad(p):
     '''
 
     # If the last operator is a MULTIPLY, DIVIDE or MODULE..
-    interCode.generateOperatorQuadruple(
-        interCode.currentFunction, ['*', '/', '%'])
+    interCode.generateOperatorQuadruple(interCode.currentFunction,
+                                        ['*', '/', '%'])
 
 
 def p_neupoint_add_wall(p):
@@ -815,11 +817,17 @@ def p_neupoint_gosub_quad(p):
     interCode.stkOperator.pop()
 
     # Get the called func data
-    funcData = funcTable.functionTable[callingFunc]
+    funcData = funcTable.searchFunction(callingFunc)
+
+    # Get the return memory address if the function is not void
+    if (funcData['returnType'] != 'void'):
+        returnAddress = funcTable.searchVariable('global', callingFunc)['memoryAddress']
+    else:
+        returnAddress = None
 
     # Add the GOSUB quad
-    interCode.gosubQuad(funcData['returnType'],
-                        funcData['numQuad'], interCode.currentFunction)
+    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'],
+                        interCode.currentFunction, returnAddress)
 
 
 def p_neupoint_write_quad(p):

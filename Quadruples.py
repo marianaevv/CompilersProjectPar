@@ -51,7 +51,7 @@ class QuadrupleEncoder(JSONEncoder):
 
     def default(self, object):
         if isinstance(object, Quadruple):
-            return object.__dict__
+            return (object.operator, object.lftOperand, object.rghtOperand, object.result)
         else:
             # Call base class implementation which takes care of
             # raising exceptions for unsupported types
