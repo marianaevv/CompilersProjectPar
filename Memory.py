@@ -1,11 +1,11 @@
 class Memory:
     def __init__(self):
         """
-        Global Memory - Starts at 1000 and ends at 15999
+        Global Memory - Starts at 1000 and ends at 16999
         Temporal Global Memory - 17000 and ends at 32999
         Local Memory - Starts at 33000 and ends at 48999
         Temporal Local Memory - 49000 and ends at 64999
-        Constant Memory - Starts at 65000 and ends at 85999
+        Constant Memory - Starts at 65000 and ends at 84999
 
         Each memory context (global, local or constant) will be divided into types context (int, bool, float, char, str)
         avoiding the use of casting values. Also, the contexts global and local will have a temporal version.

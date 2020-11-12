@@ -1,1 +1,84 @@
-{"FuncTable":{"global":{"returnType":"void","paramsNumber":0,"paramsType":[],"varTable":{"i":{"dataType":"int","size":1,"numDimensions":false,"dimensions":1,"memoryAddress":1000},"j":{"dataType":"int","size":1,"numDimensions":false,"dimensions":1,"memoryAddress":1001},"k":{"dataType":"int","size":1,"numDimensions":false,"dimensions":1,"memoryAddress":1002},"A":{"dataType":"int","size":11,"numDimensions":1,"dimensions":11,"memoryAddress":1003},"B":{"dataType":"int","size":330,"numDimensions":2,"dimensions":[11,30],"memoryAddress":1014},"f":{"dataType":"float","size":1,"numDimensions":false,"dimensions":1,"memoryAddress":5000},"C":{"dataType":"char","size":10,"numDimensions":1,"dimensions":10,"memoryAddress":9000},"cd":{"dataType":"char","size":1,"numDimensions":false,"dimensions":1,"memoryAddress":9010}},"numVars":8,"numQuad":0}},"ConstantValues":{"65000":2,"65001":0,"65002":1,"65003":11},"Quadruples":["[21, null, null, 1]","[4, 1000, 65000, 17000]","[4, 17000, 1002, 17001]","[3, 17001, 1001, 17002]","[1, 17002, null, 1000]","[24, 65001, 11, null]","[25, 65001, 1003, 17003]","[24, 65002, 11, null]","[25, 65002, 1003, 17004]","[24, \"->17004\", 11, null]","[25, \"->17004\", 1003, 17005]","[24, 65003, 11, null]","[24, 65001, 30, null]","[26, 65003, 30, 17006]","[25, 65001, 1014, 17007]","[2, \"->17005\", \"->17007\", 17008]","[1, 17008, null, \"->17003\"]","[27, null, null, null]"]}
+{
+    "FuncTable": {
+        "global": {
+            "returnType": "void",
+            "paramsNumber": 0,
+            "paramsType": [],
+            "varTable": {
+                "A": {
+                    "dataType": "int",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 1000
+                },
+                "B": {
+                    "dataType": "int",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 1001
+                },
+                "E": {
+                    "dataType": "int",
+                    "size": 10,
+                    "numDimensions": 1,
+                    "dimensions": 10,
+                    "memoryAddress": 1002
+                },
+                "D": {
+                    "dataType": "int",
+                    "size": 50,
+                    "numDimensions": 2,
+                    "dimensions": [
+                        10,
+                        5
+                    ],
+                    "memoryAddress": 1012
+                },
+                "F": {
+                    "dataType": "float",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 5000
+                },
+                "J": {
+                    "dataType": "float",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 5001
+                },
+                "C": {
+                    "dataType": "char",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 9000
+                },
+                "L": {
+                    "dataType": "char",
+                    "size": 1,
+                    "numDimensions": false,
+                    "dimensions": 1,
+                    "memoryAddress": 9001
+                }
+            },
+            "numVars": 8,
+            "numQuad": 0
+        }
+    },
+    "ConstantValues": {
+        "11": 65000,
+        "1.3": 69000,
+        "S": 73000
+    },
+    "Quadruples": [
+        "[\"GOTO\", null, null, 1]",
+        "[\"=\", 65000, null, 1000]",
+        "[\"=\", 69000, null, 5000]",
+        "[\"=\", 73000, null, 9000]",
+        "[\"END\", null, null, null]"
+    ]
+}

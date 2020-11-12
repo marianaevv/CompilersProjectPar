@@ -602,10 +602,10 @@ class IntermediateCode:
             programName (string): Name of the input program
         """
 
-        # Switch keys to values and viciversa, to have the memory addresses as keys on
-        # the dictionary
-        constantValues = {value: key for key,
-                          value in memoryObj.constantValues.items()}
+        # # Switch keys to values and viciversa, to have the memory addresses as keys on
+        # # the dictionary
+        # constantValues = {int(value): key for key, value in
+        #                   memoryObj.constantValues.items()}
 
         # Encode the quadruple list
         encodedQuads = list(
@@ -613,10 +613,10 @@ class IntermediateCode:
 
         compiledCode = {
             "FuncTable": funcTable.functionTable,
-            "ConstantValues": constantValues,
+            "ConstantValues": memoryObj.constantValues,
             "Quadruples": encodedQuads
         }
 
         # Dump the compiled data into a JSON
-        with open("{}.json".format(programName), 'w') as compiledFile:
+        with open("{}.obj".format(programName), 'w') as compiledFile:
             json.dump(compiledCode, compiledFile, separators=(',', ':'))
