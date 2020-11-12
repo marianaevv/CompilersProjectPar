@@ -17,6 +17,7 @@ class IntermediateCode:
         self.stkOperator = list()
         self.stkJumps = list()
         self.stkQuadruples = list()
+        self.stkIndexes = list()
 
         self.countTemporals = 1
         self.countReturns = 1
@@ -49,6 +50,96 @@ class IntermediateCode:
         """
         funcTable.addVariables(funcName, listVars,
                                flgParams, memoryObj=memoryObj)
+
+    def addIdentifiers(self, funcTable, varIden):
+        """
+        To add a variable identifier to the stacks after making sure
+        the variable exists.
+
+        Args:
+            funcTable (FunctionTable Obj|): A function table object
+            varIden (string): Variable's name
+        """
+        # Get the operand data type
+        operandData = funcTable.searchVariable(
+            self.currentFunction, varIden)
+
+        # Add variable address and datatype to the stacks
+        self.stkOperand.append(operandData['memoryAddress'])
+        self.stkType.append(operandData['dataType'])
+
+    def updateArrayAddress(self, arrayData, varName):
+        """
+        Make the needed quads to get the real indexed memory address from an array
+
+        Args:
+            arrayData (Dictionary): A dict with the data from a variable
+            varName (string): String with the variable name
+
+        Raises:
+            Exception: If the variable is actually a matrix
+        """
+
+        # Check if the var is actually a matrix
+        if(arrayData['numDimensions'] == 2):
+            raise Exception('Variable {} is a matrix'.format(varName))
+
+        # Get expresion as index
+        index = self.stkOperand.pop()
+        self.stkType.pop()
+
+        # Make the verify quad
+        self.stkQuadruples.append(
+            Quadruple('VERIFY', index, arrayData['dimensions'], None))
+
+        # Create memory address to store the sum of base address and index
+        sumAddr = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
+
+        # Make the sum to get the actual memory address
+        self.stkQuadruples.append(
+            Quadruple('SUMINDEX', index, arrayData['memoryAddress'], sumAddr))
+
+        # Append the pointer to the stack
+        self.stkOperand.append('->' + str(sumAddr))
+        self.stkType.append(arrayData['dataType'])
+
+    def updateMatrixAddress(self, arrayData):
+        """
+        Function to make the VERIFY quads and the sum to get the pointer to 
+        the real indexed address from a matri
+
+        Args:
+            arrayData (Dictionary): A dict with the variable data
+        """
+
+        # Get expresion as index
+        indexCol = self.stkOperand.pop()
+        self.stkType.pop()
+        indexRow = self.stkOperand.pop()
+        self.stkType.pop()
+
+        # Make the verify quad
+        self.stkQuadruples.append(
+            Quadruple('VERIFY', indexRow, arrayData['dimensions'][0], None))
+        self.stkQuadruples.append(
+            Quadruple('VERIFY', indexCol, arrayData['dimensions'][1], None))
+
+        # Create memory address to store the sum of base address and index
+        sumAddr = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
+        multAddr = memoryObj.getMemoryAddress(
+            'int', 1, self.currentFunction, True)
+
+        # Make the sum to get the actual memory address
+        self.stkQuadruples.append(
+            Quadruple('MULTINDEX', indexRow, arrayData['dimensions'][1], sumAddr))
+        self.stkQuadruples.append(
+            Quadruple('SUMINDEX', indexCol, arrayData['memoryAddress'], multAddr))
+
+        # Append the pointer to the stack
+        self.stkOperand.append('->' + str(multAddr))
+        self.stkType.append(arrayData['dataType'])
 
     def addConstantValue(self, cteValue):
         """
@@ -384,8 +475,8 @@ class IntermediateCode:
 
         # Generate assignation quad to store the returned value in a termporal value
         if(returnAddress != None):
-            self.stkQuadruples.append(Quadruple('=', returnAddress, None, returnDir))
-
+            self.stkQuadruples.append(
+                Quadruple('=', returnAddress, None, returnDir))
 
     def writeQuad(self):
         """
@@ -500,7 +591,6 @@ class IntermediateCode:
         # Fill the jump quad
         self.stkQuadruples[endFOR].result = len(self.stkQuadruples)
 
-
     def compileCode(self, funcTable, programName):
         """
         Function to write the object code file after compile the input code.
@@ -512,19 +602,21 @@ class IntermediateCode:
             programName (string): Name of the input program
         """
 
-        # Switch keys to values and viciversa, to have the memory addresses as keys on 
+        # Switch keys to values and viciversa, to have the memory addresses as keys on
         # the dictionary
-        constantValues = {value:key for key,value in memoryObj.constantValues.items()}
+        constantValues = {value: key for key,
+                          value in memoryObj.constantValues.items()}
 
         # Encode the quadruple list
-        encodedQuads = list(map(lambda Quad: QuadrupleEncoder().encode(Quad), self.stkQuadruples))
+        encodedQuads = list(
+            map(lambda Quad: QuadrupleEncoder().encode(Quad), self.stkQuadruples))
 
         compiledCode = {
-            "FuncTable" : funcTable.functionTable,
+            "FuncTable": funcTable.functionTable,
             "ConstantValues": constantValues,
             "Quadruples": encodedQuads
         }
 
-        # Dump the compiled data into a JSON 
+        # Dump the compiled data into a JSON
         with open("{}.json".format(programName), 'w') as compiledFile:
-            json.dump(compiledCode, compiledFile, separators = (',',':'))
+            json.dump(compiledCode, compiledFile, separators=(',', ':'))

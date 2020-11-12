@@ -1,42 +1,12 @@
 program patito3;
 
 var
-    int i, j, k, A;
+    int i, j, k, A[11], B[11][30];
     float f;
     char C[10], cd;
 
-module void uno(int a, int b){
-    if(a > 0) then{
-        i = a + b * j + i;
-        write(i + j);
-        uno(a - i, i);
-    
-    }else{
-        write(a + b);
-    }
-}
-
-module int dos(int a, float g)
-var int x;
-{
-    x = a;
-
-        a = a - k * j;
-        uno(a * 2, a + k);
-        g=g * j - k;
-
-
-    return(i + k * j);
-}
-
 main ()
 {
-    i = 2;
-    k = i + 1;
-    f = 3.14;
-
-    for A = 0 to 20 do{
-        write(dos(i, f) + dos(i, f));
-        A = A - k;
-    }
+    i = i * 2 * k - j;
+    A[0] = A[A[1]] + B[11][0];
 }

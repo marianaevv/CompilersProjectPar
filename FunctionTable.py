@@ -58,7 +58,7 @@ class FunctionTable:
             self.functionTable['global']['varTable'][funcName] = {
                 'dataType': returnType,
                 'size': 1,
-                'flgArray': False,
+                'numDimensions': 1,
                 'dimensions': 1,
                 'memoryAddress': memAddress
             }
@@ -110,7 +110,7 @@ class FunctionTable:
         self.functionTable[funcName]['numVars'] += len(varList)
 
         for var in varList:
-            flgArray = False
+            numDimensions = False
             dimensions = 1
             size = 1
 
@@ -130,16 +130,17 @@ class FunctionTable:
 
             # Check if the variable is array or matrix
             if (len(var) == 3):
-                flgArray = True
                 dimensions = var[2]
 
                 # Calculate the size if it is a matrix
                 if(type(var[2]) == tuple):
                     size = var[2][0] * var[2][1]
+                    numDimensions = 2
 
                 # Or just store the array size
                 else:
                     size = var[2]
+                    numDimensions = 1
 
             # Get the memory address
             memAddress = memoryObj.getMemoryAddress(var[0], size,
@@ -149,7 +150,7 @@ class FunctionTable:
             self.functionTable[funcName]['varTable'][var[1]] = {
                 'dataType': var[0],
                 'size': size,
-                'flgArray': flgArray,
+                'numDimensions': numDimensions,
                 'dimensions': dimensions,
                 'memoryAddress': memAddress
             }

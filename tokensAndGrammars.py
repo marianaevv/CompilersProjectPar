@@ -20,6 +20,7 @@ flgHaveReturn = False
 countArgs = 0
 callingFunc = ""
 programName = ""
+arrayData = ""
 
 # Tokens definition
 tokens = [
@@ -182,12 +183,17 @@ def p_program(p):
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
+    print(interCode.stkOperator)
     print(interCode.stkOperand)
+    print(interCode.stkType)
+    print(interCode.stkIndexes)
+    for i in interCode.stkQuadruples:
+        print(i)
 
 
 def p_neupoint_goto_main(p):
     '''
-    neupoint_goto_main : 
+    neupoint_goto_main :
     '''
     global programName
     programName = p[-2]
@@ -196,7 +202,7 @@ def p_neupoint_goto_main(p):
 
 def p_neupoint_fill_goto_main(p):
     '''
-    neupoint_fill_goto_main : 
+    neupoint_fill_goto_main :
     '''
     interCode.currentFunction = 'global'
     interCode.fillGOTOMain()
@@ -204,7 +210,7 @@ def p_neupoint_fill_goto_main(p):
 
 def p_neupoint_end(p):
     '''
-    neupoint_end : 
+    neupoint_end :
     '''
     interCode.endQuad()
 
@@ -271,11 +277,11 @@ def p_decla_identifier(p):
 
 def p_identifier(p):
     '''
-    identifier : ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-               | ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-               | ID
+    identifier : ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET LEFTSQRBRACKET neupoint_index_matrix exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_matrix_addr
+               | ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_array_addr
+               | ID neupoint_add_identifier
     '''
-    p[0] = p[1]
+    pass
 
 
 # --------------- Variables Neural Points ---------------
@@ -284,6 +290,62 @@ def p_neupoint_add_vars(p):
     neupoint_add_vars :
     '''
     interCode.addVariablesToTables(funcTable, interCode.currentFunction, p[-1])
+
+
+def p_neupoint_add_identifier(p):
+    '''
+    neupoint_add_identifier :
+    '''
+    interCode.addIdentifiers(funcTable, p[-1])
+
+
+def p_neupoint_index_array(p):
+    '''
+    neupoint_index_array : 
+    '''
+    global arrayData
+    arrayData = funcTable.searchVariable(interCode.currentFunction, p[-3])
+
+    # Remove base address
+    interCode.stkOperand.pop()
+    interCode.stkType.pop()
+
+    # Make the validation to see if the variable is an array
+    if(arrayData['numDimensions'] == 0):
+        raise Exception('Variable {} is not an array'.format(p[-3]))
+
+    # Add a false wall to give priority to the exp inside the index
+    interCode.stkOperator.append('(')
+
+
+def p_neupoint_index_matrix(p):
+    '''
+    neupoint_index_matrix : 
+    '''
+    global arrayData
+
+    # Make the validation to see if the variable is a matrix
+    if(arrayData['numDimensions'] == 1):
+        raise Exception('Variable {} is not a matrix'.format(p[-7]))
+
+    # Add a false wall to give priority to the exp inside the index
+    interCode.stkOperator.append('(')
+
+
+def p_neupoint_update_array_addr(p):
+    '''
+    neupoint_update_array_addr : 
+    '''
+    global arrayData
+    interCode.updateArrayAddress(arrayData, p[-7])
+
+
+def p_neupoint_update_matrix_addr(p):
+    '''
+    neupoint_update_matrix_addr : 
+    '''
+    global arrayData
+    interCode.updateMatrixAddress(arrayData)
 
 
 # ====================== Functions ======================
@@ -467,11 +529,11 @@ def p_statute(p):
 
 def p_assignment(p):
     '''
-    assignment : identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
-               | identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    assignment : identifier EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+               | identifier DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     '''
     pass
 
@@ -485,8 +547,8 @@ def p_reading(p):
 
 def p_reading_list(p):
     '''
-    reading_list : identifier neupoint_add_operand  COMMA reading_list
-                 | identifier neupoint_add_operand
+    reading_list : identifier  COMMA reading_list
+                 | identifier
     '''
     # Push the writing quad
     interCode.readQuad()
@@ -617,7 +679,7 @@ def p_factor(p):
            | CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
            | function_call
-           | identifier neupoint_add_operand
+           | identifier
     '''
 
 
@@ -627,19 +689,6 @@ def p_neupoint_add_operator(p):
     neupoint_add_operator : 
     '''
     interCode.stkOperator.append(p[-1])
-
-
-def p_neupoint_add_operand(p):
-    '''
-    neupoint_add_operand : 
-    '''
-    # Get the operand data type
-    operandData = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])
-
-    # Add name and datatype to the stacks
-    interCode.stkOperand.append(operandData['memoryAddress'])
-    interCode.stkType.append(operandData['dataType'])
 
 
 def p_neupoint_add_cte_operand(p):
@@ -821,7 +870,8 @@ def p_neupoint_gosub_quad(p):
 
     # Get the return memory address if the function is not void
     if (funcData['returnType'] != 'void'):
-        returnAddress = funcTable.searchVariable('global', callingFunc)['memoryAddress']
+        returnAddress = funcTable.searchVariable(
+            'global', callingFunc)['memoryAddress']
     else:
         returnAddress = None
 
