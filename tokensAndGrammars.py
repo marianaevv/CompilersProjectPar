@@ -279,7 +279,7 @@ def p_identifier(p):
     '''
     identifier : ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET LEFTSQRBRACKET neupoint_index_matrix exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_matrix_addr
                | ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_array_addr
-               | ID neupoint_add_identifier
+               | ID neupoint_add_identifier neupoint_validate_isnot_array
     '''
     pass
 
@@ -297,6 +297,18 @@ def p_neupoint_add_identifier(p):
     neupoint_add_identifier :
     '''
     interCode.addIdentifiers(funcTable, p[-1])
+
+
+def p_neupoint_validate_isnot_array(p):
+    '''
+    neupoint_validate_isnot_array :
+    '''
+    idenData = funcTable.searchVariable(interCode.currentFunction, p[-2])
+
+    # Make the validation to see if the variable is an array
+    if(idenData['numDimensions'] != 0):
+        raise Exception('Variable {} is an array of {} dimension(s)'.format(
+            p[-2], idenData['numDimensions']))
 
 
 def p_neupoint_index_array(p):

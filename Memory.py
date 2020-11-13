@@ -1,11 +1,11 @@
 class Memory:
     def __init__(self):
         """
-        Global Memory - Starts at 1000 and ends at 16999
-        Temporal Global Memory - 17000 and ends at 32999
-        Local Memory - Starts at 33000 and ends at 48999
-        Temporal Local Memory - 49000 and ends at 64999
-        Constant Memory - Starts at 65000 and ends at 84999
+        Global Memory - Starts at 1000 and ends at 12999
+        Temporal Global Memory - 13000 and ends at 28999
+        Local Memory - Starts at 29000 and ends at 40999
+        Temporal Local Memory - 41000 and ends at 56999
+        Constant Memory - Starts at 57000 and ends at 72999
 
         Each memory context (global, local or constant) will be divided into types context (int, bool, float, char, str)
         avoiding the use of casting values. Also, the contexts global and local will have a temporal version.
@@ -13,13 +13,13 @@ class Memory:
 
         self.baseAddress = {
             1: 1000,
-            2: 33000,
-            3: 65000
+            2: 29000,
+            3: 57000
         }
 
         self.baseTemporalAddress = {
-            1: 17000,
-            2: 49000
+            1: 13000,
+            2: 41000
         }
 
         self.dataTypeRangeStart = {
@@ -27,7 +27,7 @@ class Memory:
             'float': 4000,
             'char': 8000,
             'bool': 12000,
-            'str': 16000
+            'str': 12000
         }
 
         self.countPositions = {
@@ -35,19 +35,16 @@ class Memory:
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
             },
             2: {
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
             },
             3: {
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0,
                 'str': 0
             }
         }
@@ -74,7 +71,7 @@ class Memory:
         Function to get the memory address for a variable
 
         Args:
-            varType (string): The data type of the variable [int | float | char | string]
+            varType (string): The data type of the variable [int | float | char | bool | string]
             size (integer): Size of the vairibale
             scope (string): Name of the current function
             flgTemp (bool): To know it is a teporal varible
@@ -143,8 +140,7 @@ class Memory:
         self.countPositions[2] = {
             'int': 0,
             'float': 0,
-            'char': 0,
-            'bool': 0
+            'char': 0
         }
 
         self.countTemporalPositions[2] = {

@@ -88,17 +88,23 @@ class IntermediateCode:
         index = self.stkOperand.pop()
         self.stkType.pop()
 
+        # Add the dimension to constant context
+        dimAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                       arrayData['dimensions'])
+        baseAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        arrayData['memoryAddress'])
+
         # Make the verify quad
         self.stkQuadruples.append(
-            Quadruple('VERIFY', index, arrayData['dimensions'], None))
+            Quadruple('VERIFY', index, dimAddr, None))
 
         # Create memory address to store the sum of base address and index
-        sumAddr = memoryObj.getMemoryAddress(
-            'int', 1, self.currentFunction, True)
+        sumAddr = memoryObj.getMemoryAddress('int', 1,
+                                             self.currentFunction, True)
 
         # Make the sum to get the actual memory address
         self.stkQuadruples.append(
-            Quadruple('SUMINDEX', index, arrayData['memoryAddress'], sumAddr))
+            Quadruple('+', index, baseAddr, sumAddr))
 
         # Append the pointer to the stack
         self.stkOperand.append('->' + str(sumAddr))
@@ -119,11 +125,21 @@ class IntermediateCode:
         indexRow = self.stkOperand.pop()
         self.stkType.pop()
 
+        print(arrayData['memoryAddress'])
+
+        # Add the dimension to constant context
+        dim1Addr = memoryObj.getMemoryAddressToConstant(
+            'int', arrayData['dimensions'][0])
+        dim2Addr = memoryObj.getMemoryAddressToConstant(
+            'int', arrayData['dimensions'][1])
+        baseAddr = memoryObj.getMemoryAddressToConstant(
+            'int', arrayData['memoryAddress'])
+
         # Make the verify quad
         self.stkQuadruples.append(
-            Quadruple('VERIFY', indexRow, arrayData['dimensions'][0], None))
+            Quadruple('VERIFY', indexRow, dim1Addr, None))
         self.stkQuadruples.append(
-            Quadruple('VERIFY', indexCol, arrayData['dimensions'][1], None))
+            Quadruple('VERIFY', indexCol, dim2Addr, None))
 
         # Create memory address to store the sum of base address and index
         sumAddr = memoryObj.getMemoryAddress(
@@ -133,12 +149,14 @@ class IntermediateCode:
 
         # Make the sum to get the actual memory address
         self.stkQuadruples.append(
-            Quadruple('MULTINDEX', indexRow, arrayData['dimensions'][1], sumAddr))
+            Quadruple('*', indexRow, dim2Addr, multAddr))
         self.stkQuadruples.append(
-            Quadruple('SUMINDEX', indexCol, arrayData['memoryAddress'], multAddr))
+            Quadruple('+', multAddr, dim1Addr, sumAddr))
+        self.stkQuadruples.append(
+            Quadruple('+', baseAddr, sumAddr, sumAddr))
 
         # Append the pointer to the stack
-        self.stkOperand.append('->' + str(multAddr))
+        self.stkOperand.append('->' + str(sumAddr))
         self.stkType.append(arrayData['dataType'])
 
     def addConstantValue(self, cteValue):
@@ -602,10 +620,10 @@ class IntermediateCode:
             programName (string): Name of the input program
         """
 
-        # # Switch keys to values and viciversa, to have the memory addresses as keys on
-        # # the dictionary
-        # constantValues = {int(value): key for key, value in
-        #                   memoryObj.constantValues.items()}
+        # Switch keys to values and viciversa, to have the memory addresses as keys on
+        # the dictionary
+        constantValues = {int(value): key for key, value in
+                          memoryObj.constantValues.items()}
 
         # Encode the quadruple list
         encodedQuads = list(
@@ -613,7 +631,7 @@ class IntermediateCode:
 
         compiledCode = {
             "FuncTable": funcTable.functionTable,
-            "ConstantValues": memoryObj.constantValues,
+            "ConstantValues": constantValues,
             "Quadruples": encodedQuads
         }
 
