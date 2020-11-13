@@ -12,7 +12,7 @@ class VirtualMachine():
     def __init__(self, inputName):
 
         # Instance of the virtual memory
-        self.virtMemory = ExecutionMemory()
+        self.execMemory = ExecutionMemory()
 
         # Open file with the compiled code
         with open(inputName, 'r') as inputFile:
@@ -20,32 +20,20 @@ class VirtualMachine():
             compiledCode = json.load(inputFile)
 
             # Load the constant and global variables
-            self.virtMemory.addConstantMemory(compiledCode['ConstantValues'])
-            self.virtMemory.addGlobalMemory(compiledCode['FuncTable']['global']['varTable'])
-            self.virtMemory.loadQuads(compiledCode['Quadruples'])
+            self.execMemory.addConstantMemory(compiledCode['ConstantValues'])
+            self.execMemory.addGlobalMemory(
+                compiledCode['FuncTable']['global']['varTable'])
+            self.execMemory.loadQuads(compiledCode['Quadruples'])
 
         # Load operators dictionary
         self.functionsDict = {
-            1: self.assignationOperation,
-            2: self.arith_relat_logicOperation,
-
-            3: self.arith_relat_logicOperation,
-            4: self.arith_relat_logicOperation,
-
-            5: self.arith_relat_logicOperation,
-            6: self.arith_relat_logicOperation,
-
-            7: self.arith_relat_logicOperation,
-            8: self.arith_relat_logicOperation,
-
-            9: self.arith_relat_logicOperation,
-            10: self.arith_relat_logicOperation,
-
-            11: self.arith_relat_logicOperation,
-            12: self.arith_relat_logicOperation,
-
-            13: self.arith_relat_logicOperation,
-            14: self.arith_relat_logicOperation,
+            1: self.assignationOperation, 2: self.arith_relat_logicOperation,
+            3: self.arith_relat_logicOperation, 4: self.arith_relat_logicOperation,
+            5: self.arith_relat_logicOperation, 6: self.arith_relat_logicOperation,
+            7: self.arith_relat_logicOperation, 8: self.arith_relat_logicOperation,
+            9: self.arith_relat_logicOperation, 10: self.arith_relat_logicOperation,
+            11: self.arith_relat_logicOperation, 12: self.arith_relat_logicOperation,
+            13: self.arith_relat_logicOperation, 14: self.arith_relat_logicOperation,
 
             15: self.temporal,
             16: self.temporal,
@@ -60,12 +48,9 @@ class VirtualMachine():
             22: self.temporal,
 
             23: self.temporal,
-            24: self.temporal,
+            24: self.verifyOperation,
 
-            25: self.temporal,
-            26: self.temporal,
-
-            27: self.temporal
+            25: self.temporal
         }
 
         # From operator ID to python operators
@@ -83,7 +68,7 @@ class VirtualMachine():
         """
         Go through all the quadruples and execute what is necessary
         """
-        for quad in self.virtMemory.quadsList:
+        for quad in self.execMemory.quadsList:
             # Execute the function depending on the operator
             self.functionsDict[quad[0]](quad[1], quad[2], quad[3], quad[0])
 
@@ -94,30 +79,58 @@ class VirtualMachine():
 
         Args:
             lftAddress (integer): Memory address were is located the left value
-            rghtAddress (None): None. Just to jeep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
             resultAddress (integer): Memory address were is going to be store the value
-            operatorNum (None): None. Just to jeep params simetry with all the functions.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         # Get data from the specified address
-        lftVal = self.virtMemory.getFromMemory(lftAddress)
-        print(type(lftVal))
+        lftVal = self.execMemory.getFromMemory(lftAddress)
 
         # Store the value on the expected memory
-        self.virtMemory.saveOnMemory(resultAddress,  lftVal)
-
-        print(self.virtMemory.ExecMemory[0])
+        self.execMemory.saveOnMemory(resultAddress,  lftVal)
 
     def arith_relat_logicOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
+        """
+        Function to get the value from a point A and B, to apply an operator and store it on a C 
+        memory address.
+
+        Args:
+            lftAddress (integer): Memory address of the A operand
+            rghtAddress (integer): Memory address of the B operand
+            resultAddress (integer): Memory addres to store the operation result
+            operatorNum (operator obj): Operator object with the function to apply to the operands
+        """
         # Get the values from the operand address
-        lftVal = self.virtMemory.getFromMemory(lftAddress)
-        rghtVal = self.virtMemory.getFromMemory(rghtAddress)
-        print(type(lftVal))
+        lftVal = self.execMemory.getFromMemory(lftAddress)
+        rghtVal = self.execMemory.getFromMemory(rghtAddress)
 
         # Execute the operator function
-        resultVal = self.__operatorsDict[operatorNum](int(lftVal), int(rghtVal))
+        resultVal = self.__operatorsDict[operatorNum](lftVal, rghtVal)
 
         # Store the value on the expected memory
-        self.virtMemory.saveOnMemory(resultAddress,  resultVal)
+        self.execMemory.saveOnMemory(resultAddress,  resultVal)
+
+
+    def verifyOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
+        """
+        Make the validation that an index is indide the arrays dimension.
+
+        Args:
+            lftAddress (integer): Memory address that store the wanted index
+            rghtAddress (integer): Memory address that store the array dimension
+            resultAddress (None): None. Just to keep params simetry with all the functions.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+
+        Raises:
+            Exception: [description]
+        """
+        # Get the values from the operand address
+        lftVal = self.execMemory.getFromMemory(lftAddress)
+        rghtVal = self.execMemory.getFromMemory(rghtAddress)
+
+        if(lftVal > rghtVal):
+            raise Exception("Index out of range")
+        
 
     def temporal(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         print("Temporal")

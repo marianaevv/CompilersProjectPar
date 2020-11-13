@@ -76,7 +76,6 @@ class ExecutionMemory():
         self.ExecMemory[0][0] = [None] * countDit['int']
         self.ExecMemory[0][1] = [None] * countDit['float']
         self.ExecMemory[0][2] = [None] * countDit['char']
-        print(self.ExecMemory[0])
 
     def loadQuads(self, quadsList):
         """

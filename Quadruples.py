@@ -14,8 +14,7 @@ mapOperators = {
     'RETURN': 19, 'ENDFUNC': 20,
     'GOTO': 21, 'GOSUB': 22,
     'GOTOF': 23, 'VERIFY': 24,
-    'SUMINDEX': 25, 'MULTINDEX': 26,
-    'END': 27
+    'END': 25
 }
 
 
