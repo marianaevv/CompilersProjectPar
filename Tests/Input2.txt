@@ -1,43 +1,13 @@
-program patito;
+program patito3;
 
 var
-    int i, j, k;
-    float f;
-
-module void uno(int a, int b){
-    if(a > 0) then{
-        i = a + b * j + i;
-        write(i + j);
-        uno(a - i, i);
-    
-    }else{
-        write(a + b);
-    }
-}
-
-module int dos(int a, float g)
-var int x;
-{
-    x = a;
-
-    while(a > 0) do{
-        a = a - k * j;
-        uno(a * 2, a + k);
-        g=g * j - k;
-    }
-
-    return(i + k * j);
-}
+    int A, B, E[10], D[10][5];
+    float F, J;
+    char C, L;
 
 main ()
 {
-    i = 2;
-    k = i + 1;
-    f = 3.14;
-
-    for i = 0 to 20 do{
-        write(dos(i + k, f * 3) + 3);
-        write(i, j * 2, f * 2 + 1.5);
-        i = i - k;
-    }
+    A = 5;
+    F = 1.3;
+    E[8] = 10000;
 }

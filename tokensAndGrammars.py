@@ -19,6 +19,8 @@ flgHaveReturn = False
 # Global variables
 countArgs = 0
 callingFunc = ""
+programName = ""
+arrayData = ""
 
 # Tokens definition
 tokens = [
@@ -174,27 +176,33 @@ def p_program(p):
             | PROGRAM ID SEMICOLON neupoint_goto_main functions_list MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
             | PROGRAM ID SEMICOLON neupoint_goto_main MAIN neupoint_fill_goto_main LEFTPARENTHESIS RIGHTPARENTHESIS block neupoint_end
     '''
+    global programName
+
+    p[0] = "Program {} was compiled succesfully".format(programName)
+
+    # Generate the object code
+    interCode.compileCode(funcTable, programName)
+
     print(interCode.stkOperator)
     print(interCode.stkOperand)
     print(interCode.stkType)
-    cont = 0
+    print(interCode.stkIndexes)
     for i in interCode.stkQuadruples:
-        print(cont, i)
-        cont += 1
-    print(interCode.stkJumps)
-    print()
+        print(i)
 
 
 def p_neupoint_goto_main(p):
     '''
-    neupoint_goto_main : 
+    neupoint_goto_main :
     '''
+    global programName
+    programName = p[-2]
     interCode.generateGOTOMain()
 
 
 def p_neupoint_fill_goto_main(p):
     '''
-    neupoint_fill_goto_main : 
+    neupoint_fill_goto_main :
     '''
     interCode.currentFunction = 'global'
     interCode.fillGOTOMain()
@@ -202,7 +210,7 @@ def p_neupoint_fill_goto_main(p):
 
 def p_neupoint_end(p):
     '''
-    neupoint_end : 
+    neupoint_end :
     '''
     interCode.endQuad()
 
@@ -269,11 +277,11 @@ def p_decla_identifier(p):
 
 def p_identifier(p):
     '''
-    identifier : ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-               | ID LEFTSQRBRACKET expresion RIGHTSQRBRACKET
-               | ID
+    identifier : ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET LEFTSQRBRACKET neupoint_index_matrix exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_matrix_addr
+               | ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_array_addr
+               | ID neupoint_add_identifier neupoint_validate_isnot_array
     '''
-    p[0] = p[1]
+    pass
 
 
 # --------------- Variables Neural Points ---------------
@@ -282,6 +290,74 @@ def p_neupoint_add_vars(p):
     neupoint_add_vars :
     '''
     interCode.addVariablesToTables(funcTable, interCode.currentFunction, p[-1])
+
+
+def p_neupoint_add_identifier(p):
+    '''
+    neupoint_add_identifier :
+    '''
+    interCode.addIdentifiers(funcTable, p[-1])
+
+
+def p_neupoint_validate_isnot_array(p):
+    '''
+    neupoint_validate_isnot_array :
+    '''
+    idenData = funcTable.searchVariable(interCode.currentFunction, p[-2])
+
+    # Make the validation to see if the variable is an array
+    if(idenData['numDimensions'] != 0):
+        raise Exception('Variable {} is an array of {} dimension(s)'.format(
+            p[-2], idenData['numDimensions']))
+
+
+def p_neupoint_index_array(p):
+    '''
+    neupoint_index_array : 
+    '''
+    global arrayData
+    arrayData = funcTable.searchVariable(interCode.currentFunction, p[-3])
+
+    # Remove base address
+    interCode.stkOperand.pop()
+    interCode.stkType.pop()
+
+    # Make the validation to see if the variable is an array
+    if(arrayData['numDimensions'] == 0):
+        raise Exception('Variable {} is not an array'.format(p[-3]))
+
+    # Add a false wall to give priority to the exp inside the index
+    interCode.stkOperator.append('(')
+
+
+def p_neupoint_index_matrix(p):
+    '''
+    neupoint_index_matrix : 
+    '''
+    global arrayData
+
+    # Make the validation to see if the variable is a matrix
+    if(arrayData['numDimensions'] == 1):
+        raise Exception('Variable {} is not a matrix'.format(p[-7]))
+
+    # Add a false wall to give priority to the exp inside the index
+    interCode.stkOperator.append('(')
+
+
+def p_neupoint_update_array_addr(p):
+    '''
+    neupoint_update_array_addr : 
+    '''
+    global arrayData
+    interCode.updateArrayAddress(arrayData, p[-7])
+
+
+def p_neupoint_update_matrix_addr(p):
+    '''
+    neupoint_update_matrix_addr : 
+    '''
+    global arrayData
+    interCode.updateMatrixAddress(arrayData)
 
 
 # ====================== Functions ======================
@@ -465,11 +541,11 @@ def p_statute(p):
 
 def p_assignment(p):
     '''
-    assignment : identifier neupoint_add_operand EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
-               | identifier neupoint_add_operand INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
-               | identifier neupoint_add_operand DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+    assignment : identifier EQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier PLUSEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier SUBSTRACTEQUALS neupoint_add_operator expresion neupoint_assignment_quad SEMICOLON
+               | identifier INCREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
+               | identifier DECREMENT neupoint_add_operator neupoint_assignment_single_quad SEMICOLON
     '''
     pass
 
@@ -483,8 +559,8 @@ def p_reading(p):
 
 def p_reading_list(p):
     '''
-    reading_list : identifier neupoint_add_operand  COMMA reading_list
-                 | identifier neupoint_add_operand
+    reading_list : identifier  COMMA reading_list
+                 | identifier
     '''
     # Push the writing quad
     interCode.readQuad()
@@ -615,7 +691,7 @@ def p_factor(p):
            | CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
            | function_call
-           | identifier neupoint_add_operand
+           | identifier
     '''
 
 
@@ -627,31 +703,12 @@ def p_neupoint_add_operator(p):
     interCode.stkOperator.append(p[-1])
 
 
-def p_neupoint_add_operand(p):
-    '''
-    neupoint_add_operand : 
-    '''
-    # Get the operand data type
-    operandDat = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])
-
-    # Add name and datatype to the stacks
-    interCode.stkOperand.append(operandDat['memoryAddress'])
-    interCode.stkType.append(operandDat['dataType'])
-
-
 def p_neupoint_add_cte_operand(p):
     '''
     neupoint_add_cte_operand : 
     '''
-    interCode.stkOperand.append(p[-1])
-    if(type(p[-1]).__name__ == 'str'):
-        if(len(p[-1]) == 1):
-            interCode.stkType.append('char')
-        else:
-            interCode.stkType.append('str')
-    else:
-        interCode.stkType.append(type(p[-1]).__name__)
+    # Add a constant variable to the stacks and memory
+    interCode.addConstantValue(p[-1])
 
 
 def p_neupoint_arithmetic_exp_quad(p):
@@ -660,7 +717,7 @@ def p_neupoint_arithmetic_exp_quad(p):
     '''
 
     # If the last operator is a PLUS or MINUS..
-    interCode.generateOperatorQuadruple(['+', '-'])
+    interCode.generateOperatorQuadruple(interCode.currentFunction, ['+', '-'])
 
 
 def p_neupoint_arithmetic_term_quad(p):
@@ -669,7 +726,8 @@ def p_neupoint_arithmetic_term_quad(p):
     '''
 
     # If the last operator is a MULTIPLY, DIVIDE or MODULE..
-    interCode.generateOperatorQuadruple(['*', '/', '%'])
+    interCode.generateOperatorQuadruple(interCode.currentFunction,
+                                        ['*', '/', '%'])
 
 
 def p_neupoint_add_wall(p):
@@ -706,7 +764,8 @@ def p_neupoint_logical_relational_opt(p):
     '''
     neupoint_logical_relational_opt : 
     '''
-    interCode.generateOperatorQuadruple(flgArithmetic=False)
+    interCode.generateOperatorQuadruple(
+        interCode.currentFunction, flgArithmetic=False)
 
 
 def p_neupoint_conditional_quad(p):
@@ -819,10 +878,18 @@ def p_neupoint_gosub_quad(p):
     interCode.stkOperator.pop()
 
     # Get the called func data
-    funcData = funcTable.functionTable[callingFunc]
+    funcData = funcTable.searchFunction(callingFunc)
+
+    # Get the return memory address if the function is not void
+    if (funcData['returnType'] != 'void'):
+        returnAddress = funcTable.searchVariable(
+            'global', callingFunc)['memoryAddress']
+    else:
+        returnAddress = None
 
     # Add the GOSUB quad
-    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'])
+    interCode.gosubQuad(funcData['returnType'], funcData['numQuad'],
+                        interCode.currentFunction, returnAddress)
 
 
 def p_neupoint_write_quad(p):
@@ -837,17 +904,17 @@ def p_neupoint_add_operand_integer(p):
     neupoint_add_operand_integer : 
     '''
     # Get the operand data type
-    operandType = funcTable.searchVariable(
-        interCode.currentFunction, p[-1])['dataType']
+    operandData = funcTable.searchVariable(
+        interCode.currentFunction, p[-1])
 
-    if(operandType != 'int'):
+    if(operandData['dataType'] != 'int'):
         raise Exception("Variable used in a FOR must be an integer")
 
     # Add name and datatype to the stacks
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
-    interCode.stkOperand.append(p[-1])
-    interCode.stkType.append(operandType)
+    interCode.stkOperand.append(operandData['memoryAddress'])
+    interCode.stkType.append(operandData['dataType'])
+    interCode.stkOperand.append(operandData['memoryAddress'])
+    interCode.stkType.append(operandData['dataType'])
 
 
 def p_neupoint_add_operand_for(p):
@@ -855,7 +922,7 @@ def p_neupoint_add_operand_for(p):
     neupoint_add_operand_for : 
     '''
     # Generate the VControl Quad
-    interCode.generateVControlQuad()
+    interCode.generateVControlQuad(interCode.currentFunction)
 
 
 def p_neupoint_comparison_quad(p):
@@ -863,7 +930,7 @@ def p_neupoint_comparison_quad(p):
     neupoint_comparison_quad : 
     '''
     # Generate quads
-    interCode.generateVCVFComparisonQuad()
+    interCode.generateVCVFComparisonQuad(interCode.currentFunction)
 
 
 def p_neupoint_for_end(p):

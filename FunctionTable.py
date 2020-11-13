@@ -15,7 +15,7 @@ class FunctionTable:
             }
         }
 
-    def addNewFunction(self, funcName, returnType, objMemory=None):
+    def addNewFunction(self, funcName, returnType, memoryObj=None):
         """
         Add new function data into the Function Table after making 
         the needed validations.
@@ -50,18 +50,18 @@ class FunctionTable:
         }
 
         if (returnType != 'void'):
-            # Get the direction address
-            memAddress = objMemory.getGlobalAddress(returnType)
+            # Get the memory address
+            memAddress = memoryObj.getMemoryAddress(
+                returnType, 1, 'global', False)
 
             # Add the variable to store the return value
             self.functionTable['global']['varTable'][funcName] = {
                 'dataType': returnType,
                 'size': 1,
-                'flgArray': False,
+                'numDimensions': 1,
                 'dimensions': 1,
-                'memoryAddress' : memAddress
+                'memoryAddress': memAddress
             }
-
 
     def searchFunction(self, funcName):
         """
@@ -78,7 +78,7 @@ class FunctionTable:
         """
 
         # Check on the functiontable
-        if funcName  in self.functionTable:
+        if funcName in self.functionTable:
             return self.functionTable[funcName]
 
         # If not, the function do no exists
@@ -86,7 +86,7 @@ class FunctionTable:
             raise Exception(
                 'The function "{}" has not been declared'.format(funcName))
 
-    def addVariables(self, funcName, varList, flgParams=False, objMemory=None):
+    def addVariables(self, funcName, varList, flgParams=False, memoryObj=None):
         """
         Adds the variables to its corresponding function
 
@@ -95,6 +95,7 @@ class FunctionTable:
             varList (list): A list of tuples with the format (DataType, VarName)
             flgParams (bool, optional): Flag to know if the list are 
             parameters of the current function. Defaults to False.
+            memoryObj: (Memory Obj): To calculate the memory address of the var
 
         Raises:
             Exception: If the function is already used
@@ -109,7 +110,7 @@ class FunctionTable:
         self.functionTable[funcName]['numVars'] += len(varList)
 
         for var in varList:
-            flgArray = False
+            numDimensions = False
             dimensions = 1
             size = 1
 
@@ -122,44 +123,41 @@ class FunctionTable:
             elif var[1] in self.functionTable['global']['varTable']:
                 raise Exception(
                     'Variable "{}" already exists as a global variable'.format(var[1]))
-                    
+
             elif var[1] in self.functionTable[funcName]['varTable']:
                 raise Exception(
                     'Variable "{}" has already been declared'.format(var[1]))
 
             # Check if the variable is array or matrix
             if (len(var) == 3):
-                flgArray = True
                 dimensions = var[2]
 
                 # Calculate the size if it is a matrix
                 if(type(var[2]) == tuple):
                     size = var[2][0] * var[2][1]
+                    numDimensions = 2
 
                 # Or just store the array size
                 else:
                     size = var[2]
-                    
-            if(funcName == 'global'):
-                # Get the direction address
-                memAddress = objMemory.getGlobalAddress(var[0])
-            else:
-                memAddress = 'MEM'
-            
+                    numDimensions = 1
+
+            # Get the memory address
+            memAddress = memoryObj.getMemoryAddress(var[0], size,
+                                                    funcName, False)
+
             # Add the variable to the function variables table
             self.functionTable[funcName]['varTable'][var[1]] = {
                 'dataType': var[0],
                 'size': size,
-                'flgArray': flgArray,
+                'numDimensions': numDimensions,
                 'dimensions': dimensions,
-                'memoryAddress' : memAddress
+                'memoryAddress': memAddress
             }
 
             # If the variables are parameters, store the data type also on another list
             if(flgParams):
                 self.functionTable[funcName]['paramsType'].append(var[0])
-
-        print(self.functionTable)
 
     def searchVariable(self, funcName, varName):
         """
