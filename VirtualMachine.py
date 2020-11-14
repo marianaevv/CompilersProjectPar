@@ -35,8 +35,7 @@ class VirtualMachine():
             11: self.arith_relat_logicOperation, 12: self.arith_relat_logicOperation,
             13: self.arith_relat_logicOperation, 14: self.arith_relat_logicOperation,
 
-            15: self.temporal,
-            16: self.temporal,
+            15: self.writeOperation, 16: self.readOperation,
 
             17: self.temporal,
             18: self.temporal,
@@ -130,6 +129,46 @@ class VirtualMachine():
 
         if(lftVal > rghtVal):
             raise Exception("Index out of range")
+
+
+    def writeOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
+        """
+        Print on screen the value stored on the received memory address
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            resultAddress (integer): Memory address in which to find the data to be printed
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+
+        Raises:
+            Exception: [description]
+        """
+        # Get the values from the operand address
+        resultVal = self.execMemory.getFromMemory(resultAddress)
+
+        if(resultVal != None):
+            print(resultVal)
+
+    def readOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
+        """
+        Read input from the console and store it on the received memory address
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            resultAddress (integer): Memory address in which to store the readed data.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+
+        Raises:
+            Exception: [description]
+        """
+        # Ask for input to the user
+        inputVal = input()
+
+        self.execMemory.saveOnMemory(resultAddress, inputVal, True)
+
+        print(self.execMemory.ExecMemory[0])
         
 
     def temporal(self, lftAddress, rghtAddress, resultAddress, operatorNum):
