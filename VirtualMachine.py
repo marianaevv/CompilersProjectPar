@@ -20,9 +20,9 @@ class VirtualMachine():
             compiledCode = json.load(inputFile)
 
             # Load the constant and global variables
-            self.execMemory.addConstantMemory(compiledCode['ConstantValues'])
             self.execMemory.addGlobalMemory(
                 compiledCode['FuncTable']['global']['varTable'])
+            self.execMemory.addConstantMemory(compiledCode['ConstantValues'])
             self.execMemory.loadQuads(compiledCode['Quadruples'])
 
         # Load operators dictionary
@@ -40,16 +40,16 @@ class VirtualMachine():
             17: self.temporal,
             18: self.temporal,
 
-            19: self.temporal,
-            20: self.temporal,
+            19: self.returnQuad,
+            20: self.endFunction,
 
-            21: self.temporal,
-            22: self.temporal,
+            21: self.gotoQuad,
+            22: self.gosubQuad,
 
             23: self.temporal,
             24: self.verifyOperation,
 
-            25: self.temporal
+            25: self.endProgram
         }
 
         # From operator ID to python operators
@@ -67,9 +67,21 @@ class VirtualMachine():
         """
         Go through all the quadruples and execute what is necessary
         """
-        for quad in self.execMemory.quadsList:
+        self.countQuad = 0
+
+        while True:
+            quad = self.execMemory.quadsList[self.countQuad]
+
+            print(quad)
+
             # Execute the function depending on the operator
             self.functionsDict[quad[0]](quad[1], quad[2], quad[3], quad[0])
+
+            # To end the program
+            if(self.countQuad == 'EXIT'):
+                break
+            else:
+                self.countQuad += 1
 
     def assignationOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -109,7 +121,6 @@ class VirtualMachine():
         # Store the value on the expected memory
         self.execMemory.saveOnMemory(resultAddress,  resultVal)
 
-
     def verifyOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
         Make the validation that an index is indide the arrays dimension.
@@ -119,9 +130,6 @@ class VirtualMachine():
             rghtAddress (integer): Memory address that store the array dimension
             resultAddress (None): None. Just to keep params simetry with all the functions.
             operatorNum (None): None. Just to keep params simetry with all the functions.
-
-        Raises:
-            Exception: [description]
         """
         # Get the values from the operand address
         lftVal = self.execMemory.getFromMemory(lftAddress)
@@ -129,7 +137,6 @@ class VirtualMachine():
 
         if(lftVal > rghtVal):
             raise Exception("Index out of range")
-
 
     def writeOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -140,9 +147,6 @@ class VirtualMachine():
             rghtAddress (None): None. Just to keep params simetry with all the functions.
             resultAddress (integer): Memory address in which to find the data to be printed
             operatorNum (None): None. Just to keep params simetry with all the functions.
-
-        Raises:
-            Exception: [description]
         """
         # Get the values from the operand address
         resultVal = self.execMemory.getFromMemory(resultAddress)
@@ -160,16 +164,75 @@ class VirtualMachine():
             resultAddress (integer): Memory address in which to store the readed data.
             operatorNum (None): None. Just to keep params simetry with all the functions.
 
-        Raises:
-            Exception: [description]
         """
         # Ask for input to the user
         inputVal = input()
 
         self.execMemory.saveOnMemory(resultAddress, inputVal, True)
 
-        print(self.execMemory.ExecMemory[0])
-        
+    def gotoQuad(self, lftAddress, rghtAddress, quadNum, operatorNum):
+        """
+        Move the quads proccessing to the target quad
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            quadNum (integer): Target quadruple number
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        self.countQuad = quadNum - 1
+
+    def gosubQuad(self, lftAddress, rghtAddress, quadNum, operatorNum):
+        """
+        Moves the quad processing to a function segment. Storing the current Control-Flow.
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            quadNum (integer): Target quadruple number
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+
+        self.execMemory.saveInstructionPointers(self.countQuad)
+        self.countQuad = quadNum - 2
+
+    def returnQuad(self, lftAddress, rghtAddress, globalAddress, operatorNum):
+        """
+        Moves the quad processing to a function segment. Storing the current Control-Flow.
+
+        Args:
+            lftAddress (integer): Local temporal address where is stored the returned value.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            globalAddress (integer): Memory address to store the returned value on the global scope.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        returnVal = self.execMemory.getFromMemory(lftAddress)
+        self.execMemory.saveOnMemory(globalAddress, returnVal)
+
+    def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
+        """
+        Finish the current flow control and goes back to the previous one.
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            quadNum (None): None. Just to keep params simetry with all the functions.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+
+        self.countQuad = self.execMemory.restoreInstructionPointer()
+
+    def endProgram(self, lftAddress, rghtAddress, quadNum, operatorNum):
+        """
+        Break the while that read the quad list, ending the program.
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            None. Just to keep params simetry with all the functions.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        self.countQuad = "EXIT"
 
     def temporal(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         print("Temporal")

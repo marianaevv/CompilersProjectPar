@@ -63,32 +63,49 @@
                     "numDimensions": false,
                     "dimensions": 1,
                     "memoryAddress": 9001
+                },
+                "Prueba": {
+                    "dataType": "int",
+                    "size": 1,
+                    "numDimensions": 1,
+                    "dimensions": 1,
+                    "memoryAddress": 1062
                 }
             },
             "numVars": 8,
             "numQuad": 0
+        },
+        "Prueba": {
+            "returnType": "int",
+            "paramsNumber": 1,
+            "paramsType": [
+                "int"
+            ],
+            "varTable": {},
+            "numVars": 1,
+            "numQuad": 2
         }
     },
     "ConstantValues": {
-        "57000": 5,
-        "57001": 12,
+        "57000": 22,
+        "57001": 5,
+        "57002": 12,
         "61000": 1.3,
-        "57002": 8,
-        "57003": 10,
-        "57004": 1002,
-        "57005": 10000
+        "57003": 122222
     },
     "Quadruples": [
-        "[21, null, null, 1]",
-        "[2, 57000, 57001, 13000]",
+        "[21, null, null, 4]",
+        "[2, 57000, 57000, 41000]",
+        "[19, null, null, 41000]",
+        "[20, null, null, null]",
+        "[2, 57001, 57002, 13000]",
         "[1, 13000, null, 1000]",
         "[1, 61000, null, 5000]",
-        "[24, 57002, 57003, null]",
-        "[2, 57002, 57004, 13001]",
-        "[1, 57005, null, \"->13001\"]",
-        "[24, 57002, 57003, null]",
-        "[2, 57002, 57004, 13002]",
-        "[15, null, null, \"->13002\"]",
+        "[18, null, null, 1]",
+        "[17, 57003, null, 0]",
+        "[22, 1062, null, 2]",
+        "[1, 13001, null, 1001]",
+        "[15, null, null, 1001]",
         "[25, null, null, null]"
     ]
 }

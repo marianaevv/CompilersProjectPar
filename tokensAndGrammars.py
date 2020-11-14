@@ -620,12 +620,8 @@ def p_function_return(p):
     global flgHaveReturn
     flgHaveReturn = True
 
-    # Search the function data
-    funcData = funcTable.searchFunction(interCode.currentFunction)
-
-    # Validate the return type
-    interCode.returnFunctionQuad(
-        interCode.currentFunction, funcData['returnType'])
+    # Validate the return type and add the quad
+    interCode.returnFunctionQuad(interCode.currentFunction, funcTable)
 
 
 def p_function_call_void(p):

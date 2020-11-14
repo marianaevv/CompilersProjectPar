@@ -10,6 +10,16 @@ class ExecutionMemory():
         """
         Dictionaries to save values according to the context and the value type
         """
+        self.__localContext = {
+            0: [],     # Integer stack
+            1: [],     # Float stack
+            2: [],     # Char stack
+            3: [],     # Temporal Integer stack
+            4: [],     # Temporal Float stack
+            5: [],     # Temporal Char stack
+            6: []      # Temporal Boolean stack
+        }
+
         self.ExecMemory = {
             # Global context
             0: {
@@ -21,16 +31,10 @@ class ExecutionMemory():
                 5: [],     # Temporal Char stack
                 6: []      # Temporal Boolean stack
             },
+
             # Local context
-            1: {
-                0: [],     # Integer stack
-                1: [],     # Float stack
-                2: [],     # Char stack
-                3: [],     # Temporal Integer stack
-                4: [],     # Temporal Float stack
-                5: [],     # Temporal Char stack
-                6: []      # Temporal Boolean stack
-            },
+            1: self.__localContext.copy(),
+
             # Constant context
             2: {
                 0: [],     # Integer st°ack
@@ -41,6 +45,7 @@ class ExecutionMemory():
         }
 
         self.quadsList = []
+        self.instrucPointers = []
 
     def addConstantMemory(self, constantsDir):
         """
@@ -181,3 +186,39 @@ class ExecutionMemory():
             self.ExecMemory[contextNum][dataType].append(value)
         else:
             self.ExecMemory[contextNum][dataType][positionNum] = value
+
+    def saveInstructionPointers(self, instrucPointer):
+        """
+        Function to save the current Instruction Pointer and the current local mememory
+        when a function is called.
+
+        Args:
+            instrucPointer (integer): Number of the current quad.
+        """
+
+        # Make a dictionary with the current local memory and the pointer
+        currentMemory = {
+            "Memory": self.ExecMemory[1].copy(),
+            "IP": instrucPointer
+        }
+
+        # Store the current flow control
+        self.instrucPointers.append(currentMemory)
+
+        # Reset the local context
+        self.ExecMemory[1] = self.__localContext.copy()
+
+    def restoreInstructionPointer(self):
+        """
+        Function to restore the control to the previous function.
+        And loading it's local memory.
+
+        Returns:
+            integer: Instruction pointer to the previous control flow.
+        """
+
+        prevControl = self.instrucPointers.pop()
+
+        self.ExecMemory[1] = prevControl['Memory']
+
+        return prevControl['IP']

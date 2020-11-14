@@ -396,7 +396,7 @@ class IntermediateCode:
         # Fill the end line
         self.stkQuadruples[endLine].result = len(self.stkQuadruples)
 
-    def returnFunctionQuad(self, funcName, returnType):
+    def returnFunctionQuad(self, funcName, funcTable):
         """
         Generate the RETURN Quad of the return statement.
         Making the needed validation.
@@ -404,27 +404,38 @@ class IntermediateCode:
         Args:
             funcName (string): Name of the function the return is inside
             returnType (string): Data type of the returned value
+            varAddr(integer | None): Memory address where is store the returned value
+                                     if the function is not void
 
         Raises:
             Exception: If the function is void and has a return
             Exception: If the returned data type is different than the expected
         """
+        varAddr = None
         actualType = self.stkType.pop()
 
-        # If the function is void and have a return
-        if(returnType == 'void'):
+        # Search the function data
+        funcData = funcTable.searchFunction(self.currentFunction)
+
+        # If the function is void and have a return raise error
+        if(funcData['returnType'] == 'void'):
             raise Exception(
                 'Function "{}" is void and does not need a return'.format(funcName))
 
+        # If not, get the global memory address
+        else:
+            varAddr = funcTable.searchVariable('global',
+                                               self.currentFunction)['memoryAddress']
+
         # If the returned value is different from the function return type
-        if(returnType != actualType):
+        if(funcData['returnType'] != actualType):
             raise Exception(
                 'Error trying to return a {} when function "{}" returns a {}'.format(
-                    actualType, funcName, returnType))
+                    actualType, funcName, funcData['returnType']))
 
         # Push the returned value
         self.stkQuadruples.append(
-            Quadruple('RETURN', None, None, self.stkOperand.pop()))
+            Quadruple('RETURN', self.stkOperand.pop(), None, varAddr))
 
     def endFunctionQuad(self):
         """
