@@ -125,8 +125,6 @@ class IntermediateCode:
         indexRow = self.stkOperand.pop()
         self.stkType.pop()
 
-        print(arrayData['memoryAddress'])
-
         # Add the dimension to constant context
         dim1Addr = memoryObj.getMemoryAddressToConstant(
             'int', arrayData['dimensions'][0])
@@ -321,15 +319,18 @@ class IntermediateCode:
                 actionName = 'decrement'
             raise Exception("Cannot {} a {}".format(actionName, lftOpndType))
 
+        # Get memory address for the constant
+        cteAddr = memoryObj.getMemoryAddressToConstant('int', 1)
+
         if(operator == '++'):
             # Push the quadruple
             self.stkQuadruples.append(Quadruple('+',
-                                                lftOperand, 1, lftOperand))
+                                                lftOperand, cteAddr, lftOperand))
 
         elif(operator == '--'):
             # Push the quadruple
             self.stkQuadruples.append(Quadruple('-',
-                                                lftOperand, 1, lftOperand))
+                                                lftOperand, cteAddr, lftOperand))
 
     def generateConditionQuad(self):
         """
@@ -427,8 +428,6 @@ class IntermediateCode:
             varAddr = funcTable.searchVariable('global',
                                                self.currentFunction)['memoryAddress']
 
-        print(varAddr)
-
         # If the returned value is different from the function return type
         if(funcData['returnType'] != actualType):
             raise Exception(
@@ -484,7 +483,8 @@ class IntermediateCode:
         argNumAddr = memoryObj.getMemoryAddressToConstant('int', argNum)
 
         # Push the quadruple
-        self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNumAddr))
+        self.stkQuadruples.append(
+            Quadruple('PARAM', argValue, None, argNumAddr))
 
     def gosubQuad(self, returnType, numQuad, funcName, returnAddress):
         """
@@ -613,8 +613,11 @@ class IntermediateCode:
         self.stkType.pop()
         self.stkType.pop()
 
+        # Get memory address for the constant
+        cteAddr = memoryObj.getMemoryAddressToConstant('int', 1)
+
         # Generate the update quad
-        self.stkQuadruples.append(Quadruple('+', VControl, 1, VControl))
+        self.stkQuadruples.append(Quadruple('+', VControl, cteAddr, VControl))
         self.stkQuadruples.append(Quadruple('=', VControl, None, IDMemory))
 
         # Get jumps

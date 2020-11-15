@@ -40,7 +40,7 @@ class VirtualMachine():
             19: self.returnQuad, 20: self.endFunction,
             21: self.gotoQuad, 22: self.gosubQuad,
 
-            23: self.temporal,
+            23: self.gotof,
             24: self.verifyOperation,
 
             25: self.endProgram
@@ -179,6 +179,24 @@ class VirtualMachine():
         """
         self.countQuad = quadNum - 1
 
+    def gotof(self, boolAddress, rghtAddress, quadNum, operatorNum):
+        """
+        Move the quads proccessing to the target quad if the received boolean is false.
+
+        Args:
+            boolAddress (integer): Memory address to get the boolean.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            quadNum (integer): Target quadruple number
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        boolVal = self.execMemory.getFromMemory(boolAddress)
+
+        print("-------------------->", boolVal)
+
+        if(not boolVal):
+            self.countQuad = quadNum - 1
+
+
     def eraQuad(self, lftAddress, rghtAddress, nameAddress, operatorNum):
         """
         Function to resever the needed memory to a function.
@@ -232,7 +250,7 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
-        
+
         for s in self.execMemory.ExecMemory.items():
             print(s)
 

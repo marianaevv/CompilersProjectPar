@@ -5,17 +5,15 @@ var
     float F, J;
     char C, L;
 
-module float Prueba(int EH, float AS)
+module void Prueba(int EH, float AS)
 {
-
-    return(EH * AS);
+    while (EH < 10) do{
+        write(EH);
+        EH++;
+    }
 }
 
 main ()
 {
-    A = 5 + 12;
-    F = 2.4;
-
-    F = Prueba(9, 4.4);
-    write("Resultado variable F", F);
+    Prueba(5, 0.1);
 }

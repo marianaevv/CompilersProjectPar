@@ -127,7 +127,7 @@ def t_CTECHAR(token):
 
 def t_CTESTRING(token):
     r'"([^"]*)"'
-    token.value = str(token.value)
+    token.value = str(token.value).replace('"', '')
     return token
 
 
