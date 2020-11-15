@@ -10,7 +10,11 @@ class FunctionTable:
                 'paramsNumber': 0,
                 'paramsType': [],
                 'varTable': {},
-                'numVars': 0,
+                'numVars': {
+                    "int": 0,
+                    "float": 0,
+                    "char": 0
+                },
                 'numQuad': 0
             }
         }
@@ -45,7 +49,11 @@ class FunctionTable:
             'paramsNumber': 0,
             'paramsType': [],
             'varTable': {},
-            'numVars': 0,
+            'numVars': {
+                "int": 0,
+                "float": 0,
+                "char": 0
+            },
             'numQuad': 0
         }
 
@@ -53,6 +61,10 @@ class FunctionTable:
             # Get the memory address
             memAddress = memoryObj.getMemoryAddress(
                 returnType, 1, 'global', False)
+
+            # Increase the counter of the memory
+            # on the global data type
+            self.functionTable['global']['numVars'][returnType] += 1
 
             # Add the variable to store the return value
             self.functionTable['global']['varTable'][funcName] = {
@@ -106,9 +118,6 @@ class FunctionTable:
         if(flgParams):
             self.functionTable[funcName]['paramsNumber'] = len(varList)
 
-        # Add the amount of variables
-        self.functionTable[funcName]['numVars'] += len(varList)
-
         for var in varList:
             numDimensions = False
             dimensions = 1
@@ -141,6 +150,9 @@ class FunctionTable:
                 else:
                     size = var[2]
                     numDimensions = 1
+
+            # Increase the counter per each variable size
+            self.functionTable[funcName]['numVars'][var[0]] += size
 
             # Get the memory address
             memAddress = memoryObj.getMemoryAddress(var[0], size,

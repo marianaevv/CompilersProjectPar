@@ -817,11 +817,9 @@ def p_neupoint_era_quad(p):
     neupoint_era_quad : 
     '''
     global callingFunc
-    # Get the num of variables
-    numVars = funcTable.searchFunction(callingFunc)['numVars']
 
     # Append the ERA quadruple
-    interCode.eraQuad(numVars)
+    interCode.eraQuad(callingFunc)
 
     # Initilize the args counter
     global countArgs

@@ -427,6 +427,8 @@ class IntermediateCode:
             varAddr = funcTable.searchVariable('global',
                                                self.currentFunction)['memoryAddress']
 
+        print(varAddr)
+
         # If the returned value is different from the function return type
         if(funcData['returnType'] != actualType):
             raise Exception(
@@ -446,18 +448,20 @@ class IntermediateCode:
         # Reset local memory address
         memoryObj.resetLocalCounters()
 
-    def eraQuad(self, numVars):
+    def eraQuad(self, callingFunc):
         """
         Generate the ERA quad when calling a function
 
         Args:
-            numVars (integert): Number of variables that the function has
+            callingFunc (string): Name of the called function
         """
-        self.stkQuadruples.append(Quadruple('ERA', None, None, numVars))
+        # Store the function name
+        nameAddr = memoryObj.getMemoryAddressToConstant("str", callingFunc)
+        self.stkQuadruples.append(Quadruple('ERA', None, None, nameAddr))
 
     def argumentQuad(self, varType, argNum):
         """
-        Generate the quad per argument sended to a function. Also checks that
+        Generate the quad per argument sent to a function. Also checks that
         the user do not send more thant the expécted amount.
 
         Args:
@@ -476,8 +480,11 @@ class IntermediateCode:
             raise Exception(
                 "The argument is {} but needs to be {}".format(argType, varType))
 
+        # Store the constant value
+        argNumAddr = memoryObj.getMemoryAddressToConstant('int', argNum)
+
         # Push the quadruple
-        self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNum))
+        self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNumAddr))
 
     def gosubQuad(self, returnType, numQuad, funcName, returnAddress):
         """
@@ -494,7 +501,7 @@ class IntermediateCode:
             returnDir = None
         else:
             returnDir = memoryObj.getMemoryAddress(returnType, 1,
-                                                   self.currentFunction, True)
+                                                   funcName, True)
 
             self.stkType.append(returnType)
             self.stkOperand.append(returnDir)

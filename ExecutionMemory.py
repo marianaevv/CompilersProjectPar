@@ -46,6 +46,7 @@ class ExecutionMemory():
 
         self.quadsList = []
         self.instrucPointers = []
+        self.paramsList = []
 
     def addConstantMemory(self, constantsDir):
         """
@@ -60,27 +61,48 @@ class ExecutionMemory():
         for addr, value in constantsDir.items():
             self.saveOnMemory(int(addr), value)
 
-    def addGlobalMemory(self, globalDict):
+    def reserveContextMemmory(self, contextDict, contextNum):
         """
         Load the global variables to the global memory
 
         Args:
-            globalDict (Dictionary): A dict with the variable table from the global context
+            contextDict (Dictionary): Dictionary with counters for each type of data that the function needs
+            contextNum (integer): A number 0 if it is to the global memory or 1 if it is local
         """
-        countDit = {
-            "int": 0,
-            "float": 0,
-            "char": 0
+        if(contextNum == 0):
+            self.ExecMemory[0][0] = [None] * contextDict['int']
+            self.ExecMemory[0][1] = [None] * contextDict['float']
+            self.ExecMemory[0][2] = [None] * contextDict['char']
+
+        else:
+            self.paramsList = []
+            copyLocalMem = self.__localContext.copy()
+
+            # Separate memory for each type of data
+            copyLocalMem[0] = [None] * contextDict['int']
+            copyLocalMem[1] = [None] * contextDict['float']
+            copyLocalMem[2] = [None] * contextDict['char']
+
+            self.instrucPointers.append(copyLocalMem)
+
+    def sendParams(self, currentAddr, value):
+        # Get data type
+        _, dataType, _ = self.getPositionMemory(currentAddr)
+
+        # Add it to the list
+        self.paramsList.append({'dataType': dataType, 'value': value})
+
+    def copyArgsToParms(self):
+        countDict = {
+            0: 0,
+            1: 0,
+            2: 0
         }
 
-        # Per each variable...
-        for value in globalDict.values():
-            countDit[value['dataType']] += value['size']
-
-        # Separate memory for each type of data
-        self.ExecMemory[0][0] = [None] * countDit['int']
-        self.ExecMemory[0][1] = [None] * countDit['float']
-        self.ExecMemory[0][2] = [None] * countDit['char']
+        for arg in self.paramsList:
+            self.instrucPointers[-1][arg['dataType']
+                                     ][countDict[arg['dataType']]] = arg['value']
+            countDict[arg['dataType']] += 1
 
     def loadQuads(self, quadsList):
         """
@@ -195,6 +217,7 @@ class ExecutionMemory():
         Args:
             instrucPointer (integer): Number of the current quad.
         """
+        newLocalMen = self.instrucPointers.pop()
 
         # Make a dictionary with the current local memory and the pointer
         currentMemory = {
@@ -205,8 +228,8 @@ class ExecutionMemory():
         # Store the current flow control
         self.instrucPointers.append(currentMemory)
 
-        # Reset the local context
-        self.ExecMemory[1] = self.__localContext.copy()
+        # Change the local context
+        self.ExecMemory[1] = newLocalMen
 
     def restoreInstructionPointer(self):
         """
@@ -216,9 +239,7 @@ class ExecutionMemory():
         Returns:
             integer: Instruction pointer to the previous control flow.
         """
-
         prevControl = self.instrucPointers.pop()
-
         self.ExecMemory[1] = prevControl['Memory']
 
         return prevControl['IP']

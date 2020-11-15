@@ -17,13 +17,14 @@ class VirtualMachine():
         # Open file with the compiled code
         with open(inputName, 'r') as inputFile:
             # Load the JSON
-            compiledCode = json.load(inputFile)
+            self.compiledCode = json.load(inputFile)
 
             # Load the constant and global variables
-            self.execMemory.addGlobalMemory(
-                compiledCode['FuncTable']['global']['varTable'])
-            self.execMemory.addConstantMemory(compiledCode['ConstantValues'])
-            self.execMemory.loadQuads(compiledCode['Quadruples'])
+            self.execMemory.reserveContextMemmory(
+                self.compiledCode['FuncTable']['global']['numVars'], 0)
+            self.execMemory.addConstantMemory(
+                self.compiledCode['ConstantValues'])
+            self.execMemory.loadQuads(self.compiledCode['Quadruples'])
 
         # Load operators dictionary
         self.functionsDict = {
@@ -34,17 +35,10 @@ class VirtualMachine():
             9: self.arith_relat_logicOperation, 10: self.arith_relat_logicOperation,
             11: self.arith_relat_logicOperation, 12: self.arith_relat_logicOperation,
             13: self.arith_relat_logicOperation, 14: self.arith_relat_logicOperation,
-
             15: self.writeOperation, 16: self.readOperation,
-
-            17: self.temporal,
-            18: self.temporal,
-
-            19: self.returnQuad,
-            20: self.endFunction,
-
-            21: self.gotoQuad,
-            22: self.gosubQuad,
+            17: self.paramQuad, 18: self.eraQuad,
+            19: self.returnQuad, 20: self.endFunction,
+            21: self.gotoQuad, 22: self.gosubQuad,
 
             23: self.temporal,
             24: self.verifyOperation,
@@ -68,6 +62,9 @@ class VirtualMachine():
         Go through all the quadruples and execute what is necessary
         """
         self.countQuad = 0
+
+        for s in self.execMemory.ExecMemory.items():
+            print(s)
 
         while True:
             quad = self.execMemory.quadsList[self.countQuad]
@@ -182,6 +179,33 @@ class VirtualMachine():
         """
         self.countQuad = quadNum - 1
 
+    def eraQuad(self, lftAddress, rghtAddress, nameAddress, operatorNum):
+        """
+        Function to resever the needed memory to a function.
+
+        Args:
+            lftAddress (None): None. Just to keep params simetry with all the functions.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            nameAddress (integer): Memory address where the function identifier is stored.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        nameFunc = self.execMemory.getFromMemory(nameAddress)
+        countDict = self.compiledCode['FuncTable'][nameFunc]['numVars']
+        self.execMemory.reserveContextMemmory(countDict, 1)
+
+    def paramQuad(self, argAddress, rghtAddress, nameAddress, operatorNum):
+        """
+        Function to resever the needed memory to a function.
+
+        Args:
+            argAddress (integer): Address where the sent argument is stored.
+            rghtAddress (None): None. Just to keep params simetry with all the functions.
+            nameAddress (integer): Memory address where the function identifier is stored.
+            operatorNum (None): None. Just to keep params simetry with all the functions.
+        """
+        argVal = self.execMemory.getFromMemory(argAddress)
+        self.execMemory.sendParams(argAddress, argVal)
+
     def gosubQuad(self, lftAddress, rghtAddress, quadNum, operatorNum):
         """
         Moves the quad processing to a function segment. Storing the current Control-Flow.
@@ -192,13 +216,13 @@ class VirtualMachine():
             quadNum (integer): Target quadruple number
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
-
+        self.execMemory.copyArgsToParms()
         self.execMemory.saveInstructionPointers(self.countQuad)
         self.countQuad = quadNum - 2
 
     def returnQuad(self, lftAddress, rghtAddress, globalAddress, operatorNum):
         """
-        Moves the quad processing to a function segment. Storing the current Control-Flow.
+        Store the returned value on the global address of the function.
 
         Args:
             lftAddress (integer): Local temporal address where is stored the returned value.
@@ -208,6 +232,9 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
+        
+        for s in self.execMemory.ExecMemory.items():
+            print(s)
 
     def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
         """
@@ -233,6 +260,8 @@ class VirtualMachine():
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         self.countQuad = "EXIT"
+        for s in self.execMemory.ExecMemory.items():
+            print(s)
 
     def temporal(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         print("Temporal")
