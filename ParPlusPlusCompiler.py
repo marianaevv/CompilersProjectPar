@@ -178,18 +178,10 @@ def p_program(p):
     '''
     global programName
 
-    p[0] = "Program {} was compiled succesfully".format(programName)
-
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
-    print(interCode.stkIndexes)
-    for i in interCode.stkQuadruples:
-        print(i)
-
+    p[0] = "Program {} was compiled succesfully and saved on the file {}.obj".format(programName, programName)
 
 def p_neupoint_goto_main(p):
     '''
@@ -946,17 +938,20 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-try:
-    # Read the source file
-    fileName = './Tests/Input2.txt'
-    f = open(fileName, "r")
-    srcFile = f.read()
+def compileCode(inputFile):
+    try:
+        # Read the source file
+        f = open(inputFile, "r")
+        srcFile = f.read()
 
-    # Parser the input
-    result = parser.parse(srcFile)
+        # Parser the input
+        result = parser.parse(srcFile)
 
-    if not flgError:
-        print("\n-> Apropiado\n")
+        if not flgError:
+            print('\n =>',result,'<= \n')
 
-except FileNotFoundError:
-    print("\n-> No existe el archivo\n")
+    except FileNotFoundError:
+        print("\n-> No existe el archivo\n")
+
+
+compileCode('./Tests/Input2.txt')

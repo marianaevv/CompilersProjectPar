@@ -5,15 +5,16 @@ var
     float F, J;
     char C, L;
 
-module void Prueba(int EH, float AS)
-{
-    while (EH < 10) do{
-        write(EH);
-        EH++;
-    }
-}
-
 main ()
 {
-    Prueba(5, 0.1);
+    read(A);
+    read(B);
+    while (A <= B) do{
+        if(A % 2 == 0)then{
+            write(A);
+        }else{
+            write("Impar");
+        }
+        A++;
+    }
 }

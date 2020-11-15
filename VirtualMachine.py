@@ -39,10 +39,7 @@ class VirtualMachine():
             17: self.paramQuad, 18: self.eraQuad,
             19: self.returnQuad, 20: self.endFunction,
             21: self.gotoQuad, 22: self.gosubQuad,
-
-            23: self.gotof,
-            24: self.verifyOperation,
-
+            23: self.gotof, 24: self.verifyOperation,
             25: self.endProgram
         }
 
@@ -63,13 +60,8 @@ class VirtualMachine():
         """
         self.countQuad = 0
 
-        for s in self.execMemory.ExecMemory.items():
-            print(s)
-
         while True:
             quad = self.execMemory.quadsList[self.countQuad]
-
-            print(quad)
 
             # Execute the function depending on the operator
             self.functionsDict[quad[0]](quad[1], quad[2], quad[3], quad[0])
@@ -167,35 +159,32 @@ class VirtualMachine():
 
         self.execMemory.saveOnMemory(resultAddress, inputVal, True)
 
-    def gotoQuad(self, lftAddress, rghtAddress, quadNum, operatorNum):
+    def gotoQuad(self, lftAddress, rghtAddress, quadAddr, operatorNum):
         """
         Move the quads proccessing to the target quad
 
         Args:
             lftAddress (None): None. Just to keep params simetry with all the functions.
             rghtAddress (None): None. Just to keep params simetry with all the functions.
-            quadNum (integer): Target quadruple number
+            quadAddr (integer): Target quadruple number
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
-        self.countQuad = quadNum - 1
+        self.countQuad = self.execMemory.getFromMemory(quadAddr) - 1
 
-    def gotof(self, boolAddress, rghtAddress, quadNum, operatorNum):
+    def gotof(self, boolAddress, rghtAddress, quadAddr, operatorNum):
         """
         Move the quads proccessing to the target quad if the received boolean is false.
 
         Args:
             boolAddress (integer): Memory address to get the boolean.
             rghtAddress (None): None. Just to keep params simetry with all the functions.
-            quadNum (integer): Target quadruple number
+            quadAddr (integer): Target quadruple number
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         boolVal = self.execMemory.getFromMemory(boolAddress)
 
-        print("-------------------->", boolVal)
-
         if(not boolVal):
-            self.countQuad = quadNum - 1
-
+            self.countQuad = self.execMemory.getFromMemory(quadAddr) - 1
 
     def eraQuad(self, lftAddress, rghtAddress, nameAddress, operatorNum):
         """
@@ -224,19 +213,19 @@ class VirtualMachine():
         argVal = self.execMemory.getFromMemory(argAddress)
         self.execMemory.sendParams(argAddress, argVal)
 
-    def gosubQuad(self, lftAddress, rghtAddress, quadNum, operatorNum):
+    def gosubQuad(self, lftAddress, rghtAddress, quadAddr, operatorNum):
         """
         Moves the quad processing to a function segment. Storing the current Control-Flow.
 
         Args:
             lftAddress (None): None. Just to keep params simetry with all the functions.
             rghtAddress (None): None. Just to keep params simetry with all the functions.
-            quadNum (integer): Target quadruple number
+            quadAddr (integer): Target quadruple number
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         self.execMemory.copyArgsToParms()
         self.execMemory.saveInstructionPointers(self.countQuad)
-        self.countQuad = quadNum - 2
+        self.countQuad = self.execMemory.getFromMemory(quadAddr) - 2
 
     def returnQuad(self, lftAddress, rghtAddress, globalAddress, operatorNum):
         """
@@ -250,9 +239,6 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
-
-        for s in self.execMemory.ExecMemory.items():
-            print(s)
 
     def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
         """
@@ -278,11 +264,6 @@ class VirtualMachine():
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         self.countQuad = "EXIT"
-        for s in self.execMemory.ExecMemory.items():
-            print(s)
-
-    def temporal(self, lftAddress, rghtAddress, resultAddress, operatorNum):
-        print("Temporal")
 
 
 virMachine = VirtualMachine('patito3.obj')

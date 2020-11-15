@@ -69,6 +69,10 @@ class ExecutionMemory():
             contextDict (Dictionary): Dictionary with counters for each type of data that the function needs
             contextNum (integer): A number 0 if it is to the global memory or 1 if it is local
         """
+        for dataType in contextDict.values():
+            if(dataType >= 4000):
+                raise Exception("Out of memory")
+
         if(contextNum == 0):
             self.ExecMemory[0][0] = [None] * contextDict['int']
             self.ExecMemory[0][1] = [None] * contextDict['float']
@@ -205,6 +209,10 @@ class ExecutionMemory():
 
         # Check if the memory position already exists or not
         if(len(self.ExecMemory[contextNum][dataType]) <= positionNum):
+
+            if(len(self.ExecMemory[contextNum][dataType]) >= 4000):
+                raise Exception("Out of memory")
+
             self.ExecMemory[contextNum][dataType].append(value)
         else:
             self.ExecMemory[contextNum][dataType][positionNum] = value
