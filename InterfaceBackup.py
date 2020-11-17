@@ -59,3 +59,31 @@ button.place(x=15,y=290)
 
 
 mainloop()
+
+
+
+
+def varIntDeclaration():
+    text.insert(INSERT, "var\n")
+    var="Inicial"
+    if var is not None:
+        var = simpledialog.askstring("Input", "Insertar nombre de variable",parent=app)
+        addValue = messagebox.askyesno("Question","¿Desea darle valor a? " + var)
+        if addValue == True:
+            varValue = simpledialog.askstring("Input", "Inserta valor de la variable",parent=app)
+            text.insert(INSERT, "int " + var + "= " +varValue)
+        else:
+            text.insert(INSERT, "int " + var)
+        anotherVar = messagebox.askyesno("Question","¿Desea agregar otra variable?")
+        while anotherVar != False:
+            var = simpledialog.askstring("Input", "Insertar nombre de variable",parent=app)
+            addValue = messagebox.askyesno("Question","¿Desea darle valor a? " + var)
+            if addValue == True:
+                varValue = simpledialog.askstring("Input", "Inserta valor de la variable",parent=app)
+                text.insert(INSERT, ", " + var + "= " +varValue)
+            else:
+                text.insert(INSERT, ", " + var)
+                anotherVar = messagebox.askyesno("Question","¿Desea agregar otra variable?")
+        text.insert(INSERT, "; ")
+    else:
+        print("You don't have a first name?")
