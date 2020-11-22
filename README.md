@@ -98,6 +98,9 @@ Se generaron cuadruplos para las siguientes expresiones:
 Se realizó el mapa de memoria para la maquina virtual usando diccionarios para cada entorno del programa, cada diccionario tiene llaves con los tipos de variables es decir (int, float, bool, char) para en el momento de guardar las variables se guarder en el espacio correcto.
 Para la clase memory.py se crearon funciones para asignar espacio de memoria de acuerdo al entorno y tipo de dato, función para obtener valores guardados dentro de estás estructuras y función para resetear contadores cuando se termine de ejecutar una función.
 
+# Avance 7 
+
+En este avance cuenta con el funcionamiento del compilador y la primera versión de la documentación, incluyendo definición de léxico, sintaxis.
 
 # Tecnologías
 [(Back to top)](#tabla-de-contenidos)
