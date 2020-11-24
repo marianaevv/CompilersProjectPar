@@ -125,8 +125,6 @@ class IntermediateCode:
         indexRow = self.stkOperand.pop()
         self.stkType.pop()
 
-        print(arrayData['memoryAddress'])
-
         # Add the dimension to constant context
         dim1Addr = memoryObj.getMemoryAddressToConstant(
             'int', arrayData['dimensions'][0])
@@ -194,7 +192,9 @@ class IntermediateCode:
         Fill the GOTO Main quad
         """
         # Get the initial quad
-        self.stkQuadruples[0].result = len(self.stkQuadruples)
+        gotoAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        len(self.stkQuadruples))
+        self.stkQuadruples[0].result = gotoAddr
 
     def endQuad(self):
         """
@@ -321,15 +321,18 @@ class IntermediateCode:
                 actionName = 'decrement'
             raise Exception("Cannot {} a {}".format(actionName, lftOpndType))
 
+        # Get memory address for the constant
+        cteAddr = memoryObj.getMemoryAddressToConstant('int', 1)
+
         if(operator == '++'):
             # Push the quadruple
             self.stkQuadruples.append(Quadruple('+',
-                                                lftOperand, 1, lftOperand))
+                                                lftOperand, cteAddr, lftOperand))
 
         elif(operator == '--'):
             # Push the quadruple
             self.stkQuadruples.append(Quadruple('-',
-                                                lftOperand, 1, lftOperand))
+                                                lftOperand, cteAddr, lftOperand))
 
     def generateConditionQuad(self):
         """
@@ -367,8 +370,12 @@ class IntermediateCode:
         # Append the new jump
         self.stkJumps.append(len(self.stkQuadruples) - 1)
 
+        # Store the jump quad
+        gotoAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        len(self.stkQuadruples))
+
         # Fill the GotoF
-        self.stkQuadruples[falseLine].result = len(self.stkQuadruples)
+        self.stkQuadruples[falseLine].result = gotoAddr
 
     def endConditionQuad(self):
         """
@@ -377,8 +384,12 @@ class IntermediateCode:
         # Pop the jump quad
         endLine = self.stkJumps.pop()
 
+        # Store the jump quad
+        gotoAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        len(self.stkQuadruples))
+
         # Fill the Goto
-        self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+        self.stkQuadruples[endLine].result = gotoAddr
 
     def endWhileQuad(self):
         """
@@ -390,13 +401,21 @@ class IntermediateCode:
         # Get the return jump
         returnLine = self.stkJumps.pop()
 
+        # Store on memory the constant value
+        gotoAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        returnLine)
+
         # Push the return quad
-        self.stkQuadruples.append(Quadruple('GOTO', None, None, returnLine))
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, gotoAddr))
+
+        # Store the jump quad
+        gotoAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        len(self.stkQuadruples))
 
         # Fill the end line
-        self.stkQuadruples[endLine].result = len(self.stkQuadruples)
+        self.stkQuadruples[endLine].result = gotoAddr
 
-    def returnFunctionQuad(self, funcName, returnType):
+    def returnFunctionQuad(self, funcName, funcTable):
         """
         Generate the RETURN Quad of the return statement.
         Making the needed validation.
@@ -404,27 +423,38 @@ class IntermediateCode:
         Args:
             funcName (string): Name of the function the return is inside
             returnType (string): Data type of the returned value
+            varAddr(integer | None): Memory address where is store the returned value
+                                     if the function is not void
 
         Raises:
             Exception: If the function is void and has a return
             Exception: If the returned data type is different than the expected
         """
+        varAddr = None
         actualType = self.stkType.pop()
 
-        # If the function is void and have a return
-        if(returnType == 'void'):
+        # Search the function data
+        funcData = funcTable.searchFunction(self.currentFunction)
+
+        # If the function is void and have a return raise error
+        if(funcData['returnType'] == 'void'):
             raise Exception(
                 'Function "{}" is void and does not need a return'.format(funcName))
 
+        # If not, get the global memory address
+        else:
+            varAddr = funcTable.searchVariable('global',
+                                               self.currentFunction)['memoryAddress']
+
         # If the returned value is different from the function return type
-        if(returnType != actualType):
+        if(funcData['returnType'] != actualType):
             raise Exception(
                 'Error trying to return a {} when function "{}" returns a {}'.format(
-                    actualType, funcName, returnType))
+                    actualType, funcName, funcData['returnType']))
 
         # Push the returned value
         self.stkQuadruples.append(
-            Quadruple('RETURN', None, None, self.stkOperand.pop()))
+            Quadruple('RETURN', self.stkOperand.pop(), None, varAddr))
 
     def endFunctionQuad(self):
         """
@@ -435,18 +465,20 @@ class IntermediateCode:
         # Reset local memory address
         memoryObj.resetLocalCounters()
 
-    def eraQuad(self, numVars):
+    def eraQuad(self, callingFunc):
         """
         Generate the ERA quad when calling a function
 
         Args:
-            numVars (integert): Number of variables that the function has
+            callingFunc (string): Name of the called function
         """
-        self.stkQuadruples.append(Quadruple('ERA', None, None, numVars))
+        # Store the function name
+        nameAddr = memoryObj.getMemoryAddressToConstant("str", callingFunc)
+        self.stkQuadruples.append(Quadruple('ERA', None, None, nameAddr))
 
     def argumentQuad(self, varType, argNum):
         """
-        Generate the quad per argument sended to a function. Also checks that
+        Generate the quad per argument sent to a function. Also checks that
         the user do not send more thant the expécted amount.
 
         Args:
@@ -465,8 +497,12 @@ class IntermediateCode:
             raise Exception(
                 "The argument is {} but needs to be {}".format(argType, varType))
 
+        # Store the constant value
+        argNumAddr = memoryObj.getMemoryAddressToConstant('int', argNum)
+
         # Push the quadruple
-        self.stkQuadruples.append(Quadruple('PARAM', argValue, None, argNum))
+        self.stkQuadruples.append(
+            Quadruple('PARAM', argValue, None, argNumAddr))
 
     def gosubQuad(self, returnType, numQuad, funcName, returnAddress):
         """
@@ -483,13 +519,17 @@ class IntermediateCode:
             returnDir = None
         else:
             returnDir = memoryObj.getMemoryAddress(returnType, 1,
-                                                   self.currentFunction, True)
+                                                   funcName, True)
 
             self.stkType.append(returnType)
             self.stkOperand.append(returnDir)
 
+         # Store on memory the constant value
+        gosubAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                         numQuad)
+
         # Generate GOSUB Quad to execute a function and update the return data
-        self.stkQuadruples.append(Quadruple('GOSUB', None, None, numQuad))
+        self.stkQuadruples.append(Quadruple('GOSUB', None, None, gosubAddr))
 
         # Generate assignation quad to store the returned value in a termporal value
         if(returnAddress != None):
@@ -595,8 +635,11 @@ class IntermediateCode:
         self.stkType.pop()
         self.stkType.pop()
 
+        # Get memory address for the constant
+        cteAddr = memoryObj.getMemoryAddressToConstant('int', 1)
+
         # Generate the update quad
-        self.stkQuadruples.append(Quadruple('+', VControl, 1, VControl))
+        self.stkQuadruples.append(Quadruple('+', VControl, cteAddr, VControl))
         self.stkQuadruples.append(Quadruple('=', VControl, None, IDMemory))
 
         # Get jumps
@@ -606,8 +649,12 @@ class IntermediateCode:
         # Generate the GOTO quad
         self.stkQuadruples.append(Quadruple('GOTO', None, None, returnFOR))
 
+        # Store the jump quad
+        jumpAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        len(self.stkQuadruples))
+
         # Fill the jump quad
-        self.stkQuadruples[endFOR].result = len(self.stkQuadruples)
+        self.stkQuadruples[endFOR].result = jumpAddr
 
     def compileCode(self, funcTable, programName):
         """

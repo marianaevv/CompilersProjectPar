@@ -127,7 +127,7 @@ def t_CTECHAR(token):
 
 def t_CTESTRING(token):
     r'"([^"]*)"'
-    token.value = str(token.value)
+    token.value = str(token.value).replace('"', '')
     return token
 
 
@@ -178,18 +178,10 @@ def p_program(p):
     '''
     global programName
 
-    p[0] = "Program {} was compiled succesfully".format(programName)
-
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
-    print(interCode.stkOperator)
-    print(interCode.stkOperand)
-    print(interCode.stkType)
-    print(interCode.stkIndexes)
-    for i in interCode.stkQuadruples:
-        print(i)
-
+    p[0] = "Program {} was compiled succesfully and saved on the file {}.obj".format(programName, programName)
 
 def p_neupoint_goto_main(p):
     '''
@@ -620,12 +612,8 @@ def p_function_return(p):
     global flgHaveReturn
     flgHaveReturn = True
 
-    # Search the function data
-    funcData = funcTable.searchFunction(interCode.currentFunction)
-
-    # Validate the return type
-    interCode.returnFunctionQuad(
-        interCode.currentFunction, funcData['returnType'])
+    # Validate the return type and add the quad
+    interCode.returnFunctionQuad(interCode.currentFunction, funcTable)
 
 
 def p_function_call_void(p):
@@ -821,11 +809,9 @@ def p_neupoint_era_quad(p):
     neupoint_era_quad : 
     '''
     global callingFunc
-    # Get the num of variables
-    numVars = funcTable.searchFunction(callingFunc)['numVars']
 
     # Append the ERA quadruple
-    interCode.eraQuad(numVars)
+    interCode.eraQuad(callingFunc)
 
     # Initilize the args counter
     global countArgs
@@ -952,17 +938,20 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-try:
-    # Read the source file
-    fileName = './Tests/Input2.txt'
-    f = open(fileName, "r")
-    srcFile = f.read()
+def compileCode(inputFile):
+    try:
+        # Read the source file
+        f = open(inputFile, "r")
+        srcFile = f.read()
 
-    # Parser the input
-    result = parser.parse(srcFile)
+        # Parser the input
+        result = parser.parse(srcFile)
 
-    if not flgError:
-        print("\n-> Apropiado\n")
+        if not flgError:
+            print('\n =>',result,'<= \n')
 
-except FileNotFoundError:
-    print("\n-> No existe el archivo\n")
+    except FileNotFoundError:
+        print("\n-> No existe el archivo\n")
+
+
+compileCode('./Tests/Input2.txt')
