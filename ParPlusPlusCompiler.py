@@ -231,14 +231,14 @@ def p_vars_lists(p):
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
+    
     p[0] = list(map(lambda x: (p[1], x[0], x[1]) if (
         type(x) == tuple) else (p[1], x), p[2]))
-
     # Put all the IDs list together
     if(len(p) > 4):
         if(type(p[4]) == list):
             p[0] += p[4]
-
+            print(p[0])
 
 def p_decla_ids_list(p):
     '''

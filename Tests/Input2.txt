@@ -2,7 +2,7 @@ program patito3;
 
 var
     int A, B;
-    float F, J;
+    float F;
     char C, L;
 
 main ()
