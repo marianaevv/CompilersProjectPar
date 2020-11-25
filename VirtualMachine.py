@@ -85,10 +85,9 @@ class VirtualMachine():
         """
         # Get data from the specified address
         lftVal = self.execMemory.getFromMemory(lftAddress)
-        print(lftAddress, '=', resultAddress)
 
         # Store the value on the expected memory
-        self.execMemory.saveOnMemory(resultAddress,  lftVal)
+        self.execMemory.saveOnMemory(resultAddress, lftVal)
 
     def arith_relat_logicOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -104,7 +103,6 @@ class VirtualMachine():
         # Get the values from the operand address
         lftVal = self.execMemory.getFromMemory(lftAddress)
         rghtVal = self.execMemory.getFromMemory(rghtAddress)
-        print(lftAddress, operatorNum, rghtAddress, '=', resultAddress)
 
         # Execute the operator function
         resultVal = self.__operatorsDict[operatorNum](lftVal, rghtVal)
@@ -207,7 +205,7 @@ class VirtualMachine():
         Function to resever the needed memory to a function.
 
         Args:
-            argAddress (integer): Address where the sent argument is stored.
+            argAddress (integer): ValftVal where the sent argvarghtVal is stored.
             rghtAddress (None): None. Just to keep params simetry with all the functions.
             nameAddress (integer): Memory address where the function identifier is stored.
             operatorNum (None): None. Just to keep params simetry with all the functions.
@@ -241,7 +239,6 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
-        print(self.execMemory.ExecMemory)
         self.countQuad = self.execMemory.restoreInstructionPointer()
 
     def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
@@ -270,5 +267,5 @@ class VirtualMachine():
         self.countQuad = "EXIT"
 
 
-virMachine = VirtualMachine('fibonacci.obj')
+virMachine = VirtualMachine('test.obj')
 virMachine.proccessQuads()

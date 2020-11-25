@@ -188,6 +188,10 @@ class ExecutionMemory():
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
 
+
+        if(dataType == 0 and type(value).__name__ == 'float'):
+            value = round(value)
+
         # Check if it is necessary to cast the data
         if(toCast):
             toCast = {

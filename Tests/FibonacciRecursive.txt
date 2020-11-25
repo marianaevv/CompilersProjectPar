@@ -15,5 +15,5 @@ module int fib(int n) {
 main () 
 {   
     write("Fibonnaci con 9");
-    write(fib(3));
+    write(fib(4));
 }

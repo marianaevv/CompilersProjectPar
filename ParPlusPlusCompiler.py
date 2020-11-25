@@ -181,6 +181,9 @@ def p_program(p):
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
+    for quad in interCode.stkQuadruples:
+        print(quad)
+
     p[0] = "Program {} was compiled succesfully and saved on the file {}.obj".format(programName, programName)
 
 def p_neupoint_goto_main(p):
@@ -677,6 +680,8 @@ def p_factor(p):
     factor : LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
            | CTEINT neupoint_add_cte_operand
            | CTEFLOAT neupoint_add_cte_operand
+           | exp_operator CTEINT neupoint_add_cte_operand
+           | exp_operator CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
            | function_call
            | identifier
@@ -696,7 +701,11 @@ def p_neupoint_add_cte_operand(p):
     neupoint_add_cte_operand : 
     '''
     # Add a constant variable to the stacks and memory
-    interCode.addConstantValue(p[-1])
+    if(p[-2] == '-'):
+        temp = p[-1] * -1
+    else:
+        temp = p[-1]
+    interCode.addConstantValue(temp)
 
 
 def p_neupoint_arithmetic_exp_quad(p):
@@ -954,4 +963,4 @@ def compileCode(inputFile):
         print("\n-> No existe el archivo\n")
 
 
-compileCode('./Tests/FibonacciRecursive.txt')
+compileCode('./Tests/Input2.txt')

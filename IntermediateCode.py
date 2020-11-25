@@ -244,6 +244,7 @@ class IntermediateCode:
             # Validate the operation
             resultType = semanticCube.verifyOperations(operator,
                                                        lftOpndType, rgtOpndType)
+            print('=>', rgtOpndType, lftOperand, resultType)
 
             # Raise exception if it is a invalid operation
             if(resultType == "error"):
@@ -280,8 +281,9 @@ class IntermediateCode:
 
         # Raise exception if it is a invalid operation
         if(lftOpndType != rgtOpndType):
-            raise Exception("Cannot asign a {} to a {}".format(rgtOpndType,
-                                                               lftOpndType))
+            if(not (lftOpndType == 'int' or rgtOpndType == 'float')):
+                raise Exception("Cannot asign a {} to a {}".format(rgtOpndType,
+                                                                   lftOpndType))
 
         if(operator == '='):
             # Push the quadruple
@@ -344,6 +346,7 @@ class IntermediateCode:
         # Pop the last operands
         resultValue = self.stkOperand.pop()
         resultType = self.stkType.pop()
+        print('->', resultType, resultValue)
 
         # Check the result data type
         if(resultType != 'bool'):
