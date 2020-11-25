@@ -1,4 +1,4 @@
-$('#codeGenerated').val('program;\n\tvar\n\t\n\tmain(){\n\t\n\t}\n');
+$('#codeGenerated').val('program NAME_OF_YOUR_PROGRAM;\n\tvar\n\t\n\tmain(){\n\t\n\t}\n');
 
 $('#run').click(function () {
 	//String que se mandará al compilador.
@@ -46,10 +46,10 @@ function getCallFunc() {
 	return 'FUNC_NAME(PARAMETER1, PARAMETER2,..);\n';
 }
 function getRead() {
-	return 'read(ID);\n';
+	return '\tread(ID);\n';
 }
 function getWrite() {
-	return 'write(ID);\n';
+	return '\twrite(ID);\n';
 }
 function getIf() {
 	return 'if (expresion) {\n\t\n\t}';
