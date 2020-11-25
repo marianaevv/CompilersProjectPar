@@ -238,7 +238,6 @@ def p_vars_lists(p):
     if(len(p) > 4):
         if(type(p[4]) == list):
             p[0] += p[4]
-            print(p[0])
 
 def p_decla_ids_list(p):
     '''
@@ -677,6 +676,8 @@ def p_factor(p):
     factor : LEFTPARENTHESIS neupoint_add_wall expresion neupoint_remove_wall RIGHTPARENTHESIS
            | CTEINT neupoint_add_cte_operand
            | CTEFLOAT neupoint_add_cte_operand
+           | exp_operator CTEINT neupoint_add_cte_operand
+           | exp_operator CTEFLOAT neupoint_add_cte_operand
            | CTECHAR neupoint_add_cte_operand
            | function_call
            | identifier
@@ -696,7 +697,11 @@ def p_neupoint_add_cte_operand(p):
     neupoint_add_cte_operand : 
     '''
     # Add a constant variable to the stacks and memory
-    interCode.addConstantValue(p[-1])
+    if(p[-2] == '-'):
+        temp = p[-1] * -1
+    else:
+        temp = p[-1]
+    interCode.addConstantValue(temp)
 
 
 def p_neupoint_arithmetic_exp_quad(p):

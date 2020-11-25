@@ -1,15 +1,19 @@
 program fibonacci;
-int fib(int n) 
-{ 
-    if (n <= 1) 
-        return n; 
-    return fib(n-1) + fib(n-2); 
+
+module int fib(int n) { 
+    if(n == 0)then{
+        return(0);
+    }
+    
+    if (n == 1)then{
+        return (1);
+    }
+
+    return(fib(n-1) + fib(n-2));  
 } 
   
-int main () 
-{ 
-    int n = 9; 
-    cout << fib(n); 
-    getchar(); 
-    return 0; 
-} 
+main () 
+{   
+    write("Fibonnaci con 9");
+    write(fib(4));
+}

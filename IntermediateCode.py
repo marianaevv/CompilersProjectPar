@@ -280,8 +280,9 @@ class IntermediateCode:
 
         # Raise exception if it is a invalid operation
         if(lftOpndType != rgtOpndType):
-            raise Exception("Cannot asign a {} to a {}".format(rgtOpndType,
-                                                               lftOpndType))
+            if(not (lftOpndType == 'int' or rgtOpndType == 'float')):
+                raise Exception("Cannot asign a {} to a {}".format(rgtOpndType,
+                                                                   lftOpndType))
 
         if(operator == '='):
             # Push the quadruple

@@ -104,6 +104,8 @@ class ExecutionMemory():
         }
 
         for arg in self.paramsList:
+            if(arg['dataType'] >= 3):
+                arg['dataType'] -= 3
             self.instrucPointers[-1][arg['dataType']
                                      ][countDict[arg['dataType']]] = arg['value']
             countDict[arg['dataType']] += 1
@@ -185,6 +187,10 @@ class ExecutionMemory():
 
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
+
+
+        if(dataType == 0 and type(value).__name__ == 'float'):
+            value = round(value)
 
         # Check if it is necessary to cast the data
         if(toCast):

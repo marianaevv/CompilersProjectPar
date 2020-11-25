@@ -87,7 +87,7 @@ class VirtualMachine():
         lftVal = self.execMemory.getFromMemory(lftAddress)
 
         # Store the value on the expected memory
-        self.execMemory.saveOnMemory(resultAddress,  lftVal)
+        self.execMemory.saveOnMemory(resultAddress, lftVal)
 
     def arith_relat_logicOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -205,7 +205,7 @@ class VirtualMachine():
         Function to resever the needed memory to a function.
 
         Args:
-            argAddress (integer): Address where the sent argument is stored.
+            argAddress (integer): ValftVal where the sent argvarghtVal is stored.
             rghtAddress (None): None. Just to keep params simetry with all the functions.
             nameAddress (integer): Memory address where the function identifier is stored.
             operatorNum (None): None. Just to keep params simetry with all the functions.
@@ -239,6 +239,7 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
+        self.countQuad = self.execMemory.restoreInstructionPointer()
 
     def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
         """
@@ -266,5 +267,5 @@ class VirtualMachine():
         self.countQuad = "EXIT"
 
 
-virMachine = VirtualMachine('patito3.obj')
+virMachine = VirtualMachine('test.obj')
 virMachine.proccessQuads()
