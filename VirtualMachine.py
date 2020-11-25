@@ -266,5 +266,5 @@ class VirtualMachine():
         self.countQuad = "EXIT"
 
 
-virMachine = VirtualMachine('patito3.obj')
+virMachine = VirtualMachine('patito.obj')
 virMachine.proccessQuads()

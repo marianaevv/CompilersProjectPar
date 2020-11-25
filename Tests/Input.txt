@@ -10,6 +10,8 @@ module float Prueba(){
 }
     
 main(){
-    A = A - K * J;
-    Z = G * J - Prueba();
+    K=10;
+    for E = 1 to 5 do{
+        write("HOLA");
+    }
 }

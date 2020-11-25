@@ -1,0 +1,25 @@
+program FibonacciNormal;
+var   
+    int n, t1, t2, nextTerm, i;
+    
+main(){
+    
+    write("Enter the number of terms: ");
+    read(n);
+    write("Fibonacci Series: ");
+
+    for i = 1 to n do{
+        if(i == 1)then{
+            write(t1);
+        }
+        if(i == 2)then{
+            write(t2);
+        }
+        nextTerm = t1 + t2;
+        t1 = t2;
+        t2 = nextTerm;
+        
+        write(nextTerm);
+        i++;
+    }
+}

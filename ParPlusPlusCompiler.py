@@ -954,4 +954,4 @@ def compileCode(inputFile):
         print("\n-> No existe el archivo\n")
 
 
-compileCode('./Tests/Input2.txt')
+compileCode('./Tests/BinarySearch.txt')

@@ -1,0 +1,80 @@
+program sortProgram;
+
+module void merge(int arr[], int l, int m, int r){
+    var
+        int n1 = m - l + 1;
+        int n2 = r - m;
+
+    int L[n1], R[n2];
+    int i,j;
+    for i = 0 to n1 do{
+         L[i] = arr[l + i];
+         i++;
+    }
+    for j = 0 to n2 do{
+        R[j] = arr[m + 1 + j];
+        j++;
+    }
+    int i = 0;
+    int j = 0;
+    int k = l;
+ 
+    while (i < n1 & j < n2) do{
+        if (L[i] <= R[j]) then{
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) do{
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) do{
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+ 
+module void mSort(int arr[],int l,int r){
+    if(l>=r) then{
+        return;
+    }
+    var
+    int m = (l+r-1)/2;
+    mSort(arr,l,m);
+    mSort(arr,m+1,r);
+    merge(arr,l,m,r);
+}
+ 
+module void printArray(int A[], int size)
+{
+    for i = 0 to size do{
+        write(A[i]," ");
+        i++;
+    }
+       
+}
+ 
+main()
+{   
+    var
+    int arr[] = { 12, 11, 13, 5, 6, 7 };
+    int arr_size = sizeof(arr) / sizeof(arr[0]);
+ 
+    write("Given array is \n");
+    printArray(arr, arr_size);
+ 
+    mSort(arr, 0, arr_size - 1);
+ 
+    write("\nSorted array is \n");
+    printArray(arr, arr_size);
+}

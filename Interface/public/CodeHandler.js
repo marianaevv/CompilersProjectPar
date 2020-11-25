@@ -52,7 +52,7 @@ function getWrite() {
 	return '\twrite(ID);\n';
 }
 function getIf() {
-	return 'if (expresion) {\n\t\n\t}';
+	return 'if (expresion) then {\n\t\n\t}';
 }
 
 function getElse() {
