@@ -1,0 +1,78 @@
+{
+    "FuncTable": {
+        "global": {
+            "returnType": "void",
+            "paramsNumber": 0,
+            "paramsType": [],
+            "varTable": {
+                "fib": {
+                    "dataType": "int",
+                    "size": 1,
+                    "numDimensions": 1,
+                    "dimensions": 1,
+                    "memoryAddress": 1000
+                }
+            },
+            "numVars": {
+                "int": 1,
+                "float": 0,
+                "char": 0
+            },
+            "numQuad": 0
+        },
+        "fib": {
+            "returnType": "int",
+            "paramsNumber": 1,
+            "paramsType": [
+                "int"
+            ],
+            "varTable": {},
+            "numVars": {
+                "int": 1,
+                "float": 0,
+                "char": 0
+            },
+            "numQuad": 2
+        }
+    },
+    "ConstantValues": {
+        "57000": 0,
+        "57001": 4,
+        "57002": 1,
+        "57003": 7,
+        "69000": "fib",
+        "57004": 2,
+        "57005": 20,
+        "69001": "Fibonnaci con 9",
+        "57006": 5
+    },
+    "Quadruples": [
+        "[21, null, null, 57005]",
+        "[11, 29000, 57000, 53000]",
+        "[23, 53000, null, 57001]",
+        "[19, 57000, null, 1000]",
+        "[11, 29000, 57002, 53001]",
+        "[23, 53001, null, 57003]",
+        "[19, 57002, null, 1000]",
+        "[18, null, null, 69000]",
+        "[3, 29000, 57002, 41000]",
+        "[17, 41000, null, 57000]",
+        "[22, null, null, 57004]",
+        "[1, 1000, null, 41001]",
+        "[18, null, null, 69000]",
+        "[3, 29000, 57004, 41002]",
+        "[17, 41002, null, 57000]",
+        "[22, null, null, 57004]",
+        "[1, 1000, null, 41003]",
+        "[2, 41001, 41003, 41004]",
+        "[19, 41004, null, 1000]",
+        "[20, null, null, null]",
+        "[15, null, null, 69001]",
+        "[18, null, null, 69000]",
+        "[17, 57006, null, 57000]",
+        "[22, null, null, 57004]",
+        "[1, 1000, null, 13000]",
+        "[15, null, null, 13000]",
+        "[25, null, null, null]"
+    ]
+}

@@ -85,6 +85,7 @@ class VirtualMachine():
         """
         # Get data from the specified address
         lftVal = self.execMemory.getFromMemory(lftAddress)
+        print(lftAddress, '=', resultAddress)
 
         # Store the value on the expected memory
         self.execMemory.saveOnMemory(resultAddress,  lftVal)
@@ -103,6 +104,7 @@ class VirtualMachine():
         # Get the values from the operand address
         lftVal = self.execMemory.getFromMemory(lftAddress)
         rghtVal = self.execMemory.getFromMemory(rghtAddress)
+        print(lftAddress, operatorNum, rghtAddress, '=', resultAddress)
 
         # Execute the operator function
         resultVal = self.__operatorsDict[operatorNum](lftVal, rghtVal)
@@ -239,6 +241,8 @@ class VirtualMachine():
         """
         returnVal = self.execMemory.getFromMemory(lftAddress)
         self.execMemory.saveOnMemory(globalAddress, returnVal)
+        print(self.execMemory.ExecMemory)
+        self.countQuad = self.execMemory.restoreInstructionPointer()
 
     def endFunction(self, lftAddress, rghtAddress, quadNum, operatorNum):
         """
@@ -266,5 +270,5 @@ class VirtualMachine():
         self.countQuad = "EXIT"
 
 
-virMachine = VirtualMachine('patito3.obj')
+virMachine = VirtualMachine('fibonacci.obj')
 virMachine.proccessQuads()
