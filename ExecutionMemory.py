@@ -83,9 +83,6 @@ class ExecutionMemory():
             for iI in range(7):
                 self.ExecMemory[0][iI] = [None] * counterList[iI]
 
-            print("Separating global memory")
-            print(self.ExecMemory[0], '\n')
-
         # Or separate the local memory
         else:
             self.paramsList = []
@@ -93,9 +90,6 @@ class ExecutionMemory():
 
             for iI in range(7):
                 copyLocalMem[iI] = [None] * counterList[iI]
-
-            print("Separating local memory")
-            print(copyLocalMem, '\n')
 
             self.instrucPointers.append(copyLocalMem)
 
@@ -105,7 +99,6 @@ class ExecutionMemory():
 
         # Add it to the list
         self.paramsList.append({'dataType': dataType, 'value': value})
-        print("Lista parametros: ", self.paramsList, '\n')
 
     def copyArgsToParms(self):
         countDict = {
@@ -176,10 +169,6 @@ class ExecutionMemory():
 
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
-        print(contextNum, dataType, positionNum)
-        print(self.ExecMemory[contextNum][dataType])
-        print('->', self.ExecMemory[contextNum][dataType][positionNum])
-        print()
 
         # Return the wanted value
         return self.ExecMemory[contextNum][dataType][positionNum]
@@ -198,12 +187,10 @@ class ExecutionMemory():
         if(type(memoryAddr) is str):
             # Get the memory address that is pointed
             # and be able to store on the actual wanted address
-            print("Guardando en un pointer")
             memoryAddr = self.getFromMemory(int(memoryAddr[2:]))
 
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
-        print("Saved on", memoryAddr)
 
         if(dataType == 0 and type(value).__name__ == 'float'):
             value = round(value)

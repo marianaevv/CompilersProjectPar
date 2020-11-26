@@ -1,9 +1,7 @@
 program test;
 
 var
-    int A, B;
-    float F;
-    char C, L;
+    int A[10], B[10], C[10]
 
 main ()
 {

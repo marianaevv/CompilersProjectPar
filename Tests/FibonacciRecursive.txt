@@ -1,19 +1,21 @@
-program fibonacci;
+program fibonacciRecusive;
+var 
+    int iX;
 
-module int fib(int n) { 
-    if(n == 0)then{
-        return(0);
-    }
+module int fibonacciSeries(int iN) 
+var int iVal;
+{ 
     
-    if (n == 1)then{
-        return (1);
+    if(iN <= 1) then {
+        return(iN);
     }
 
-    return(fib(n-1) + fib(n-2));  
+    return(fibonacciSeries(iN - 1) + fibonacciSeries(iN - 2));
 } 
   
 main () 
-{   
-    write("Fibonnaci con 9");
-    write(fib(4));
+{   write("Write the number: ");
+    read(iX);
+    iX -= 1;
+    write("Fibonnaci value at the wanted position is", fibonacciSeries(iX));
 }
