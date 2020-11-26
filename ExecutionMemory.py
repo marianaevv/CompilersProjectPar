@@ -61,31 +61,41 @@ class ExecutionMemory():
         for addr, value in constantsDir.items():
             self.saveOnMemory(int(addr), value)
 
-    def reserveContextMemmory(self, contextDict, contextNum):
+    def reserveContextMemmory(self, contextDict, temporalDict, contextNum):
         """
         Load the global variables to the global memory
 
         Args:
             contextDict (Dictionary): Dictionary with counters for each type of data that the function needs
+            temporalDict (Dictionary): Dictionary with counters for each temporal by data type
             contextNum (integer): A number 0 if it is to the global memory or 1 if it is local
         """
-        for dataType in contextDict.values():
+        # Put together the counter of the normal and the temporal variables
+        counterList = [*contextDict.values()] + [*temporalDict.values()]
+
+        # Verify there is not out of memory case
+        for dataType in counterList:
             if(dataType >= 4000):
                 raise Exception("Out of memory")
 
+        # Separate the global memory
         if(contextNum == 0):
-            self.ExecMemory[0][0] = [None] * contextDict['int']
-            self.ExecMemory[0][1] = [None] * contextDict['float']
-            self.ExecMemory[0][2] = [None] * contextDict['char']
+            for iI in range(7):
+                self.ExecMemory[0][iI] = [None] * counterList[iI]
 
+            print("Separating global memory")
+            print(self.ExecMemory[0], '\n')
+
+        # Or separate the local memory
         else:
             self.paramsList = []
             copyLocalMem = self.__localContext.copy()
 
-            # Separate memory for each type of data
-            copyLocalMem[0] = [None] * contextDict['int']
-            copyLocalMem[1] = [None] * contextDict['float']
-            copyLocalMem[2] = [None] * contextDict['char']
+            for iI in range(7):
+                copyLocalMem[iI] = [None] * counterList[iI]
+
+            print("Separating local memory")
+            print(copyLocalMem, '\n')
 
             self.instrucPointers.append(copyLocalMem)
 
@@ -95,6 +105,7 @@ class ExecutionMemory():
 
         # Add it to the list
         self.paramsList.append({'dataType': dataType, 'value': value})
+        print("Lista parametros: ", self.paramsList, '\n')
 
     def copyArgsToParms(self):
         countDict = {
@@ -165,6 +176,10 @@ class ExecutionMemory():
 
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
+        print(contextNum, dataType, positionNum)
+        print(self.ExecMemory[contextNum][dataType])
+        print('->', self.ExecMemory[contextNum][dataType][positionNum])
+        print()
 
         # Return the wanted value
         return self.ExecMemory[contextNum][dataType][positionNum]
@@ -183,11 +198,12 @@ class ExecutionMemory():
         if(type(memoryAddr) is str):
             # Get the memory address that is pointed
             # and be able to store on the actual wanted address
+            print("Guardando en un pointer")
             memoryAddr = self.getFromMemory(int(memoryAddr[2:]))
 
         # Calculate the corresponding position
         contextNum, dataType, positionNum = self.getPositionMemory(memoryAddr)
-
+        print("Saved on", memoryAddr)
 
         if(dataType == 0 and type(value).__name__ == 'float'):
             value = round(value)

@@ -457,11 +457,18 @@ class IntermediateCode:
         self.stkQuadruples.append(
             Quadruple('RETURN', self.stkOperand.pop(), None, varAddr))
 
-    def endFunctionQuad(self):
+    def endFunctionQuad(self, funcTable):
         """
         Generate the ENDFUNC quad
+
+        Args:
+            funcTable (FunctionTable Obj): A function table object
         """
         self.stkQuadruples.append(Quadruple('ENDFUNC', None, None, None))
+
+        # Store the needed space to the normal and temporal local variables
+        funcTable.functionTable[self.currentFunction]['numVars'] = memoryObj.countPositions[2]
+        funcTable.functionTable[self.currentFunction]['numTempVars'] = memoryObj.countTemporalPositions[2]
 
         # Reset local memory address
         memoryObj.resetLocalCounters()
@@ -682,6 +689,10 @@ class IntermediateCode:
             "ConstantValues": constantValues,
             "Quadruples": encodedQuads
         }
+
+        # Store the needed space to the normal and temporal global variables
+        funcTable.functionTable['global']['numVars'] = memoryObj.countPositions[1]
+        funcTable.functionTable['global']['numTempVars'] = memoryObj.countTemporalPositions[1]
 
         # Dump the compiled data into a JSON
         with open("{}.obj".format(programName), 'w') as compiledFile:

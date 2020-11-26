@@ -464,7 +464,7 @@ def p_neupoint_end_function(p):
     '''
 
     # Insert the end quadruple of a function
-    interCode.endFunctionQuad()
+    interCode.endFunctionQuad(funcTable)
 
     # Release the Local Variable Table
     funcTable.functionTable[interCode.currentFunction]['varTable'] = {}
@@ -959,4 +959,4 @@ def compileCode(inputFile):
         print("\n-> No existe el archivo\n")
 
 
-compileCode('./Tests/Input2.txt')
+compileCode('./Tests/BinarySearch.txt')

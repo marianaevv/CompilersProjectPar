@@ -21,7 +21,8 @@ class VirtualMachine():
 
             # Load the constant and global variables
             self.execMemory.reserveContextMemmory(
-                self.compiledCode['FuncTable']['global']['numVars'], 0)
+                self.compiledCode['FuncTable']['global']['numVars'],
+                self.compiledCode['FuncTable']['global']['numTempVars'], 0)
             self.execMemory.addConstantMemory(
                 self.compiledCode['ConstantValues'])
             self.execMemory.loadQuads(self.compiledCode['Quadruples'])
@@ -62,6 +63,8 @@ class VirtualMachine():
 
         while True:
             quad = self.execMemory.quadsList[self.countQuad]
+
+            print("=>", quad)
 
             # Execute the function depending on the operator
             self.functionsDict[quad[0]](quad[1], quad[2], quad[3], quad[0])
@@ -198,7 +201,8 @@ class VirtualMachine():
         """
         nameFunc = self.execMemory.getFromMemory(nameAddress)
         countDict = self.compiledCode['FuncTable'][nameFunc]['numVars']
-        self.execMemory.reserveContextMemmory(countDict, 1)
+        tempDict = self.compiledCode['FuncTable'][nameFunc]['numTempVars']
+        self.execMemory.reserveContextMemmory(countDict, tempDict, 1)
 
     def paramQuad(self, argAddress, rghtAddress, nameAddress, operatorNum):
         """
@@ -267,5 +271,5 @@ class VirtualMachine():
         self.countQuad = "EXIT"
 
 
-virMachine = VirtualMachine('test.obj')
+virMachine = VirtualMachine('binaryProgram.obj')
 virMachine.proccessQuads()

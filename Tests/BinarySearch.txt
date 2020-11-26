@@ -1,22 +1,25 @@
 program binaryProgram;
 
 var
-    int arr[5], num, n, result; 
+    int arr[5], iNum, iN, indexResult; 
 
-module int binarySearch(int l, int r, int x) 
+module int binarySearch(int iL, int iR, int iX) 
 var int mid;
 { 
-    if (r >= l) then{ 
+    if (iR >= iL) then{ 
 
-        mid = (l + r) / 2; 
-        if (arr[mid] == x) then {
+        mid = (iL + iR) / 2; 
+        if (arr[mid] == iX) then {
             return(mid);
         } 
 
-        if (arr[mid] > x) then{
-            return(binarySearch(l, mid - 1, x));
-        } 
-        return(binarySearch(mid + 1, r, x));
+        if (arr[mid] > iX) then{
+            return(binarySearch(iL, mid - 1, iX));
+
+        } else {
+            return(binarySearch(mid + 1, iR, iX));
+        }
+
     } 
     return(-1);
 } 
@@ -27,12 +30,15 @@ main(){
     arr[2] = 4; 
     arr[3] = 10; 
     arr[4] = 40; 
-    num = 10; 
-    n = 5; 
-    result = binarySearch(0, n - 1, num);
-    if(result == -1)then{
-        write("Element is not present in array");
+    
+    iNum = 10; 
+    iN = 5; 
+
+    indexResult = binarySearch(0, iN - 1, iNum);
+
+    if(indexResult == -1) then {
+        write("The element does not exist within the array");
     } else{
-        write("Element is present at index", result);
+        write("Element is at the index", indexResult);
     }
 } 
