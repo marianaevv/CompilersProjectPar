@@ -1,18 +1,28 @@
 program test;
 
 var
-    int A[10], B[10], C[10]
+    int A[10], B[10], C[10], iI, iJ;
 
 main ()
 {
-    read(A);
-    read(B);
-    while (A <= B) do{
-        if(A % 2 == 0)then{
-            write(A);
-        }else{
-            write("Impar");
-        }
-        A++;
+    for iI = 0 to 10 do {
+        A[iI] = iI;
+        B[iI] = iI * 2;
+    }
+
+    write("Here");
+    C = B;
+
+    iJ = 0;
+    while(iJ < 10) do {
+        write(C[iJ]);
+        iJ++;
+    }
+    write("");
+
+    iJ = 0;
+    while(iJ < 10) do {
+        write(B[iJ]);
+        iJ++;
     }
 }

@@ -181,7 +181,9 @@ def p_program(p):
     # Generate the object code
     interCode.compileCode(funcTable, programName)
 
-    p[0] = "Program {} was compiled succesfully and saved on the file {}.obj".format(programName, programName)
+    p[0] = "Program {} was compiled succesfully and saved on the file {}.obj".format(
+        programName, programName)
+
 
 def p_neupoint_goto_main(p):
     '''
@@ -231,13 +233,14 @@ def p_vars_lists(p):
                | data_type decla_ids_list SEMICOLON
     '''
     # Map the id list to a tupple format (VarType, ID)
-    
+
     p[0] = list(map(lambda x: (p[1], x[0], x[1]) if (
         type(x) == tuple) else (p[1], x), p[2]))
     # Put all the IDs list together
     if(len(p) > 4):
         if(type(p[4]) == list):
             p[0] += p[4]
+
 
 def p_decla_ids_list(p):
     '''
@@ -270,8 +273,9 @@ def p_identifier(p):
     '''
     identifier : ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET LEFTSQRBRACKET neupoint_index_matrix exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_matrix_addr
                | ID neupoint_add_identifier LEFTSQRBRACKET neupoint_index_array exp neupoint_remove_wall RIGHTSQRBRACKET neupoint_update_array_addr
-               | ID neupoint_add_identifier neupoint_validate_isnot_array
+               | ID neupoint_add_identifier
     '''
+    # neupoint_validate_isnot_array
     pass
 
 
@@ -743,7 +747,8 @@ def p_neupoint_assignment_quad(p):
     '''
     neupoint_assignment_quad : 
     '''
-    interCode.generateAssignmentQuad()
+    interCode.generateAssignmentQuad(funcTable.functionTable['global']['varTable'],
+                                     funcTable.functionTable[interCode.currentFunction]['varTable'])
 
 
 def p_neupoint_assignment_single_quad(p):
@@ -943,6 +948,7 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
+
 def compileCode(inputFile):
     try:
         # Read the source file
@@ -953,10 +959,10 @@ def compileCode(inputFile):
         result = parser.parse(srcFile)
 
         if not flgError:
-            print('\n =>',result,'<= \n')
+            print('\n =>', result, '<= \n')
 
     except FileNotFoundError:
         print("\n-> No existe el archivo\n")
 
 
-compileCode('./Tests/FibonacciRecursive.txt')
+compileCode('./Tests/Input2.txt')

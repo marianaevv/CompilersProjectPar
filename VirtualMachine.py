@@ -87,8 +87,25 @@ class VirtualMachine():
         # Get data from the specified address
         lftVal = self.execMemory.getFromMemory(lftAddress)
 
-        # Store the value on the expected memory
-        self.execMemory.saveOnMemory(resultAddress, lftVal)
+        # If it is not a array/matrix assignation
+        if(type(lftVal) == int):
+            # Store the value on the expected memory
+            self.execMemory.saveOnMemory(resultAddress, lftVal)
+
+        # If it is a array/matrix
+        else:
+            # Get the array data of the B value
+            rghtVal = self.execMemory.getFromMemory(resultAddress)
+
+            # Ge the base direction
+            baseB = ast.literal_eval(lftVal)[0]
+            sizeB = ast.literal_eval(lftVal)[1]
+            baseA = ast.literal_eval(rghtVal)[0]
+
+            # Save the data of array B onto A
+            for iI in range(sizeB):
+                getVale = self.execMemory.getFromMemory(baseB + iI)
+                self.execMemory.saveOnMemory(baseA + iI, getVale)
 
     def arith_relat_logicOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -141,7 +158,9 @@ class VirtualMachine():
         # Get the values from the operand address
         resultVal = self.execMemory.getFromMemory(resultAddress)
 
-        if(resultVal != None):
+        if(resultVal == ""):
+            print()
+        elif(resultVal != "" and resultVal != None):
             print(resultVal, end=" ")
 
     def readOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
@@ -270,5 +289,5 @@ class VirtualMachine():
         print('\n\n')
 
 
-virMachine = VirtualMachine('./CompiledCode/fibonacciRecusive.obj')
+virMachine = VirtualMachine('./CompiledCode/test.obj')
 virMachine.proccessQuads()

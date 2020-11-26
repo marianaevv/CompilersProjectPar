@@ -262,7 +262,7 @@ class IntermediateCode:
             self.stkQuadruples.append(Quadruple(operator, lftOperand,
                                                 rgtOperand, resultAddress))
 
-    def generateAssignmentQuad(self):
+    def generateAssignmentQuad(self, globalVarTable, localVarTable):
         """
         Function to generate the quadruplo of assignments
 
@@ -277,6 +277,40 @@ class IntermediateCode:
 
         # Pop the operator
         operator = self.stkOperator.pop()
+
+        # Get all the posible variables on the current scope
+        allVars = [*globalVarTable.values()] + [*localVarTable.values()]
+
+        # Verify if the assignation is between arrays
+        dimenLeft = 0
+        sizeLeft = 0
+        dimenRight = 0
+        sizeRight = 0
+        for possVar in allVars:
+            if(possVar['memoryAddress'] == lftOperand):
+                dimenLeft = possVar['dimensions']
+                sizeLeft = possVar['size']
+            if(possVar['memoryAddress'] == rgtOperand):
+                dimenRight = possVar['dimensions']
+                sizeRight = possVar['size']
+
+        # Check if both are arrays/matrices
+        if(dimenLeft != 0 and dimenRight != 0):
+
+            # Check that the dimensions are the same
+            if(dimenLeft == dimenRight):
+                # Raise exception if it is a invalid operation
+                if(lftOpndType != rgtOpndType):
+                    raise Exception("Cannot asign a array/matriz {} to a {} one".format(rgtOpndType,
+                                                                                        lftOpndType))                                                                            
+                
+                # If everything is good, update the operators and operands
+                lftOperand = memoryObj.getMemoryAddressToConstant('str', str([lftOperand, sizeLeft]))
+                rgtOperand = memoryObj.getMemoryAddressToConstant('str', str([rgtOperand, sizeRight]))
+
+            else:
+                raise Exception(
+                    "The arrays/matrix do not have the same dimension")
 
         # Raise exception if it is a invalid operation
         if(lftOpndType != rgtOpndType):
@@ -621,7 +655,7 @@ class IntermediateCode:
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VFinal))
         self.stkQuadruples.append(Quadruple('<', self.stkOperand[-1], VFinal,
                                             tempBoolean))
-        
+
         # Push the jump quad
         self.stkJumps.append(len(self.stkQuadruples) - 1)
 
@@ -656,7 +690,7 @@ class IntermediateCode:
 
         # Store the jump quad
         returnAddr = memoryObj.getMemoryAddressToConstant('int',
-                                                        returnFOR)
+                                                          returnFOR)
 
         # Generate the GOTO quad
         self.stkQuadruples.append(Quadruple('GOTO', None, None, returnAddr))
