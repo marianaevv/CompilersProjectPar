@@ -621,7 +621,7 @@ class IntermediateCode:
         self.stkQuadruples.append(Quadruple('=', expOperand, None, VFinal))
         self.stkQuadruples.append(Quadruple('<', self.stkOperand[-1], VFinal,
                                             tempBoolean))
-
+        
         # Push the jump quad
         self.stkJumps.append(len(self.stkQuadruples) - 1)
 
@@ -654,8 +654,12 @@ class IntermediateCode:
         endFOR = self.stkJumps.pop()
         returnFOR = self.stkJumps.pop()
 
+        # Store the jump quad
+        returnAddr = memoryObj.getMemoryAddressToConstant('int',
+                                                        returnFOR)
+
         # Generate the GOTO quad
-        self.stkQuadruples.append(Quadruple('GOTO', None, None, returnFOR))
+        self.stkQuadruples.append(Quadruple('GOTO', None, None, returnAddr))
 
         # Store the jump quad
         jumpAddr = memoryObj.getMemoryAddressToConstant('int',
@@ -695,5 +699,5 @@ class IntermediateCode:
         funcTable.functionTable['global']['numTempVars'] = memoryObj.countTemporalPositions[1]
 
         # Dump the compiled data into a JSON
-        with open("{}.obj".format(programName), 'w') as compiledFile:
+        with open("./CompiledCode/{}.obj".format(programName), 'w') as compiledFile:
             json.dump(compiledCode, compiledFile, separators=(',', ':'))

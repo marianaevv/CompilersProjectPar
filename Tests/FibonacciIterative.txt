@@ -1,0 +1,29 @@
+program fibonacciIterative;
+
+var   
+    int iN;
+
+module void fibonacciIterative(int iNum)
+var int iX, iY, iZ, iI;
+{
+    iX = 0;
+    iY = 1;
+    iZ = 0;
+
+    for iI = 0 to iNum do {
+
+        iZ = iX + iY;
+        iX = iY;
+        iY = iZ;
+    }
+
+}
+    
+main(){
+    
+    write("Enter the number of terms: ");
+    read(iN);
+    write("", "Fibonacci Series: ");
+    fibonacciIterative(iN);
+
+}

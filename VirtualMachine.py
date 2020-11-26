@@ -64,8 +64,6 @@ class VirtualMachine():
         while True:
             quad = self.execMemory.quadsList[self.countQuad]
 
-            print("=>", quad)
-
             # Execute the function depending on the operator
             self.functionsDict[quad[0]](quad[1], quad[2], quad[3], quad[0])
 
@@ -144,7 +142,7 @@ class VirtualMachine():
         resultVal = self.execMemory.getFromMemory(resultAddress)
 
         if(resultVal != None):
-            print(resultVal)
+            print(resultVal, end=" ")
 
     def readOperation(self, lftAddress, rghtAddress, resultAddress, operatorNum):
         """
@@ -269,7 +267,8 @@ class VirtualMachine():
             operatorNum (None): None. Just to keep params simetry with all the functions.
         """
         self.countQuad = "EXIT"
+        print('\n\n')
 
 
-virMachine = VirtualMachine('binaryProgram.obj')
+virMachine = VirtualMachine('./CompiledCode/fibonacciRecusive.obj')
 virMachine.proccessQuads()

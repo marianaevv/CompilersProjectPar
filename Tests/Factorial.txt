@@ -1,0 +1,18 @@
+program Factorial;
+
+var int iNum;
+
+module int calculateFactorial(int iN) 
+{ 
+    if (iN == 0) then{
+        return(1); 
+    }
+    return (iN * calculateFactorial(iN - 1)); 
+} 
+  
+main() 
+{ 
+    write("Write a number ");
+    read(iNum);
+    write("Factorial of", iNum, "is", calculateFactorial(iNum)); 
+}
